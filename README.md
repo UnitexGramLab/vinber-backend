@@ -2,7 +2,7 @@
 
 > [Unitex/GramLab][unitex] is an open source, cross-platform, multilingual, lexicon- and grammar-based corpus processing suite
 
-This shell script is used to build the [Unitex/GramLab][unitex] project. Including:
+This shell script is used to build the [Unitex/GramLab][unitex] suite. Including:
 
 - Static website
 - Documentation (User's manual)
