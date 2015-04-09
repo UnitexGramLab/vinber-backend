@@ -2,7 +2,7 @@
 
 > [Unitex/GramLab][unitex] is an open source, cross-platform, multilingual, lexicon- and grammar-based corpus processing suite
 
-This shell script is used to build the [Unitex/GramLab][unitex] suite, including:
+Vinber is a lightweight continuous integration script used to build the [Unitex/GramLab][unitex] suite, including:
 
 - Static website
 - Documentation (User's manual)
