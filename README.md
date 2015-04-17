@@ -15,6 +15,18 @@ Vinber is a lightweight continuous integration script used to build the [Unitex/
 
 Vinber code is ShellCheck-compliant see http://www.shellcheck.net/about.html for information about how to run ShellCheck locally
 
+### Badges
+
+The badges from [Vinber][vinber] shows the status of the [Unitex/GramLab][unitex] builds. Badges are powered by [shields.io](http://shields.io/) using a preprocessing disk-cache layer.
+
+[![Nightly Status](http://unitex.univ-mlv.fr/v6/badge/nightly/latest.svg?subject=product.name&status=product.version.full)][nightly] [![Nightly Status](http://unitex.univ-mlv.fr/v6/badge/nightly/latest.svg)][nightly] 
+
+[![Commit Status](http://unitex.univ-mlv.fr/v6/badge/commit/latest.svg?subject=product.name&status=product.version.full)][Commit]
+[![Commit Status](http://unitex.univ-mlv.fr/v6/badge/commit/latest.svg)][commit]
+
+
+
+
 ### Contributing
 
 We welcome everyone to contribute to improve this project. Below are some of the
@@ -31,3 +43,6 @@ This program is licensed under the [GNU Lesser General Public License version 2.
 Copyright (C) 2014-2015 Université Paris-Est Marne-la-Vallée
 
 [unitex]: http://unitexgramlab.org
+[vinber]: http://http://unitex.univ-mlv.fr/v6
+[nightly]: http://unitex.univ-mlv.fr/v6/#bundle=nightly&q=latest
+[commit]: http://unitex.univ-mlv.fr/v6/#bundle=commit&q=latest
