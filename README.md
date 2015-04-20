@@ -17,9 +17,15 @@ Vinber code is ShellCheck-compliant see http://www.shellcheck.net/about.html for
 
 ### Badges
 
-The badges from [Vinber][vinber] shows the status of the [Unitex/GramLab][unitex] builds. Badges are powered by [shields.io](http://shields.io/) using a preprocessing disk-cache layer.
+The badges from [Vinber][vinber] shows the status of the [Unitex/GramLab][unitex] builds. Badges are powered by [shields.io](http://shields.io/) using a disk-cache layer.
 
-[![Nightly Status](http://unitex.univ-mlv.fr/v6/badge/nightly/latest.svg?subject=product.name&status=product.version.full)][nightly] [![Nightly Status](http://unitex.univ-mlv.fr/v6/badge/nightly/latest.svg)][nightly] 
+#### Nightly Status
+
+[![Nightly Status](http://unitex.univ-mlv.fr/v6/badge/nightly/latest.svg?subject=product.name&status=product.version.full)][nightly] [![Nightly Status](http://unitex.univ-mlv.fr/v6/badge/nightly/latest.svg)][nightly]
+
+#### Last Commit Status
+
+[![Last Commit Status](http://unitex.univ-mlv.fr/v6/badge/commit/latest.svg?subject=product.name&status=product.version.full)][commit] [![Last Commit Status](http://unitex.univ-mlv.fr/v6/badge/commit/latest.svg)][commit]
 
 ### Contributing
 
