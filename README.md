@@ -43,6 +43,6 @@ This program is licensed under the [GNU Lesser General Public License version 2.
 Copyright (C) 2014-2015 Université Paris-Est Marne-la-Vallée
 
 [unitex]: http://unitexgramlab.org
-[vinber]: http://http://unitex.univ-mlv.fr/v6
+[vinber]: http://unitex.univ-mlv.fr/v6
 [nightly]: http://unitex.univ-mlv.fr/v6/#bundle=nightly&q=latest
 [commit]: http://unitex.univ-mlv.fr/v6/#bundle=commit&q=latest
