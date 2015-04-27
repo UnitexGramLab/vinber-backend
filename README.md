@@ -21,11 +21,11 @@ The badges from [Vinber][vinber] shows the status of the [Unitex/GramLab][unitex
 
 #### Nightly Status
 
-[![Nightly Status](http://unitex.univ-mlv.fr/v6/badge/nightly/latest.png?subject=product.name&status=product.version.full)][nightly] [![Nightly Status](http://unitex.univ-mlv.fr/v6/badge/nightly/latest.png)][nightly]
+[![Nightly Release](http://unitex.univ-mlv.fr/v6/badge/nightly/latest.png?subject=product.name&status=product.version.full)][nightly] [![Nightly Status](http://unitex.univ-mlv.fr/v6/badge/nightly/latest.png)][nightly]
 
 #### Last Commit Status
 
-[![Last Commit Status](http://unitex.univ-mlv.fr/v6/badge/commit/latest.png?subject=product.name&status=product.version.full)][commit] [![Last Commit Status](http://unitex.univ-mlv.fr/v6/badge/commit/latest.png)][commit]
+[![Last Commit Release](http://unitex.univ-mlv.fr/v6/badge/commit/latest.png?subject=product.name&status=product.version.full)][commit] [![Last Commit Status](http://unitex.univ-mlv.fr/v6/badge/commit/latest.png)][commit]
 
 ### Contributing
 
