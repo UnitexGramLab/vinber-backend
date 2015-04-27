@@ -21,7 +21,7 @@ The badges from [Vinber][vinber] shows the status of the [Unitex/GramLab][unitex
 
 #### Nightly Status
 
-[![Nightly Release](http://unitex.univ-mlv.fr/v6/badge/nightly/latest.svg?subject=product.version&status=product.version.full)][nightly] [![Nightly Status](http://unitex.univ-mlv.fr/v6/badge/nightly/latest.svg?status=build.status)][nightly]
+[![Nightly Release](http://unitex.univ-mlv.fr/v6/badge/nightly/latest.svg?subject=product.name&status=product.version.full)][nightly] [![Nightly Status](http://unitex.univ-mlv.fr/v6/badge/nightly/latest.svg?status=build.status)][nightly]
 
 #### Last Commit Status
 
