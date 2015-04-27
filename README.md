@@ -21,11 +21,11 @@ The badges from [Vinber][vinber] shows the status of the [Unitex/GramLab][unitex
 
 #### Nightly Status
 
-[![Nightly Release](http://unitex.univ-mlv.fr/v6/badge/nightly/latest.png?subject=product.name&status=product.version.full)][nightly] [![Nightly Status](http://unitex.univ-mlv.fr/v6/badge/nightly/latest.png)][nightly]
+[![Nightly Release](http://unitex.univ-mlv.fr/v6/badge/nightly/latest.svg?subject=product.name&status=product.version.full)][nightly] [![Nightly Status](http://unitex.univ-mlv.fr/v6/badge/nightly/latest.svg)][nightly]
 
 #### Last Commit Status
 
-[![Last Commit Release](http://unitex.univ-mlv.fr/v6/badge/commit/latest.png?subject=product.name&status=product.version.full)][commit] [![Last Commit Status](http://unitex.univ-mlv.fr/v6/badge/commit/latest.png)][commit]
+[![Last Commit Release](http://unitex.univ-mlv.fr/v6/badge/commit/latest.svg?subject=product.name&status=product.version.full)][commit] [![Last Commit Status](http://unitex.univ-mlv.fr/v6/badge/commit/latest.svg)][commit]
 
 ### Contributing
 
@@ -42,7 +42,7 @@ This program is licensed under the [GNU Lesser General Public License version 2.
 
 Copyright (C) 2014-2015 Université Paris-Est Marne-la-Vallée
 
-[unitex]: http://unitexgramlab.org
-[vinber]: http://unitex.univ-mlv.fr/v6
+[unitex]:  http://unitexgramlab.org
+[vinber]:  http://unitex.univ-mlv.fr/v6
 [nightly]: http://unitex.univ-mlv.fr/v6/#bundle=nightly&q=latest
-[commit]: http://unitex.univ-mlv.fr/v6/#bundle=commit&q=latest
+[commit]:  http://unitex.univ-mlv.fr/v6/#bundle=commit&q=latest
