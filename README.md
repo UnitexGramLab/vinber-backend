@@ -27,7 +27,7 @@ Vinber support 3 kinds of interaction:
 
   - [Scheduled][nightly] to produce the nightly builds.
   - [Triggered][commit] on every commit to a [Unitex/GramLab repository][repos].
-  - On-Demand using a web form.
+  - [On-Demand][request] using a web form.
 
 ### Badges
 
@@ -58,8 +58,9 @@ This program is licensed under the [GNU Lesser General Public License version 2.
 
 Copyright (C) 2014-2015 Université Paris-Est Marne-la-Vallée
 
+[repos]:   https://github.com/unitexgramlab
 [unitex]:  http://unitexgramlab.org
 [vinber]:  http://unitex.univ-mlv.fr/v6
-[repos]:  https://github.com/UnitexGramLab/
 [nightly]: http://unitex.univ-mlv.fr/v6/#bundle=nightly&q=latest
 [commit]:  http://unitex.univ-mlv.fr/v6/#bundle=commit&q=latest
+[request]: http://unitex.univ-mlv.fr/v6/#bundle=nightly&action=rebuild
