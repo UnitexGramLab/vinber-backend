@@ -2,18 +2,32 @@
 
 > [Unitex/GramLab][unitex] is an open source, cross-platform, multilingual, lexicon- and grammar-based corpus processing suite
 
-Vinber is a lightweight continuous integration script used to build the [Unitex/GramLab][unitex] suite, including:
+Vinber is a lightweight [build automation service](http://en.wikipedia.org/wiki/Build_automation) (continuous integration + continuous delivery) used to produce the [Unitex/GramLab][unitex] releases, including:
 
-- Static website
-- Documentation (User's manual)
-- Linguistic packages
-- Integrate development environments (Classic and GramLab IDEs)
-- Core components
-- Tests (memory leaks, non-regression)
-- Windows Setup Installer
-- Source distribution package
+ - Creating documentation
+   - User's manual
+   - Release notes
+ - Compiling code
+   - Core Component
+   - Integrate Development Environments (Classic and GramLab)
+ - Running automated tests
+   - Memory leaks
+   - Non-regression
+ - Packaging binary code
+   - Source distribution package
+   - Linguistic packages
+   - Windows Setup Installer
+ - Deploying to production systems
+   - Releases page creation
+   - Static website upadate
 
-Vinber code is ShellCheck-compliant see http://www.shellcheck.net/about.html for information about how to run ShellCheck locally
+### Types of interaction
+
+Vinber support 3 kinds of interaction:
+
+  - [Scheduled][nightly] to produce a nightly build.
+  - [Triggered][commit] on every commit to an [Unitex/GramLab repository][repos].
+  - On-Demand using a web form.
 
 ### Badges
 
@@ -28,6 +42,8 @@ The badges from [Vinber][vinber] shows the status of the [Unitex/GramLab][unitex
 [![Last Commit Release](http://unitex.univ-mlv.fr/v6/badge/commit/latest.svg?subject=product.name&status=product.version.string)][commit] [![Last Commit Status](http://unitex.univ-mlv.fr/v6/badge/commit/latest.svg?status=build.status)][commit]
 
 ### Contributing
+
+Vinber code is ShellCheck-compliant see http://www.shellcheck.net/about.html for information about how to run ShellCheck locally.
 
 We welcome everyone to contribute to improve this project. Below are some of the
 things that you can do to contribute:
@@ -44,5 +60,6 @@ Copyright (C) 2014-2015 Université Paris-Est Marne-la-Vallée
 
 [unitex]:  http://unitexgramlab.org
 [vinber]:  http://unitex.univ-mlv.fr/v6
+[repos]:  https://github.com/UnitexGramLab/
 [nightly]: http://unitex.univ-mlv.fr/v6/#bundle=nightly&q=latest
 [commit]:  http://unitex.univ-mlv.fr/v6/#bundle=commit&q=latest
