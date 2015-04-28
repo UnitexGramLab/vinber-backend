@@ -25,8 +25,8 @@ Vinber is a lightweight [build automation service](http://en.wikipedia.org/wiki/
 
 Vinber support 3 kinds of interaction:
 
-  - [Scheduled][nightly] to produce nightly builds.
-  - [Triggered][commit] on every commit to the [Unitex/GramLab repositories][repos].
+  - [Scheduled][nightly] to produce nightly releases.
+  - [Triggered][commit] on every commit done to the [Unitex/GramLab repositories][repos].
   - <a href="http://unitex.univ-mlv.fr/v6/#bundle=nightly&action=rebuild" target="_blank">On-Demand Request</a> using a webform.
 
 ### Badges
