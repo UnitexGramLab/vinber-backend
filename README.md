@@ -17,8 +17,8 @@ Vinber is a lightweight [build automation service](http://en.wikipedia.org/wiki/
    - Source Distribution Package
    - Official Linguistic Packages
    - Windows Setup Installer
- - Deploying to production systems
-   - Releases page creation
+ - Deploying
+   - Releases page update
    - Static website update
 
 ### Types of interaction
