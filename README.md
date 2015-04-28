@@ -5,21 +5,21 @@
 Vinber is a lightweight [build automation service](http://en.wikipedia.org/wiki/Build_automation) (continuous integration + continuous delivery) used to produce the [Unitex/GramLab][unitex] releases, including:
 
  - Creating documentation
-   - User's manual
-   - Release notes
+   - User's Manual
+   - Release Notes
  - Compiling code
-   - Core Component
+   - Core Components
    - Integrate Development Environments (Classic and GramLab)
  - Running automated tests
    - Memory leaks
    - Non-regression
  - Packaging binary code
-   - Source distribution package
-   - Linguistic packages
+   - Source Distribution Package
+   - Official Linguistic Packages
    - Windows Setup Installer
  - Deploying to production systems
    - Releases page creation
-   - Static website upadate
+   - Static website update
 
 ### Types of interaction
 
