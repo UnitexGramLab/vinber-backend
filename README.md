@@ -27,7 +27,7 @@ Vinber support 3 kinds of interaction:
 
   - [Scheduled][nightly] to produce the nightly builds.
   - [Triggered][commit] on every commit to a [Unitex/GramLab repository][repos].
-  - [On-Demand][request] using a web form.
+  - <a href="http://unitex.univ-mlv.fr/v6/#bundle=nightly&action=rebuild" target="_blank">On-Demand</a> using a web form.
 
 ### Badges
 
