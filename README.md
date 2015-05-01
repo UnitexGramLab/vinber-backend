@@ -2,7 +2,7 @@
 
 > [Unitex/GramLab][unitex] is an open source, cross-platform, multilingual, lexicon- and grammar-based corpus processing suite
 
-Vinber is a lightweight [build automation service](http://en.wikipedia.org/wiki/Build_automation) (continuous integration + continuous delivery) used to produce the [Unitex/GramLab][unitex] project releases, including:
+Vinber is a lightweight [build automation](http://en.wikipedia.org/wiki/Build_automation) service (continuous integration + continuous delivery) used to produce the [Unitex/GramLab][unitex] project releases, including:
 
  - Creating documentation
    - User's Manual
