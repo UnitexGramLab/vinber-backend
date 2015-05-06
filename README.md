@@ -16,7 +16,7 @@ Vinber is a lightweight [build automation](http://en.wikipedia.org/wiki/Build_au
  - Packaging binary code
    - Source Distribution Package
    - Official Linguistic Packages
-   - <a href="https://github.com/UnitexGramLab/unitex-packaging-windows">Windows Setup Installer</a>
+   - <a href="https://github.com/UnitexGramLab/unitex-packaging-windows" target="_blank">Windows Setup Installer</a>
    - OS X Setup Installer (work-in-progress)
  - Deploying
    - Releases page update
