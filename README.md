@@ -36,7 +36,7 @@ A short guided tour about using the frontend is <a href="http://unitex.univ-mlv.
 
 ### Badges
 
-The badges from [Vinber][vinber] shows the status of the [Unitex/GramLab][unitex] builds. Badges are powered by [shields.io](http://shields.io/) using an intermediate processing and caching layer.
+The badges from [Vinber][vinber] shows the status of the [Unitex/GramLab][unitex] builds. Badges are powered by [shields.io](http://shields.io/) using an intermediate processing/caching layer.
 
 #### Nightly Status
 
