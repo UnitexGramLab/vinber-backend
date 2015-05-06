@@ -32,7 +32,7 @@ Vinber support 3 kinds of interaction:
 
 ### Badges
 
-The badges from [Vinber][vinber] shows the status of the [Unitex/GramLab][unitex] builds. Badges are powered by [shields.io](http://shields.io/) using a disk-cache layer.
+The badges from [Vinber][vinber] shows the status of the [Unitex/GramLab][unitex] builds. Badges are powered by [shields.io](http://shields.io/) using an intermediate processing and caching layer.
 
 #### Nightly Status
 
