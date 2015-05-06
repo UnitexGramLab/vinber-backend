@@ -30,6 +30,10 @@ Vinber support 3 kinds of interaction:
   - [Triggered][commit] on every commit done to the [Unitex/GramLab repositories][repos].
   - <a href="http://unitex.univ-mlv.fr/v6/#bundle=nightly&action=rebuild" target="_blank">On-Demand Request</a> using a webform.
 
+### Tutorial trip
+
+A short guided tour about using the frontend is <a href="http://unitex.univ-mlv.fr/v6/#bundle=nightly&q=latest&action=help" target="_blank">available here</a>.
+
 ### Badges
 
 The badges from [Vinber][vinber] shows the status of the [Unitex/GramLab][unitex] builds. Badges are powered by [shields.io](http://shields.io/) using an intermediate processing and caching layer.
@@ -65,3 +69,4 @@ Copyright (C) 2014-2015 Université Paris-Est Marne-la-Vallée
 [nightly]: http://unitex.univ-mlv.fr/v6/#bundle=nightly&q=latest
 [commit]:  http://unitex.univ-mlv.fr/v6/#bundle=commit&q=latest
 [request]: http://unitex.univ-mlv.fr/v6/#bundle=nightly&action=rebuild
+[tour]:    http://unitex.univ-mlv.fr/v6/#bundle=nightly&q=buils&action=help
