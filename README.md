@@ -13,7 +13,7 @@ Vinber is a lightweight [build automation](http://en.wikipedia.org/wiki/Build_au
  - Running automated tests
    - Memory leaks
    - Non-regression
- - Packaging binary code
+ - Packaging and signing binary code
    - Source Distribution Package
    - Official Linguistic Packages
    - <a href="https://github.com/UnitexGramLab/unitex-packaging-windows" target="_blank">Windows Setup Installer</a>
