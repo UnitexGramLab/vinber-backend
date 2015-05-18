@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# This is from https://github.com/caarlos0/shell-ci-build
+# @author  Carlos Becker
+# @license MIT
 set -eo pipefail
 [[ "${DEBUG:-}" ]] && set -x
 
