@@ -50,8 +50,7 @@ The badges from [Vinber][vinber] shows the status of the [Unitex/GramLab][unitex
 
 > Vinber code is ShellCheck-compliant. See http://www.shellcheck.net/about.html for information about how to run ShellCheck locally.
 
-We welcome everyone to contribute to improve this project. Below are some of the
-things that you can do to contribute:
+We welcome everyone to contribute to improve this project. Below are some of the things that you can do to contribute:
 
 -  [Fork us](https://github.com/UnitexGramLab/vinber-backend/fork) and [request a pull](https://github.com/UnitexGramLab/vinber-backend/pulls) to the [develop branch](https://github.com/UnitexGramLab/vinber-backend/tree/develop).
 -  Submit [bug reports or feature requests](https://github.com/UnitexGramLab/vinber-backend/issues)
