@@ -1,0 +1,17 @@
+# This snippet is from 
+# @source http://stackoverflow.com/a/987162/2042871
+# Ignore everything
+*
+
+# But not these files...
+!.gitignore
+!mo
+!vinber.sh
+!vinber.conf.in
+!vinber.commit.authors
+!README.md
+
+# Even if they are in subdirectories
+**/
+
+
