@@ -10,6 +10,9 @@
 !vinber.conf.in
 !vinber.commit.authors
 !README.md
+!vinber-check.sh
+!shellcheck-install.sh
+!.travis.yml
 
 # Even if they are in subdirectories
 **/
