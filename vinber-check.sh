@@ -41,7 +41,7 @@ check_all_executables() {
     [[ "$head" =~ .*ruby.* ]] && continue
     [[ "$head" =~ .*zsh.* ]] && continue
     [[ "$head" =~ ^#compdef.* ]] && continue
-    [[ "$head" =~ ^mo$ ]] && continue
+    [[ "$script" =~ ^./mo$ ]] && continue
     check "$script"
   done
 }
