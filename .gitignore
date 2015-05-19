@@ -6,13 +6,14 @@
 # But not these files...
 !.gitignore
 !mo
-!vinber.sh
-!vinber.conf.in
-!vinber.commit.authors
 !README.md
-!vinber-check.sh
 !shellcheck-install.sh
 !.travis.yml
+!vinber-check.sh
+!vinber.commit.authors
+!vinber.conf.in
+!vinber.deps
+!vinber.sh
 
 # Even if they are in subdirectories
 **/
