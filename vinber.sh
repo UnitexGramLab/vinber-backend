@@ -4677,7 +4677,6 @@ function jsonize_master_log_file() {
   
   # if no errors
   if [ $UNITEX_BUILD_FINISH_WITH_ERROR_COUNT -eq 0 ]; then
-    build_message_number="$UNITEX_BUILD_LOG_MESSAGE_COUNT"
     if [[ "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" != "$UNITEX_BUILD_NOT_DEFINED" ]]; then
        repository_name="$(get_vinber_repository_info    "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_REPOSITORY)"
        repository_url="$(get_vinber_repository_info     "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_REPOSITORY_URL)"
