@@ -252,7 +252,7 @@ UNITEX_BUILD_SEND_ZIPPED_LOG_WORKSPACE_ATTACHMENT=0
 #   FIXED  TO=(NONE)            CC=(NONE)
 # =============================================================================
 UNITEX_BUILD_DEVEL_LIST="unitex-devel@univ-mlv.fr"
-UNITEX_BUILD_NOTIFY_DEVEL_LIST=0
+UNITEX_BUILD_NOTIFY_DEVEL_LIST=1
 # =============================================================================
 UNITEX_BUILD_EXTRA_RECIPIENTS="$UNITEX_BUILD_NOT_DEFINED"
 UNITEX_BUILD_NOTIFY_EXTRA_RECIPIENTS=1
@@ -987,7 +987,7 @@ function stage_unitex-packaging-windows_dist() {
                                      sed -e "s:$UNITEX_BUILD_RELEASES_SETUP_WIN32_DIR/::" |\
                                      tee "$win32_setup_name.sha256"                 |\
                                      sed "s:\s\+.*$::")
-        log_info "Computing SHA256" "SHA256 hash ($win32_setup_sha256) saved to $win32_setup_name.sha256"
+        log_info "SHA256 Computed"  "SHA256 hash ($win32_setup_sha256) saved to $win32_setup_name.sha256"
       else
         log_warn "File not found" "File $win32_setup_name doesn't exist"
       fi
@@ -4325,7 +4325,7 @@ function notify_recipients_setup() {
   # test if we need to notify the last committer
   if [ $UNITEX_BUILD_NOTIFY_LAST_COMMITTER -eq 1 ]; then
      if [[ "$UNITEX_BUILD_LAST_FAILED_AUTHOR_EMAIL" == *"@"* ]]; then
-        LOCAL_EMAIL_TO="adrian@sehablalinux.com"
+        LOCAL_EMAIL_TO="$UNITEX_BUILD_LAST_FAILED_AUTHOR_EMAIL"
      fi          
   fi  
 
