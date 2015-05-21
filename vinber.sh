@@ -4336,10 +4336,15 @@ function notify_recipients_setup() {
      fi          
   fi
 
-  # In the worst case send a message to Vinber maintainer
-  if [ -z "$LOCAL_EMAIL_TO" -a $UNITEX_BUILD_NOTIFY_MAINTAINER -eq 1 ] ; then
-    LOCAL_EMAIL_TO="$UNITEX_BUILD_VINBER_MAINTAINER_EMAIL"
-    LOCAL_EMAIL_CC=""
+  if [ -z "$LOCAL_EMAIL_TO" ] ; then
+    if [ ! -z "LOCAL_EMAIL_CC" ] ; then
+      LOCAL_EMAIL_TO="$LOCAL_EMAIL_CC"
+      LOCAL_EMAIL_CC=""
+    elif [ $UNITEX_BUILD_NOTIFY_MAINTAINER -eq 1 ]; then
+       # In the worst case send a message to Vinber maintainer
+      LOCAL_EMAIL_TO="$UNITEX_BUILD_VINBER_MAINTAINER_EMAIL"
+      LOCAL_EMAIL_CC=""
+    fi  
   fi
 
   log_debug "Recipients" "UNITEX_BUILD_DEVEL_LIST=$(anonymize_mail_addresses "$UNITEX_BUILD_DEVEL_LIST")"
