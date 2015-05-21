@@ -1248,7 +1248,7 @@ function stage_unitex_lingua_check_for_updates() {
                                   sed -e "s:$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip:$lang.zip:"  |\
                                   tee "$UNITEX_BUILD_RELEASES_LING_DIR/$lang.sha256"               |\
                                   sed "s:\s\+.*$::")
-        log_info "Computing SHA256" "SHA256 hash ($ling_sha256) saved to $lang.sha256"
+        log_info "SHA256 Computed" "SHA256 hash ($ling_sha256) saved to $lang.sha256"
 
         # replace the existing language directory, if any, by this new one
         rm -rf "${UNITEXDIR:?}/$lang"
@@ -2703,7 +2703,7 @@ function create_zip() {
                           sed -e "s:$ZIP_FILE:$ZIP_FILENAME:"    |\
                           tee "$ZIP_PATH/$ZIP_FILENAME.sha256"   |\
                           sed "s:\s\+.*$::")
-    log_info "Computing SHA256" "SHA256 hash ($zip_sha256) saved to $ZIP_FILENAME.sha256"
+    log_info "SHA256 Computed" "SHA256 hash ($zip_sha256) saved to $ZIP_FILENAME.sha256"
   else
     log_warn "File not found" "File $ZIP_FILE doesn't exist"
   fi
