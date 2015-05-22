@@ -4338,7 +4338,7 @@ function notify_recipients_setup() {
 
   if [ -z "$LOCAL_EMAIL_TO" ] ; then
     if [ ! -z "LOCAL_EMAIL_CC" ] ; then
-      LOCAL_EMAIL_TO="$LOCAL_EMAIL_CC"
+      LOCAL_EMAIL_TO="$UNITEX_BUILD_DEVEL_LIST"
       LOCAL_EMAIL_CC=""
     elif [ $UNITEX_BUILD_NOTIFY_MAINTAINER -eq 1 ]; then
        # In the worst case send a message to Vinber maintainer
