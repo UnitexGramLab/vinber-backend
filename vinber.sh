@@ -2878,7 +2878,7 @@ cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
 }
 //-->
 </script>
-<p><a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_VINBER_HOME_NAME/#bundle=$UNITEX_BUILD_BUNDLE_NAME&amp;q=latest"><img alt="${UNITEX_BUILD_BUNDLE_NAME^} Release" src="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_VINBER_HOME_NAME/badge/$UNITEX_BUILD_BUNDLE_NAME/latest.svg?subject=product.name&amp;status=product.version.string" style="max-width:100%;"></a> <a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_VINBER_HOME_NAME/#bundle=$UNITEX_BUILD_BUNDLE_NAME&amp;q=latest"><img alt="${UNITEX_BUILD_BUNDLE_NAME^} Status" src="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_VINBER_HOME_NAME/badge/$UNITEX_BUILD_BUNDLE_NAME/latest.svg?status=build.status" style="max-width:100%;"></a></p>
+<p><a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_VINBER_HOME_NAME/#bundle=$UNITEX_BUILD_BUNDLE_NAME&amp;q=$UNITEX_BUILD_LOG_NAME"><img alt="${UNITEX_BUILD_BUNDLE_NAME^} Release" src="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_VINBER_HOME_NAME/badge/$UNITEX_BUILD_BUNDLE_NAME/$UNITEX_BUILD_LOG_NAME.svg?subject=product.name&amp;status=product.version.string" style="max-width:100%;"></a> <a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_VINBER_HOME_NAME/#bundle=$UNITEX_BUILD_BUNDLE_NAME&amp;q=$UNITEX_BUILD_LOG_NAME"><img alt="${UNITEX_BUILD_BUNDLE_NAME^} Status" src="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_VINBER_HOME_NAME/badge/$UNITEX_BUILD_BUNDLE_NAME/$UNITEX_BUILD_LOG_NAME.svg?status=build.status" style="max-width:100%;"></a></p>
 <p>
 In order to coordinate the cooperative development, $UNITEX_PRETTYAPPNAME programs
 and resources are now maintained on a Version Control System. This page is automatically regenerated,
