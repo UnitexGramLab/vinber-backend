@@ -19,7 +19,7 @@ Vinber is a lightweight [build automation](http://en.wikipedia.org/wiki/Build_au
    - <a href="http://unitex.univ-mlv.fr/releases/latest-beta/win32/" target="_blank">Windows Setup Installer</a>
    - OS X Setup Installer (work-in-progress)
  - Deploying
-   - <a href="http://unitex.univ-mlv.fr/releases/" target="_blank">Releases page update</a>
+   - Releases page update: <a href="http://www-igm.univ-mlv.fr/~unitex/index.php?page=3&html=latest-beta.html" target="_blank">Old-style page</a>, <a href="http://unitex.univ-mlv.fr/releases" target="_blank">New page</a>
    - <a href="http://unitex.univ-mlv.fr" target="_blank">Static website update</a>
 
 ### Types of interaction
