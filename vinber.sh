@@ -862,7 +862,7 @@ function stage_unitex_doc_dist() {
       cp "$UNITEX_BUILD_REPOSITORY_USERMANUAL_LOCAL_PATH/UnitexManual_EN_utf8.pdf" "$UNITEX_BUILD_RELEASES_MAN_DIR/$UNITEX_PACKAGE_MAN_PREFIX-en.pdf"
       
       # UnitexManual_FR_utf8.pdf to releases/man/Unitex-GramLab-3.1beta-usermanual-fr.pdf
-      log_info "Copying" "UnitexManual_EN_utf8.pdf to $UNITEX_BUILD_RELEASES_MAN_DIR/$UNITEX_PACKAGE_MAN_PREFIX-fr.pdf"
+      log_info "Copying" "UnitexManual_FR_utf8.pdf to $UNITEX_BUILD_RELEASES_MAN_DIR/$UNITEX_PACKAGE_MAN_PREFIX-fr.pdf"
       cp "$UNITEX_BUILD_REPOSITORY_USERMANUAL_LOCAL_PATH/UnitexManual_FR_utf8.pdf" "$UNITEX_BUILD_RELEASES_MAN_DIR/$UNITEX_PACKAGE_MAN_PREFIX-fr.pdf"     
 
       log_info "Dist prepared" "Documentation distribution is now prepared"
