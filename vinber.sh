@@ -541,7 +541,7 @@ function log() {
 # Attention this function doesn't handle unicode escapes
 function json_escape() {
     local json_string="$*"
-    local -r json_escaped_string=$(echo -n "$json_string" |\
+    local -r json_escaped_string=$(echo -nE "$json_string" |\
                                 sed "s:\([\"\f\n\r\t\v\\]\):\\\\\1:g")
     echo "$json_escaped_string"  
 }
