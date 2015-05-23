@@ -4313,37 +4313,46 @@ function notify_recipients_setup() {
 
   local -r UNITEX_BUILD_LAST_FAILED_AUTHOR_EMAIL="$(get_vinber_repository_info "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" $VINBER_BUILD_AUTHOR_EMAIL)";
 
-  # test if we need to notify the devel list
-  if [ $UNITEX_BUILD_NOTIFY_DEVEL_LIST -eq 1 ]; then
-     if [[   "$UNITEX_BUILD_EXTRA_RECIPIENTS"          != *"$UNITEX_BUILD_DEVEL_LIST"* \
-          && "$UNITEX_BUILD_LAST_FAILED_AUTHOR_EMAIL"  != *"$UNITEX_BUILD_DEVEL_LIST"* \
-          && "$UNITEX_BUILD_DEVEL_LIST"                == *"@"* ]]; then
-          LOCAL_EMAIL_CC="-c $UNITEX_BUILD_DEVEL_LIST"
-     fi          
-  fi
-
   # test if we need to notify the last committer
   if [ $UNITEX_BUILD_NOTIFY_LAST_COMMITTER -eq 1 ]; then
      if [[ "$UNITEX_BUILD_LAST_FAILED_AUTHOR_EMAIL" == *"@"* ]]; then
-        LOCAL_EMAIL_TO="$UNITEX_BUILD_LAST_FAILED_AUTHOR_EMAIL"
+        if [ -z "$LOCAL_EMAIL_TO" ] ; then
+          LOCAL_EMAIL_TO="$UNITEX_BUILD_LAST_FAILED_AUTHOR_EMAIL"
+        else
+          LOCAL_EMAIL_TO="$LOCAL_EMAIL_TO,$UNITEX_BUILD_LAST_FAILED_AUTHOR_EMAIL"   
+        fi
      fi          
   fi  
 
   # test if we need to notify the extra recipients
   if [ $UNITEX_BUILD_NOTIFY_EXTRA_RECIPIENTS -eq 1 ]; then
      if [[ "$UNITEX_BUILD_EXTRA_RECIPIENTS" == *"@"* ]]; then
-        LOCAL_EMAIL_TO="$UNITEX_BUILD_EXTRA_RECIPIENTS"
+        if [ -z "$LOCAL_EMAIL_TO" ] ; then
+          LOCAL_EMAIL_TO="$UNITEX_BUILD_EXTRA_RECIPIENTS"
+        else
+          LOCAL_EMAIL_TO="$LOCAL_EMAIL_TO,$UNITEX_BUILD_EXTRA_RECIPIENTS"   
+        fi    
      fi          
   fi
 
-  if [ -z "$LOCAL_EMAIL_TO" ] ; then
-    if [ ! -z "LOCAL_EMAIL_CC" ] ; then
-      LOCAL_EMAIL_TO="$UNITEX_BUILD_DEVEL_LIST"
-      LOCAL_EMAIL_CC=""
-    elif [ $UNITEX_BUILD_NOTIFY_MAINTAINER -eq 1 ]; then
-       # In the worst case send a message to Vinber maintainer
-      LOCAL_EMAIL_TO="$UNITEX_BUILD_VINBER_MAINTAINER_EMAIL"
-      LOCAL_EMAIL_CC=""
+  # test if we need to notify the devel list
+  if [ $UNITEX_BUILD_NOTIFY_DEVEL_LIST -eq 1 ]; then
+     if [[   "$UNITEX_BUILD_EXTRA_RECIPIENTS"          != *"$UNITEX_BUILD_DEVEL_LIST"* \
+          && "$UNITEX_BUILD_LAST_FAILED_AUTHOR_EMAIL"  != *"$UNITEX_BUILD_DEVEL_LIST"* \
+          && "$UNITEX_BUILD_DEVEL_LIST"                == *"@"* ]]; then
+        if [ -z "$LOCAL_EMAIL_TO" ] ; then
+          LOCAL_EMAIL_TO="$UNITEX_BUILD_DEVEL_LIST"
+        else
+          LOCAL_EMAIL_CC="-c $UNITEX_BUILD_DEVEL_LIST"
+        fi
+     fi          
+  fi
+
+  # In the worst case send a message to Vinber's maintainer
+  if [ -z "$LOCAL_EMAIL_TO" -a -z "$LOCAL_EMAIL_CC" ]; then
+    if [ $UNITEX_BUILD_NOTIFY_MAINTAINER -eq 1 ]; then
+        LOCAL_EMAIL_TO="$UNITEX_BUILD_VINBER_MAINTAINER_EMAIL"
+        LOCAL_EMAIL_CC=""
     fi  
   fi
 
