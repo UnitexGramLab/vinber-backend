@@ -2902,7 +2902,7 @@ if (cookiesEnabled()==true) {
 </script>
 </p>
 <br/>
-<p>Having problems? Old beta download page still <a href="http://www-igm.univ-mlv.fr/~unitex/index.php?page=3&html=beta.html">available here</a>. Looking forward for more ? A new and improved download page is <a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_RELEASES_HOME_NAME">available here</a>!</p>
+<p>Having problems? Old beta download page still <a href="http://www-igm.univ-mlv.fr/~unitex/index.php?page=3&html=beta.html">available here</a>. Looking forward for more? An alternative releases download page is <a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_RELEASES_HOME_NAME">available here</a>!</p>
 __END__
 
 # shellcheck disable=SC2945
