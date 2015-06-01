@@ -3465,14 +3465,20 @@ function setup_path_environment() {
 
 # =============================================================================
 function setup_user_environment() {
-  UNITEX_BUILD_CURRENT_USER=$(logname)
+  # this is from @source http://stackoverflow.com/a/11052171/2042871  
+  if logname &> /dev/null ; then 
+   UNITEX_BUILD_CURRENT_USER=$(logname)
+  else 
+   UNITEX_BUILD_CURRENT_USER=$( id | cut -d "(" -f 2 | cut -d ")" -f1 )
+  fi
+
   UNITEX_BUILD_WEB_GROUP="web"
   
   # test if user is member of the web group
   UNITEX_BUILD_CHANGE_RIGHTS=1
   if [ ! -z "$UNITEX_BUILD_CURRENT_USER" ]; then
    id -n -G "$UNITEX_BUILD_CURRENT_USER" | grep -q "$UNITEX_BUILD_WEB_GROUP" || {
-    UNITEX_BUILD_CHANGE_RIGHTS=0
+     UNITEX_BUILD_CHANGE_RIGHTS=0
    }
   fi
 }
