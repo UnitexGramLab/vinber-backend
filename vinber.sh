@@ -2589,12 +2589,13 @@ function stage_unitex_core_dist() {
       cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/build/ "$CPPDIR/"
       rm -f "$CPPDIR"/build/*.o
       cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/logger          "$CPPDIR/"
+      cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/vendor          "$CPPDIR/"
       cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/UnitexLibAndJni "$CPPDIR/"
       cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/include_tre     "$CPPDIR/"
       cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/win32vs2008     "$CPPDIR/"
       cp    "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/tre-*.tar.gz    "$CPPDIR/"
+      cp    "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/yaml-*.tar.gz   "$CPPDIR/"
       cp    "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/Licenses/*.txt  "$APPDIR/"
-
       # finally, we create the README.txt
       stage_unitex_core_create_readme "$UNITEXDIR" "README.txt"
       
