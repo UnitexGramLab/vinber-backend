@@ -117,7 +117,7 @@ UNITEX_BUG_URL="$UNITEX_HOMEPAGE_URL/index.php?page=6"
 #!UNITEX_LGPL_URL="http://www.gnu.org/licenses/lgpl.html"
 UNITEX_FORUM_URL="http://forum.$UNITEX_DOMAIN_NAME"
 UNITEX_DOCS_URL="http://docs.$UNITEX_DOMAIN_NAME"
-UNITEX_GOVERNANCE_URL="$UNITEX_SOURCE_URL/governance"
+UNITEX_GOVERNANCE_URL="$UNITEX_SOURCE_URL/unitex-governance"
 UNITEX_BUILD_DEPLOYMENT_DESTINATION="/mnt/pantheon/sdb1/unitex/W3" # Website local path
 UNITEX_WEBSITE_URL="http://unitex.univ-mlv.fr"           # Website URL
 # =============================================================================
