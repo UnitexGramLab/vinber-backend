@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # =============================================================================
 # Vinber: The Unitex/GramLab Build Automation Service
+# https://github.com/UnitexGramLab/vinber-backend
 # =============================================================================
 # Copyright (C) 2015 Université Paris-Est Marne-la-Vallée <unitex@univ-mlv.fr>
 # 
@@ -23,16 +24,15 @@
 # =============================================================================
 # Vinber is a lightweight build automation service (continuous integration +
 # continuous delivery) used to produce the Unitex/GramLab project releases.
-# @see https://github.com/UnitexGramLab/vinber-backend for more information
 # =============================================================================
-# Vinber code is ShellCheck-compliant @see http://www.shellcheck.net/about.html
+# Vinber code must be ShellCheck-compliant @see http://www.shellcheck.net/about.html
 # for information about how to run ShellCheck locally
 # e.g shellcheck -s bash vinber.sh
 # =============================================================================
 # This program is loosely based on a previous work by Sebastien Paumier 
 # (paumier). The Unitex creator and former project maintainer.
 # =============================================================================
-UNITEX_BUILD_VINBER_VERSION="1.5.0"
+UNITEX_BUILD_VINBER_VERSION="1.6.0"
 UNITEX_BUILD_VINBER_CODENAME="Vinber"
 UNITEX_BUILD_VINBER_DESCRIPTION="Unitex/GramLab Build Automation Service"
 UNITEX_BUILD_VINBER_REPOSITORY_URL="https://github.com/UnitexGramLab/vinber-backend"
@@ -122,7 +122,8 @@ UNITEX_BUILD_DEPLOYMENT_DESTINATION="/mnt/pantheon/sdb1/unitex/W3" # Website loc
 UNITEX_WEBSITE_URL="http://unitex.univ-mlv.fr"           # Website URL
 # =============================================================================
 UNITEX_BUILD_SVN_LOG_LIMIT=100
-UNITEX_BUILD_MINGW_COMMAND_PREFIX="mingw32-"
+UNITEX_BUILD_MINGW32_COMMAND_PREFIX="mingw32-"
+UNITEX_BUILD_MINGW64_COMMAND_PREFIX="mingw32-"
 # =============================================================================
 UNITEX_BUILD_VINBER_BACKEND_UPDATE=0
 UNITEX_BUILD_DOCS_UPDATE=0
@@ -320,6 +321,11 @@ UNITEX_BUILD_RELEASES_LING_HOME_NAME="lingua"
 UNITEX_BUILD_RELEASES_CHANGES_HOME_NAME="changes"
 UNITEX_BUILD_RELEASES_MAN_HOME_NAME="man"
 UNITEX_BUILD_RELEASES_WIN32_HOME_NAME="win32"
+UNITEX_BUILD_RELEASES_WIN64_HOME_NAME="win64"
+UNITEX_BUILD_RELEASES_OSX_HOME_NAME="osx"
+UNITEX_BUILD_RELEASES_LINUX_I686_HOME_NAME="linux-i686"
+UNITEX_BUILD_RELEASES_LINUX_X86_64_HOME_NAME="linux-x86_64"
+UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME="platform"
 # =============================================================================
 UNITEX_BUILD_PACKAGE_APP_SUFFIX="-application"
 UNITEX_BUILD_PACKAGE_SOURCE_SUFFIX="-source"
@@ -327,6 +333,10 @@ UNITEX_BUILD_PACKAGE_SOURCE_DISTRIBUTION_SUFFIX="-source-distribution"
 UNITEX_BUILD_PACKAGE_MAN_SUFFIX="-usermanual"
 UNITEX_BUILD_PACKAGE_SETUP_SUFFIX="-setup"
 UNITEX_BUILD_PACKAGE_SETUP_WIN32_TAG="_$UNITEX_BUILD_RELEASES_WIN32_HOME_NAME"
+UNITEX_BUILD_PACKAGE_SETUP_WIN64_TAG="_$UNITEX_BUILD_RELEASES_WIN64_HOME_NAME"
+UNITEX_BUILD_PACKAGE_OSX_SUFFIX="-$UNITEX_BUILD_RELEASES_OSX_HOME_NAME"
+UNITEX_BUILD_PACKAGE_LINUX_I686_SUFFIX="-$UNITEX_BUILD_RELEASES_LINUX_I686_HOME_NAME"
+UNITEX_BUILD_PACKAGE_LINUX_X86_64_SUFFIX="-$UNITEX_BUILD_RELEASES_LINUX_X86_64_HOME_NAME"
 # =============================================================================
 UNITEX_RELEASES_LATEST_BETA="$UNITEX_RELEASES_URL/$UNITEX_BUILD_LATEST_NAME-beta"
 UNITEX_RELEASES_LATEST_BETA_WIN32_URL="$UNITEX_RELEASES_LATEST_BETA/$UNITEX_BUILD_RELEASES_WIN32_HOME_NAME"
@@ -502,8 +512,8 @@ function log() {
       # 1. UNITEX_BUILD_DEPLOYMENT_DESTINATION(/mnt/pantheon/sdb1/unitex/W3)
       #    UNITEX_WEBSITE_URL(http://unitex.univ-mlv.fr)
       #
-      # 2. UNITEX_BUILD_RELEASES_DIR(/mnt/pantheon/sdb1/unitex/compile/web)
-      #    UNITEX_WEBSITE_URL(http://unitex.univ-mlv.fr)
+      # 2. UNITEX_BUILD_RELEASES_DIR(/mnt/pantheon/unitex/compile/build/Unitex-GramLab/nightly/releases)
+      #    UNITEX_WEBSITE_URL(http://unitex.univ-mlv.fr/build/nightly/releases)
       #
       # 3. UNITEX_BUILD_LOG_WORKSPACE(/mnt/pantheon/unitex/compile/v6/bundle/nightly/build/2015-04-06-21-34-48)
       #    ""
@@ -518,7 +528,7 @@ function log() {
        printf "$UNITEX_BUILD_LOG_FORMAT" "$2" "$UNITEX_BUILD_CURRENT_STAGE"\
               "$3" "$4"
       } | sed -e "s|$UNITEX_BUILD_DEPLOYMENT_DESTINATION|$UNITEX_WEBSITE_URL|g" \
-        | sed -e "s|$UNITEX_BUILD_RELEASES_BASEDIR|$UNITEX_WEBSITE_URL/$UNITEX_BUILD_RELEASES_HOME_NAME|g"   \
+        | sed -e "s|$UNITEX_BUILD_RELEASES_BASEDIR|$UNITEX_WEBSITE_URL/$UNITEX_BUILD_VINBER_BUILD_HOME_NAME/$UNITEX_BUILD_BUNDLE_NAME/$UNITEX_BUILD_RELEASES_HOME_NAME|g"   \
         | sed -e "s|$UNITEX_BUILD_LOG_WORKSPACE/||g" \
         | sed -e "s|$UNITEX_BUILD_LOGGER_PATH|$UNITEX_BUILD_LOGGER_WEB_HOME|g" \
         | sed -e "s|$UNITEX_BUILD_BASEDIR/||g" \
@@ -568,7 +578,7 @@ function json_printf() {
   fi  
 
   message_description=$(json_escape "$(echo -n "$message_description" |\
-        sed -e "s|$UNITEX_BUILD_DEPLOYMENT_DESTINATION|$UNITEX_WEBSITE_URL|g ; s|$UNITEX_BUILD_RELEASES_BASEDIR|$UNITEX_WEBSITE_URL/$UNITEX_BUILD_RELEASES_HOME_NAME|g ; s|$UNITEX_BUILD_LOG_WORKSPACE/||g ; s|$UNITEX_BUILD_LOGGER_PATH|$UNITEX_BUILD_LOGGER_WEB_HOME|g ; s|$UNITEX_BUILD_BASEDIR/||g"\
+        sed -e "s|$UNITEX_BUILD_DEPLOYMENT_DESTINATION|$UNITEX_WEBSITE_URL|g ; s|$UNITEX_BUILD_RELEASES_BASEDIR|$UNITEX_WEBSITE_URL/$UNITEX_BUILD_VINBER_BUILD_HOME_NAME/$UNITEX_BUILD_BUNDLE_NAME/$UNITEX_BUILD_RELEASES_HOME_NAME|g ; s|$UNITEX_BUILD_LOG_WORKSPACE/||g ; s|$UNITEX_BUILD_LOGGER_PATH|$UNITEX_BUILD_LOGGER_WEB_HOME|g ; s|$UNITEX_BUILD_BASEDIR/||g"\
         )")
 
   (echo -e "        {\n"                                               \
@@ -850,12 +860,12 @@ function stage_unitex_doc_dist() {
       log_info "Preparing dist" "Documentation distribution is being prepared..."
       
       # copy UnitexManual_EN_utf8.pdf to App/manual/en
-      mkdir -p "$MANUALDIR/en"
-      cp "$UNITEX_BUILD_REPOSITORY_USERMANUAL_LOCAL_PATH/UnitexManual_EN_utf8.pdf" "$MANUALDIR/en/UnitexManual.pdf"
+      mkdir -p "$UNITEX_BUILD_RELEASE_APP_MANUAL_DIR/en"
+      cp "$UNITEX_BUILD_REPOSITORY_USERMANUAL_LOCAL_PATH/UnitexManual_EN_utf8.pdf" "$UNITEX_BUILD_RELEASE_APP_MANUAL_DIR/en/UnitexManual.pdf"
 
       # copy UnitexManual_FR_utf8.pdf to App/manual/fr
-      mkdir -p "$MANUALDIR/fr"
-      cp "$UNITEX_BUILD_REPOSITORY_USERMANUAL_LOCAL_PATH/UnitexManual_FR_utf8.pdf" "$MANUALDIR/fr/ManuelUnitex.pdf"
+      mkdir -p "$UNITEX_BUILD_RELEASE_APP_MANUAL_DIR/fr"
+      cp "$UNITEX_BUILD_REPOSITORY_USERMANUAL_LOCAL_PATH/UnitexManual_FR_utf8.pdf" "$UNITEX_BUILD_RELEASE_APP_MANUAL_DIR/fr/ManuelUnitex.pdf"
 
       # UnitexManual_EN_utf8.pdfto releases/man/Unitex-GramLab-3.1beta-usermanual-en.pdf
       log_info "Copying" "UnitexManual_EN_utf8.pdf to $UNITEX_BUILD_RELEASES_MAN_DIR/$UNITEX_PACKAGE_MAN_PREFIX-en.pdf"
@@ -948,7 +958,7 @@ function stage_unitex_doc() {
 # =============================================================================
 # 
 # =============================================================================
-function stage_unitex-packaging-windows_checkout () {
+function stage_unitex_packaging_windows_checkout () {
   push_directory "$UNITEX_BUILD_SOURCE_DIR"
 
   git_clone_pull   "" \
@@ -962,12 +972,12 @@ function stage_unitex-packaging-windows_checkout () {
   echo "${PACKAGING_GIT_CLONE_DETAILS[2]}" > "$UNITEX_BUILD_TIMESTAMP_DIR/$UNITEX_BUILD_REPOSITORY_PACK_NAME.windows.current"
 
   pop_directory            
-}  # stage_unitex-packaging-windows_checkout ()
+}  # stage_unitex_packaging_windows_checkout ()
 
 # =============================================================================
 # 
 # =============================================================================
-function stage_unitex-packaging-windows_dist() {
+function stage_unitex_packaging_windows_dist() {
   push_stage "PackWin"
   push_directory "$UNITEX_BUILD_RELEASES_DIR"
 
@@ -976,21 +986,10 @@ function stage_unitex-packaging-windows_dist() {
     if [ $UNITEX_BUILD_PACK_UPDATE     -ne 0 -a \
          $UNITEX_BUILD_PACK_HAS_ERRORS -eq 0 ]; then
       UNITEX_BUILD_PACK_DEPLOYMENT=1
-      # Win32 SHA256
-      local -r win32_setup_name="$UNITEX_BUILD_RELEASES_SETUP_WIN32_DIR/$UNITEX_PACKAGE_WIN32_PREFIX.exe"
       log_info "Preparing dist"   "Win32 setup distribution is being prepared..."
 
-      if [ -e "$win32_setup_name" ]; then
-        # Calculate the SHA256 hash of the binary installer      
-        log_info "Computing SHA256" "Computing the SHA256 of $win32_setup_name"
-        local -r win32_setup_sha256=$(sha256sum "$win32_setup_name"                 |\
-                                     sed -e "s:$UNITEX_BUILD_RELEASES_SETUP_WIN32_DIR/::" |\
-                                     tee "$win32_setup_name.sha256"                 |\
-                                     sed "s:\s\+.*$::")
-        log_info "SHA256 Computed"  "SHA256 hash ($win32_setup_sha256) saved to $win32_setup_name.sha256"
-      else
-        log_warn "File not found" "File $win32_setup_name doesn't exist"
-      fi
+      # Win32 distribution package checksum
+      calculate_checksum "$UNITEX_BUILD_RELEASES_SETUP_WIN32_DIR/$UNITEX_PACKAGE_WIN32_PREFIX.exe" "$UNITEX_BUILD_RELEASES_SETUP_WIN32_DIR"
 
       log_info "Dist prepared"    "Win32 setup distribution is now prepared"
     fi
@@ -1005,13 +1004,13 @@ function stage_unitex-packaging-windows_dist() {
 # =============================================================================
 # 
 # =============================================================================
-# stage_unitex-packaging-windows
-function stage_unitex-packaging-windows() {
+# stage_unitex_packaging_windows
+function stage_unitex_packaging_windows() {
   push_stage "PackWin"
   push_directory "$UNITEX_BUILD_SOURCE_DIR"
 
   # 1. Packaging checkout
-  stage_unitex-packaging-windows_checkout
+  stage_unitex_packaging_windows_checkout
 
   # 2. Packaging check for updates
   check_for_updates UNITEX_BUILD_PACK_UPDATE "$UNITEX_BUILD_REPOSITORY_PACK_NAME.windows"  \
@@ -1029,12 +1028,13 @@ function stage_unitex-packaging-windows() {
   # shellcheck disable=SC2086
   if [  $UNITEX_BUILD_ISSUES_BEFORE_PACKAGING_WINDOWS_MAKE -eq 0 ]; then
     stage_unitex_packaging_make_installer_win32
+    #stage_unitex_packaging_make_installer_win64
   else
     log_warn "Compilation skipped" "Some issues prevent to compile the Windows setup installer"
   fi
 
   # 4. Distribute windows setup
-  stage_unitex-packaging-windows_dist
+  stage_unitex_packaging_windows_dist
 
   pop_directory
   pop_build_stage      
@@ -1043,7 +1043,7 @@ function stage_unitex-packaging-windows() {
 # =============================================================================
 # 
 # =============================================================================
-function stage_unitex-packaging-source_dist() {
+function stage_unitex_packaging_source_dist() {
   push_stage "PackSrc"
   push_directory "$UNITEX_BUILD_RELEASES_DIR"
 
@@ -1061,12 +1061,12 @@ function stage_unitex-packaging-source_dist() {
   
   pop_directory
   pop_build_stage
-}  # stage_unitex-packaging-source_dist
+}  # stage_unitex_packaging_source_dist
 
 # =============================================================================
 # 
 # =============================================================================
-function stage_unitex_pack_source_distribution() {
+function stage_unitex_pack_make_source_distribution() {
   push_stage "PackSrc"
   push_directory "$UNITEX_BUILD_DIST_BASEDIR"
 
@@ -1081,12 +1081,12 @@ function stage_unitex_pack_source_distribution() {
         UNITEX_BUILD_PACK_HAS_ERRORS=1
     }
 
-    create_zip "$UNITEXDIR" "$UNITEX_BUILD_RELEASES_SOURCE_DIR" \
+    create_zip "$UNITEX_BUILD_RELEASE_DIR" "$UNITEX_BUILD_RELEASES_SOURCE_DIR" \
                "$UNITEX_PACKAGE_SRC_PREFIX.zip" "Src" "-x *.svn*" || {
         UNITEX_BUILD_PACK_HAS_ERRORS=1
     }
 
-    create_zip "$UNITEXDIR" "$UNITEX_BUILD_RELEASES_SOURCE_DIR" \
+    create_zip "$UNITEX_BUILD_RELEASE_DIR" "$UNITEX_BUILD_RELEASES_SOURCE_DIR" \
                "$UNITEX_PACKAGE_APP_PREFIX.zip" "App" "-x *.svn*" || {
         UNITEX_BUILD_PACK_HAS_ERRORS=1
     }
@@ -1112,8 +1112,8 @@ function stage_unitex_pack_source_distribution() {
 # =============================================================================
 # 
 # =============================================================================
-# stage_unitex-packaging-source
-function stage_unitex-packaging-source() {
+# stage_unitex_packaging_source
+function stage_unitex_packaging_source() {
   push_stage "PackSrc"
   push_directory "$UNITEX_BUILD_DIST_BASEDIR"
 
@@ -1139,17 +1139,326 @@ function stage_unitex-packaging-source() {
   # 3. Windows packaging make
   # shellcheck disable=SC2086
   if [  $UNITEX_BUILD_ISSUES_BEFORE_PACKAGING_SOURCE_DISTRIBUTION -eq 0 ]; then
-    stage_unitex_pack_source_distribution
+    stage_unitex_pack_make_source_distribution
   else
     log_warn "Packing skipped" "Some issues prevent to pack the source distribution"
   fi
 
   # 4. source distribution
-  stage_unitex-packaging-source_dist
+  stage_unitex_packaging_source_dist
 
   pop_directory
   pop_build_stage
-}  # stage_unitex-packaging-source
+}  # stage_unitex_packaging_source
+
+# # =============================================================================
+# # 
+# # =============================================================================
+# # stage_unitex_packaging_linux_x86_64
+# function stage_unitex_packaging_linux_x86_64() {
+#   push_stage "PackLinux64"
+#   push_directory "$UNITEX_BUILD_DIST_BASEDIR"
+
+#   local packaging_linux_x86_64_timestamp
+#   if [ -e "$UNITEX_BUILD_RELEASES_LINUX_X86_64_DIR/$UNITEX_PACKAGE_LINUX_X86_64_PREFIX.run" ]; then
+#     packaging_linux_x86_64_timestamp=$(stat -c %y "$UNITEX_BUILD_RELEASES_LINUX_X86_64_DIR/$UNITEX_PACKAGE_LINUX_X86_64_PREFIX.run")
+#   fi
+
+#   # 1. Save linux_x86_64 distribution package last date changed
+#   echo "$packaging_linux_x86_64_timestamp" > "$UNITEX_BUILD_TIMESTAMP_DIR/$UNITEX_BUILD_REPOSITORY_PACK_NAME$UNITEX_BUILD_PACKAGE_LINUX_X86_64_SUFFIX.current" 
+
+#   # 2. Check for linux_x86_64 distribution package updates
+#   check_for_updates UNITEX_BUILD_PACK_UPDATE "$UNITEX_BUILD_REPOSITORY_PACK_NAME$UNITEX_BUILD_PACKAGE_LINUX_X86_64_SUFFIX"  \
+#                     "$UNITEX_BUILD_DOCS_UPDATE"                   \
+#                     "$UNITEX_BUILD_LING_UPDATE"                   \
+#                     "$UNITEX_BUILD_CLASSIC_IDE_UPDATE"            \
+#                     "$UNITEX_BUILD_GRAMLAB_IDE_UPDATE"            \
+#                     "$UNITEX_BUILD_CORE_UPDATE"
+
+
+#   count_issues_until_now UNITEX_BUILD_ISSUES_BEFORE_PACKAGING_LINUX_X86_64
+   
+#   # 3. Windows packaging make
+#   # shellcheck disable=SC2086
+#   if [  $UNITEX_BUILD_ISSUES_BEFORE_PACKAGING_LINUX_X86_64 -eq 0 ]; then
+#     stage_unitex_packaging_make_installer_linux_x86_64
+#   else
+#     log_warn "Packing skipped" "Some issues prevent to pack the linux-x86_64 distribution"
+#   fi
+
+#   # 4. linux_x86_64 distribution
+#   stage_unitex_packaging_unix_dist
+
+#   pop_directory
+#   pop_build_stage
+# }  # stage_unitex_packaging_linux_x86_64
+
+# =============================================================================
+# 
+# =============================================================================
+function stage_unitex_packaging_unix() {
+  push_stage "PackUnix"
+  push_directory "$UNITEX_BUILD_SOURCE_DIR"
+
+  # 1. Packaging checkout
+  stage_unitex_packaging_unix_checkout
+
+  # 2. Packaging check for updates
+  check_for_updates UNITEX_BUILD_PACK_UPDATE "$UNITEX_BUILD_REPOSITORY_PACK_NAME.unix"  \
+                    "$UNITEX_BUILD_PACK_FORCE_UPDATE"             \
+                    "$UNITEX_BUILD_DOCS_UPDATE"                   \
+                    "$UNITEX_BUILD_LING_UPDATE"                   \
+                    "$UNITEX_BUILD_CLASSIC_IDE_UPDATE"            \
+                    "$UNITEX_BUILD_GRAMLAB_IDE_UPDATE"            \
+                    "$UNITEX_BUILD_CORE_UPDATE"
+
+  count_issues_until_now UNITEX_BUILD_ISSUES_BEFORE_PACKAGING_UNIX_MAKE
+   
+  # 3. Unix packaging make
+  # shellcheck disable=SC2086
+  if [  $UNITEX_BUILD_ISSUES_BEFORE_PACKAGING_UNIX_MAKE -eq 0 ]; then
+    stage_unitex_packaging_configure_installer_unix
+    stage_unitex_packaging_make_installer_linux_i686
+    stage_unitex_packaging_make_installer_linux_x86_64
+  else
+    log_warn "Compilation skipped" "Some issues prevent to compile the Unix setup installers"
+  fi
+
+  # 4. Distribute unix setup
+  stage_unitex_packaging_unix_dist
+
+  pop_directory
+  pop_build_stage
+}
+
+# =============================================================================
+# 
+# =============================================================================
+function stage_unitex_packaging_unix_checkout () {
+  push_directory "$UNITEX_BUILD_SOURCE_DIR"
+
+  git_clone_pull   "" \
+                   "git://github.com/UnitexGramLab/unitex-packaging-unix.git" \
+                   "$UNITEX_BUILD_REPOSITORY_PACK_UNIX_NAME"
+               
+  git_info    PACKAGING_GIT_CLONE_DETAILS           \
+              "$UNITEX_BUILD_REPOSITORY_PACK_UNIX_NAME"
+              
+  # Saving GIT last date changed
+  echo "${PACKAGING_GIT_CLONE_DETAILS[2]}" > "$UNITEX_BUILD_TIMESTAMP_DIR/$UNITEX_BUILD_REPOSITORY_PACK_NAME.unix.current"
+
+  pop_directory            
+}  # stage_unitex_packaging_unix_checkout ()
+
+# =============================================================================
+# 
+# =============================================================================
+function stage_unitex_packaging_make_installer_linux_i686() {
+  push_stage "PackLinux32"
+  push_directory "$UNITEX_BUILD_DIST_BASEDIR"
+
+  UNITEX_BUILD_PACK_HAS_ERRORS=0
+  if [ $UNITEX_BUILD_PACK_UPDATE -ne 0 ]; then
+  
+    log_info "Packing distribution" "Packing Linux Intel (i686) distribution"
+
+    # Remove previous .run file
+    rm -rf "$UNITEX_BUILD_RELEASES_LINUX_I686_DIR/$UNITEX_PACKAGE_LINUX_I686_PREFIX.run"
+    
+    # Use makeself to build the package
+    exec_logged_command "makeself.linux_i686" "makeself.sh"                                         \
+      --license "$UNITEX_BUILD_SOURCE_DIR/$UNITEX_BUILD_REPOSITORY_PACK_UNIX_NAME/data/LICENSE.txt" \
+      --target  "\"\\\$HOME/$UNITEX_PACKAGE_FULL_NAME\""                                            \
+      "$UNITEX_PACKAGE_FULL_NAME"                                                                   \
+      "$UNITEX_BUILD_RELEASES_LINUX_I686_DIR/$UNITEX_PACKAGE_LINUX_I686_PREFIX.run"                 \
+      "\"$UNITEX_BUILD_FULL_RELEASE Linux Intel (i686)\""                                          \
+      "./App/install/setup" || {
+      UNITEX_BUILD_PACK_HAS_ERRORS=1
+    }
+    
+    if [ $UNITEX_BUILD_PACK_HAS_ERRORS -ne 0 ]; then
+      log_error "Packing failed" "Linux Intel (i686) distribution packing process fail!"
+      # Force update until success
+      $UNITEX_BUILD_TOOL_SED -i 's/UNITEX_BUILD_PACK_FORCE_UPDATE=./UNITEX_BUILD_PACK_FORCE_UPDATE=2/'  \
+                                  "$UNITEX_BUILD_CONFIG_FILENAME"
+    else
+      log_info "Packing finished" "Linux Intel (i686) distribution packing process completed successfully"
+      # Release update lock
+      $UNITEX_BUILD_TOOL_SED -i 's/UNITEX_BUILD_PACK_FORCE_UPDATE=2/UNITEX_BUILD_PACK_FORCE_UPDATE=0/' \
+                                  "$UNITEX_BUILD_CONFIG_FILENAME" 
+    fi
+  fi  #  if [ $UNITEX_BUILD_PACK_UPDATE -ne 0 ]; then  
+    
+  pop_directory  # "$UNITEX_BUILD_DIST_BASEDIR"
+  pop_build_stage 
+}
+
+# =============================================================================
+# 
+# =============================================================================
+function stage_unitex_packaging_make_installer_linux_x86_64() {
+  push_stage "PackLinux64"
+  push_directory "$UNITEX_BUILD_DIST_BASEDIR"
+
+  UNITEX_BUILD_PACK_HAS_ERRORS=0
+  if [ $UNITEX_BUILD_PACK_UPDATE -ne 0 ]; then
+  
+    log_info "Packing distribution" "Packing Linux Intel 64-bit (x86_64) distribution"
+
+    # Remove previous .run file
+    rm -rf "$UNITEX_BUILD_RELEASES_LINUX_X86_64_DIR/$UNITEX_PACKAGE_LINUX_X86_64_PREFIX.run"
+    
+    # Use makeself to build the package
+    exec_logged_command "makeself.linux_x86_64" "makeself.sh"                                       \
+      --license "$UNITEX_BUILD_SOURCE_DIR/$UNITEX_BUILD_REPOSITORY_PACK_UNIX_NAME/data/LICENSE.txt" \
+      --target  "\"\\\$HOME/$UNITEX_PACKAGE_FULL_NAME\""                                            \
+      "$UNITEX_PACKAGE_FULL_NAME"                                                                   \
+      "$UNITEX_BUILD_RELEASES_LINUX_X86_64_DIR/$UNITEX_PACKAGE_LINUX_X86_64_PREFIX.run"             \
+      "\"$UNITEX_BUILD_FULL_RELEASE Linux Intel 64-bit (x86_64)\""                                        \
+      "./App/install/setup" || {
+         UNITEX_BUILD_PACK_HAS_ERRORS=1
+    }
+    
+    if [ $UNITEX_BUILD_PACK_HAS_ERRORS -ne 0 ]; then
+      log_error "Packing failed" "Linux Intel 64-bit (x86_64) distribution packing process fail!"
+      # Force update until success
+      $UNITEX_BUILD_TOOL_SED -i 's/UNITEX_BUILD_PACK_FORCE_UPDATE=./UNITEX_BUILD_PACK_FORCE_UPDATE=2/'  \
+                                  "$UNITEX_BUILD_CONFIG_FILENAME"
+    else
+      log_info "Packing finished" "Linux Intel 64-bit (x86_64) distribution packing process completed successfully"
+      # Release update lock
+      $UNITEX_BUILD_TOOL_SED -i 's/UNITEX_BUILD_PACK_FORCE_UPDATE=2/UNITEX_BUILD_PACK_FORCE_UPDATE=0/' \
+                                  "$UNITEX_BUILD_CONFIG_FILENAME" 
+    fi
+  fi  #  if [ $UNITEX_BUILD_PACK_UPDATE -ne 0 ]; then  
+    
+  pop_directory  # "$UNITEX_BUILD_DIST_BASEDIR"
+  pop_build_stage 
+}
+
+
+# =============================================================================
+# 
+# =============================================================================
+function stage_unitex_packaging_configure_installer_unix() {
+  push_stage "PackUnix"
+  push_directory "$UNITEX_BUILD_DIST_BASEDIR"
+
+  UNITEX_BUILD_PACK_HAS_ERRORS=0
+  if [ $UNITEX_BUILD_PACK_UPDATE -ne 0 ]; then
+  
+    log_info "Configuring installer" "Configuring Unix distributions"
+
+    # Copy all unitex-packaging-unix/resources to the $UNITEX_BUILD_RELEASE_DIR
+    if [ -d "$UNITEX_BUILD_SOURCE_DIR/$UNITEX_BUILD_REPOSITORY_PACK_UNIX_NAME/resources" ]; then
+      push_directory "$UNITEX_BUILD_SOURCE_DIR/$UNITEX_BUILD_REPOSITORY_PACK_UNIX_NAME/resources"
+      cp -r ./* "$UNITEX_BUILD_RELEASE_DIR" || {
+         UNITEX_BUILD_PACK_HAS_ERRORS=1
+      }
+      pop_directory
+    fi
+
+    # Create LICENSE.txt
+    if [ -e "$UNITEX_BUILD_SOURCE_DIR/$UNITEX_BUILD_REPOSITORY_PACK_UNIX_NAME/data/LICENSE.md.in" ];then
+       log_info "Creating License" "Creating a License file for the installer"
+       UNITEX_VER_FULL="$UNITEX_VER_FULL"                                                          \
+       UNITEX_BUILD_DATE=$(date '+%B %d, %Y')                                                      \
+       UNITEX_DESCRIPTION="$UNITEX_DESCRIPTION"                                                    \
+       UNITEX_HOMEPAGE_URL="$UNITEX_HOMEPAGE_URL"                                                  \
+       UNITEX_RELEASES_URL="$UNITEX_RELEASES_URL"                                                  \
+       UNITEX_RELEASES_LATEST_BETA_WIN32_URL="$UNITEX_RELEASES_LATEST_BETA_WIN32_URL"              \
+       UNITEX_RELEASES_LATEST_BETA_SOURCE_URL="$UNITEX_RELEASES_LATEST_BETA_SOURCE_URL"            \
+       UNITEX_DOCS_URL="$UNITEX_DOCS_URL"                                                          \
+       UNITEX_FORUM_URL="$UNITEX_FORUM_URL"                                                        \
+       UNITEX_BUG_URL="$UNITEX_BUG_URL"                                                            \
+       UNITEX_GOVERNANCE_URL="$UNITEX_GOVERNANCE_URL"                                              \
+       UNITEX_COPYRIGHT_HOLDER="$UNITEX_COPYRIGHT_HOLDER"                                          \
+       UNITEX_CURRENT_YEAR=$(date '+%Y')                                                           \
+       "$SCRIPT_BASEDIR/mo" "$UNITEX_BUILD_SOURCE_DIR/$UNITEX_BUILD_REPOSITORY_PACK_UNIX_NAME/data/LICENSE.md.in" |\
+        fold -s -w72                                                                               \
+        > "$UNITEX_BUILD_SOURCE_DIR/$UNITEX_BUILD_REPOSITORY_PACK_UNIX_NAME/data/LICENSE.txt"  || {
+         UNITEX_BUILD_PACK_HAS_ERRORS=1
+       }
+    fi
+    
+    if [ $UNITEX_BUILD_PACK_HAS_ERRORS -ne 0 ]; then
+      log_error "Configuration failed" "Unix distributions configuration process failed!"
+      # Force update until success
+      $UNITEX_BUILD_TOOL_SED -i 's/UNITEX_BUILD_PACK_FORCE_UPDATE=./UNITEX_BUILD_PACK_FORCE_UPDATE=2/'  \
+                                  "$UNITEX_BUILD_CONFIG_FILENAME"
+    else
+      log_info "Configuration finished" "Unix distribution configuration process completed successfully"
+      # Release update lock
+      $UNITEX_BUILD_TOOL_SED -i 's/UNITEX_BUILD_PACK_FORCE_UPDATE=2/UNITEX_BUILD_PACK_FORCE_UPDATE=0/' \
+                                  "$UNITEX_BUILD_CONFIG_FILENAME" 
+    fi
+  fi  #  if [ $UNITEX_BUILD_PACK_UPDATE -ne 0 ]; then  
+    
+  pop_directory  # "$UNITEX_BUILD_DIST_BASEDIR"
+  pop_build_stage 
+}
+
+# =============================================================================
+# 
+# =============================================================================
+function stage_unitex_packaging_unix_dist() {
+  push_stage "PackUnix"
+  push_directory "$UNITEX_BUILD_RELEASES_DIR"
+
+  UNITEX_BUILD_PACK_DEPLOYMENT=$(( ! UNITEX_BUILD_PACK_HAS_ERRORS &&  ( UNITEX_BUILD_PACK_FORCE_DEPLOYMENT  || UNITEX_BUILD_FORCE_DEPLOYMENT) ))
+  if [ $UNITEX_BUILD_PACK_DEPLOYMENT -eq 0 ]; then
+    if [ $UNITEX_BUILD_PACK_UPDATE     -ne 0 -a \
+         $UNITEX_BUILD_PACK_HAS_ERRORS -eq 0 ]; then
+      UNITEX_BUILD_PACK_DEPLOYMENT=1
+      log_info "Preparing dist"   "Linux Intel 64-bit (x86_64) distribution is being prepared..."
+
+      # Linux Intel (i686) distribution package checksum
+      calculate_checksum "$UNITEX_BUILD_RELEASES_LINUX_I686_DIR/$UNITEX_PACKAGE_LINUX_I686_PREFIX.run"     "$UNITEX_BUILD_RELEASES_LINUX_I686_DIR"
+
+      # Linux Intel 64-bit (x86_64) distribution package checksum
+      calculate_checksum "$UNITEX_BUILD_RELEASES_LINUX_X86_64_DIR/$UNITEX_PACKAGE_LINUX_X86_64_PREFIX.run" "$UNITEX_BUILD_RELEASES_LINUX_I686_DIR"
+
+      log_info "Dist prepared"    "Unix distribution is now prepared"     
+    fi
+  else
+    log_notice "Dist prepared" "Unix distribution is already prepared, nevertheless, a full deployment will be forced by user request!"
+  fi
+  
+  pop_directory
+  pop_build_stage
+}  # stage_unitex_packaging_unix_dist
+
+# =============================================================================
+# 
+# =============================================================================
+function calculate_checksum() {
+  if [ $# -ne 2  ]; then
+    die_with_critical_error "Vinber calculate_checksum fails" \
+     "Function called with the wrong number of parameters"
+  fi
+  
+   local input_file="$1"
+   local output_directory="$2"
+ 
+   local -r input_directory=$(dirname "$input_file")
+   local -r input_name=$(basename "$input_file")
+
+   push_directory "$input_directory"
+
+   if [ -e "$input_file" ]; then
+     # Calculate the SHA256 hash of the input file      
+     log_info "Computing SHA256" "Computing the SHA256 of ${input_file// /%20}"
+     local -r file_checksum=$(sha256sum "$input_name"                                |\
+                                  sed -e "s:$input_directory/::"                     |\
+                                  tee "$output_directory/$input_name.sha256"         |\
+                                  sed "s:\s\+.*$::")
+     log_info "SHA256 Computed"  "SHA256 hash ($file_checksum) saved to $output_directory/$input_name.sha256"
+   else
+     log_warn "File not found" "File $input_file doesn't exist"
+   fi
+
+   pop_directory  #  "$input_directory"
+}
 
 # =============================================================================
 # 
@@ -1176,19 +1485,20 @@ function stage_unitex_packing() {
     return 1   
   fi    
 
-  # unitex-packaging-source
-  stage_unitex-packaging-source
+  # DO NOT CHANGE PACKAGING CREATION ORDER
 
-  # unitex-packaging-linux
-  # stage_unitex-packaging-linux
-    
-  # setup packages always before packaging-source  
-  # unitex-packaging-windows
-  stage_unitex-packaging-windows
+  # 1. Unix
+  stage_unitex_packaging_unix
 
-  # unitex-packaging-osx
-  # stage_unitex-packaging-osx
-  
+  # 2. OS X
+  # stage_unitex-packaging_osx
+
+  # 3. Windows
+  stage_unitex_packaging_windows
+
+  # 4. Sources
+  stage_unitex_packaging_source
+
   pop_directory   # "$UNITEX_BUILD_SOURCE_DIR"
   pop_build_stage  
 }
@@ -1216,9 +1526,7 @@ function stage_unitex_lingua_check_for_updates() {
   push_directory "$UNITEX_BUILD_REPOSITORY_LING_LOCAL_PATH"
 
   UNITEX_BUILD_LING_UPDATE=$((0 || UNITEX_BUILD_LING_FORCE_UPDATE || UNITEX_BUILD_FORCE_UPDATE))
-
-  local ling_sha256
-  
+ 
   for lang in *
     do
     push_stage "Ling-${ISO639_3_LANGUAGES["$lang"]}"
@@ -1242,18 +1550,13 @@ function stage_unitex_lingua_check_for_updates() {
       exec_logged_command "zipcmd.create.$lang" "$UNITEX_BUILD_TOOL_ZIP" -r "\"$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip\"" "\"$lang\"" -x ./*.svn*
 
       if [ -e "$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip" ]; then
-        # calculate the sha256 for the current lang zip file
-        log_info "Computing SHA256" "Computing the SHA256 of $UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip"
-        ling_sha256=$(sha256sum "$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip"                        |\
-                                  sed -e "s:$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip:$lang.zip:"  |\
-                                  tee "$UNITEX_BUILD_RELEASES_LING_DIR/$lang.sha256"               |\
-                                  sed "s:\s\+.*$::")
-        log_info "SHA256 Computed" "SHA256 hash ($ling_sha256) saved to $lang.sha256"
+        # calculate the checksum for the current lang zip file
+        calculate_checksum "$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip" "$UNITEX_BUILD_RELEASES_LING_DIR"
 
         # replace the existing language directory, if any, by this new one
-        rm -rf "${UNITEXDIR:?}/$lang"
-        log_info "Extracting"  "$UNITEX_BUILD_RELEASES_LING_DIR/$lang.txt into the $UNITEXDIR folder"
-        exec_logged_command "zipcmd.extract.$lang" "unzip" "\"$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip\"" -d "$UNITEXDIR"        
+        rm -rf   "${UNITEX_BUILD_RELEASE_DIR:?}/$lang"
+        log_info "Extracting"  "$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip into the $UNITEX_BUILD_RELEASE_DIR folder"
+        exec_logged_command "zipcmd.extract.$lang" "unzip" "\"$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip\"" -d "$UNITEX_BUILD_RELEASE_DIR"        
       else
         log_warn "File not found" "File $lang.zip doesn't exist"
       fi
@@ -1261,8 +1564,8 @@ function stage_unitex_lingua_check_for_updates() {
       # we update the log file
       log_info "Updating"  "$UNITEX_BUILD_RELEASES_CHANGES_DIR/$lang.txt"
       # shellcheck disable=SC2086
-      svn log --trust-server-cert --non-interactive --username anonsvn --password anonsvn $UNITEX_BUILD_SVN_LOG_LIMIT_PARAMETER "$lang" > "$UNITEXDIR/$lang/log_svn_$lang.txt"
-      cp "$UNITEXDIR/$lang/log_svn_$lang.txt" "$UNITEX_BUILD_RELEASES_CHANGES_DIR/$lang.txt" 
+      svn log --trust-server-cert --non-interactive --username anonsvn --password anonsvn $UNITEX_BUILD_SVN_LOG_LIMIT_PARAMETER "$lang" > "$UNITEX_BUILD_RELEASE_DIR/$lang/log_svn_$lang.txt"
+      cp "$UNITEX_BUILD_RELEASE_DIR/$lang/log_svn_$lang.txt" "$UNITEX_BUILD_RELEASES_CHANGES_DIR/$lang.txt" 
     fi
 
     pop_build_stage
@@ -1351,8 +1654,8 @@ function stage_unitex_classic_ide_make() {
     # we update the log file
     log_info "Updating"  "$UNITEX_BUILD_RELEASES_CHANGES_DIR/Java.txt"
     # shellcheck disable=SC2086
-    svn log --trust-server-cert --non-interactive --username anonsvn --password anonsvn $UNITEX_BUILD_SVN_LOG_LIMIT_PARAMETER "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_NAME" > "$UNITEXDIR/Src/log_svn_Java.txt"
-    cp "$UNITEXDIR/Src/log_svn_Java.txt" "$UNITEX_BUILD_RELEASES_CHANGES_DIR/Java.txt" 
+    svn log --trust-server-cert --non-interactive --username anonsvn --password anonsvn $UNITEX_BUILD_SVN_LOG_LIMIT_PARAMETER "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_NAME" > "$UNITEX_BUILD_RELEASE_DIR/Src/log_svn_Java.txt"
+    cp "$UNITEX_BUILD_RELEASE_DIR/Src/log_svn_Java.txt" "$UNITEX_BUILD_RELEASES_CHANGES_DIR/Java.txt" 
     
     push_directory "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_LOCAL_PATH"
     rm -rf classes
@@ -1423,36 +1726,45 @@ function stage_unitex_classic_ide_dist() {
       log_info "Preparing dist" "Classic IDE distribution is being prepared..."
 
       # FIXME(martinec) This is "classic_ide.revision.date"
-      date "+%B %d, %Y" > "$APPDIR/revision.date"
+      date "+%B %d, %Y" > "$UNITEX_BUILD_RELEASE_APP_DIR/revision.date"
       
       # we create the jar file
       log_info "Creating JARs" "Classic IDE sources"
+      
       log_info "Creating JAR"  "Unitex.jar"
-      rm -f "$APPDIR/Unitex.jar"
-      exec_logged_command "jarcmd.Unitex" "$UNITEX_BUILD_TOOL_JAR" cvfm "$APPDIR/Unitex.jar" \
+      rm -f "$UNITEX_BUILD_RELEASE_APP_DIR/Unitex.jar"
+      exec_logged_command "jarcmd.Unitex" "$UNITEX_BUILD_TOOL_JAR" cvfm "$UNITEX_BUILD_RELEASE_APP_DIR/Unitex.jar" \
                        "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_NAME/classes/fr/umlv/unitex/Manifest.mf" \
                        -C "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_NAME/classes/" .
 
+      # Sign Unitex.jar
+      if [ -n "${UNITEX_BUILD_TOOL_JARSIGNER+1}" ]; then
+        log_info "Signing" "Unitex.jar"                                                               
+        exec_logged_command "signjar.sh.Unitex.jar" "signjar.sh" "$UNITEX_BUILD_RELEASE_APP_DIR/Unitex.jar" || {   \
+          die_with_critical_error "Sign failed" "Error signing Unitex.jar"
+        }
+      fi   # [ -n "${UNITEX_BUILD_TOOL_JARSIGNER+1}" ]                       
+
       log_info "Creating JAR"  "XAlign.jar"
-      rm -f "$APPDIR/XAlign.jar"
-      exec_logged_command "jarcmd.XAlign" "$UNITEX_BUILD_TOOL_JAR" cvfm "$APPDIR/XAlign.jar" "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_NAME/classes/fr/loria/Manifest.mf" -C "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_NAME/classes/" .
+      rm -f "$UNITEX_BUILD_RELEASE_APP_DIR/XAlign.jar"
+      exec_logged_command "jarcmd.XAlign" "$UNITEX_BUILD_TOOL_JAR" cvfm "$UNITEX_BUILD_RELEASE_APP_DIR/XAlign.jar" "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_NAME/classes/fr/loria/Manifest.mf" -C "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_NAME/classes/" .
       
       # we copy the icons
       log_info "Copying" "Icons resources"
-      cp "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_NAME"/resources/*.ico "$APPDIR/"
+      cp "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_NAME"/resources/*.ico "$UNITEX_BUILD_RELEASE_APP_DIR/"
       #we copy the library jars
       log_info "Copying" "Jar libraries"
-      cp "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_NAME"/lib/*.jar "$APPDIR/"
+      cp "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_NAME"/lib/*.jar "$UNITEX_BUILD_RELEASE_APP_DIR/"
 
       # Finally, we update the zip containing the source files
       log_info "Creating file"  "Java.zip"
-      rm -f "$UNITEXDIR/Src/Java.zip" 
+      rm -f "$UNITEX_BUILD_RELEASE_DIR/Src/Java.zip" 
       push_directory "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_LOCAL_PATH"
       # shellcheck disable=SC2035
-      exec_logged_command  "zipcmd.create.Java" "$UNITEX_BUILD_TOOL_ZIP" -r "$UNITEXDIR/Src/Java.zip" "src" -x *.svn*
+      exec_logged_command  "zipcmd.create.Java" "$UNITEX_BUILD_TOOL_ZIP" -r "$UNITEX_BUILD_RELEASE_DIR/Src/Java.zip" "src" -x *.svn*
 
       # DEPRECATED from Vinber v1.4.0
-      # cp "$UNITEXDIR/Src/Java.zip" "$UNITEX_BUILD_RELEASES_SOURCE_DIR/"
+      # cp "$UNITEX_BUILD_RELEASE_DIR/Src/Java.zip" "$UNITEX_BUILD_RELEASES_SOURCE_DIR/"
       pop_directory  # "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_LOCAL_PATH"
       
       log_info "Dist prepared" "Classic IDE distribution is now prepared"
@@ -1532,7 +1844,7 @@ function stage_unitex_gramlab_ide_make () {
        $UNITEX_BUILD_CLASSIC_IDE_HAS_ERRORS -eq 0 ]; then
     
     # Gramlab depends of Unitex.jar
-    if [ -e "$APPDIR/Unitex.jar" ]; then
+    if [ -e "$UNITEX_BUILD_RELEASE_APP_DIR/Unitex.jar" ]; then
       # we update the log file
       log_info "Updating"  "$UNITEX_BUILD_RELEASES_CHANGES_DIR/Gramlab.txt"
       # svn log --trust-server-cert --non-interactive --username anonsvn --password anonsvn $UNITEX_BUILD_SVN_LOG_LIMIT_PARAMETER "$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_NAME" > "$UNITEX_BUILD_RELEASES_CHANGES_DIR/Gramlab.txt"
@@ -1540,8 +1852,8 @@ function stage_unitex_gramlab_ide_make () {
       # because some revisions didn't apply to trunk.
       # FIXME(martinec) This is a temporal workaround
       # shellcheck disable=SC2086
-      svn log --trust-server-cert --non-interactive --username anonsvn --password anonsvn $UNITEX_BUILD_SVN_LOG_LIMIT_PARAMETER "http://gramlab-ideling.googlecode.com/svn" > "$UNITEXDIR/Src/log_svn_Gramlab.txt"
-      cp "$UNITEXDIR/Src/log_svn_Gramlab.txt" "$UNITEX_BUILD_RELEASES_CHANGES_DIR/Gramlab.txt" 
+      svn log --trust-server-cert --non-interactive --username anonsvn --password anonsvn $UNITEX_BUILD_SVN_LOG_LIMIT_PARAMETER "http://gramlab-ideling.googlecode.com/svn" > "$UNITEX_BUILD_RELEASE_DIR/Src/log_svn_Gramlab.txt"
+      cp "$UNITEX_BUILD_RELEASE_DIR/Src/log_svn_Gramlab.txt" "$UNITEX_BUILD_RELEASES_CHANGES_DIR/Gramlab.txt" 
       
       push_directory "$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_LOCAL_PATH"
       rm -rf classes
@@ -1551,12 +1863,13 @@ function stage_unitex_gramlab_ide_make () {
       # we compile the sources
       exec_logged_command "javac.Gramlab.jar" "$UNITEX_BUILD_TOOL_JAVAC" \
                        -sourcepath src/main/java \
-                       -classpath "$APPDIR/Unitex.jar" \
+                       -classpath "$UNITEX_BUILD_RELEASE_APP_DIR/Unitex.jar" \
                        src/main/java/fr/gramlab/Main.java \
-                       -d classes -encoding UTF8
+                       -d classes -encoding UTF8 || {
+                       UNITEX_BUILD_GRAMLAB_IDE_HAS_ERRORS=1
+                     }
 
-      if [ $? -ne 0 ]; then
-        UNITEX_BUILD_GRAMLAB_IDE_HAS_ERRORS=1
+      if [ $UNITEX_BUILD_GRAMLAB_IDE_HAS_ERRORS -ne 0 ]; then
         # Force update until the successful compilation of the code is assured
         $UNITEX_BUILD_TOOL_SED -i 's/UNITEX_BUILD_CLASSIC_IDE_FORCE_UPDATE=./UNITEX_BUILD_CLASSIC_IDE_FORCE_UPDATE=2/'  \
                                    "$UNITEX_BUILD_CONFIG_FILENAME"
@@ -1596,20 +1909,27 @@ function stage_unitex_gramlab_ide_dist() {
       UNITEX_BUILD_GRAMLAB_IDE_DEPLOYMENT=1   
       log_info "Preparing dist" "GramLab IDE distribution is being prepared..."
 
-      date "+%B %d, %Y" > "$APPDIR/gramlab_revision.date"
+      date "+%B %d, %Y" > "$UNITEX_BUILD_RELEASE_APP_DIR/gramlab_revision.date"
 
       log_info "Creating JAR"  "Gramlab.jar"
-      rm -f "$APPDIR/Gramlab.jar"
-      exec_logged_command "jarcmd.Gramlab" "$UNITEX_BUILD_TOOL_JAR" cvfm "$APPDIR/Gramlab.jar" \
+      rm -f "$UNITEX_BUILD_RELEASE_APP_DIR/Gramlab.jar"
+      exec_logged_command "jarcmd.Gramlab" "$UNITEX_BUILD_TOOL_JAR" cvfm "$UNITEX_BUILD_RELEASE_APP_DIR/Gramlab.jar" \
                        "$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_NAME/classes/fr/gramlab/Manifest.mf" \
                        -C "$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_NAME/classes/" .
       
+      # Sign Gramlab.jar
+      if [ -n "${UNITEX_BUILD_TOOL_JARSIGNER+1}" ]; then
+        log_info "Signing" "Gramlab.jar"                                                               
+        exec_logged_command "signjar.sh.Gramlab.jar" "signjar.sh" "$UNITEX_BUILD_RELEASE_APP_DIR/Gramlab.jar" || {   \
+          die_with_critical_error "Sign failed" "Error signing Gramlab.jar"
+        }
+      fi   # [ -n "${UNITEX_BUILD_TOOL_JARSIGNER+1}" ]   
 
       log_info "Copying" "Gramlab pom files"
-      cp  "$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_NAME"/maven/pom.xml "$APPDIR/pom.xml"
-      mkdir -p "$APPDIR/assembly/src/main/resources/assemblies"
-      cp "$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_NAME"/maven/assembly/pom.xml "$APPDIR/assembly/" 
-      cp "$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_NAME"/maven/assembly/src/main/resources/assemblies/create-base-package.xml "$APPDIR/assembly/src/main/resources/assemblies/" 
+      cp  "$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_NAME"/maven/pom.xml "$UNITEX_BUILD_RELEASE_APP_DIR/pom.xml"
+      mkdir -p "$UNITEX_BUILD_RELEASE_APP_DIR/assembly/src/main/resources/assemblies"
+      cp "$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_NAME"/maven/assembly/pom.xml "$UNITEX_BUILD_RELEASE_APP_DIR/assembly/" 
+      cp "$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_NAME"/maven/assembly/src/main/resources/assemblies/create-base-package.xml "$UNITEX_BUILD_RELEASE_APP_DIR/assembly/src/main/resources/assemblies/" 
       
       log_info "Dist prepared"  "GramLab IDE distribution is now prepared"
     fi
@@ -1782,94 +2102,92 @@ function stage_unitex_core_make() {
     stage_unitex_core_update_source_revision_header "${CORE_SVN_CHECKOUT_DETAILS[0]}"
 
     # we update the log file
-    log_info "Updating"  "$UNITEXDIR/Src/log_svn_C++.txt"
+    log_info "Updating"  "$UNITEX_BUILD_RELEASE_DIR/Src/log_svn_C++.txt"
     # shellcheck disable=SC2086
-    svn log --trust-server-cert --non-interactive --username anonsvn --password anonsvn $UNITEX_BUILD_SVN_LOG_LIMIT_PARAMETER "$UNITEX_BUILD_REPOSITORY_CORE_NAME" > "$UNITEXDIR/Src/log_svn_C++.txt"
-    cp "$UNITEXDIR/Src/log_svn_C++.txt" "$UNITEX_BUILD_RELEASES_CHANGES_DIR/C++.txt" 
+    svn log --trust-server-cert --non-interactive --username anonsvn --password anonsvn $UNITEX_BUILD_SVN_LOG_LIMIT_PARAMETER "$UNITEX_BUILD_REPOSITORY_CORE_NAME" > "$UNITEX_BUILD_RELEASE_DIR/Src/log_svn_C++.txt"
+    cp "$UNITEX_BUILD_RELEASE_DIR/Src/log_svn_C++.txt" "$UNITEX_BUILD_RELEASES_CHANGES_DIR/C++.txt" 
     
     #then, we check if the C++ sources could be compiled
-    log_debug "Copying sources" "Core sources are being copied to $UNITEX_BUILD_CORE_SOURCES_DIR"
-    cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME" "$UNITEX_BUILD_TEMPORAL_WORKSPACE"
 
-    # MinGW32 
-    stage_unitex_core_make_mingw32
+    # MinGW32
+    UNITEX_BUILD_CORE_WIN32_DIR="$UNITEX_BUILD_TEMPORAL_WORKSPACE/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_WIN32_HOME_NAME" 
+    UNITEX_BUILD_CORE_WIN32_SOURCES_DIR="$UNITEX_BUILD_CORE_WIN32_DIR/$UNITEX_BUILD_REPOSITORY_CORE_NAME"
+    stage_unitex_core_make_win32
 
-    # Linux
-    stage_unitex_core_make_linux
+    # MinGW64    
+    UNITEX_BUILD_CORE_WIN64_DIR="$UNITEX_BUILD_TEMPORAL_WORKSPACE/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_WIN64_HOME_NAME" 
+    UNITEX_BUILD_CORE_WIN64_SOURCES_DIR="$UNITEX_BUILD_CORE_WIN64_DIR/$UNITEX_BUILD_REPOSITORY_CORE_NAME"
+    #stage_unitex_core_make_win64
+
+    # OS X
+    UNITEX_BUILD_CORE_OSX_DIR="$UNITEX_BUILD_TEMPORAL_WORKSPACE/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_OSX_HOME_NAME"
+    UNITEX_BUILD_CORE_OSX_SOURCES_DIR="$UNITEX_BUILD_CORE_OSX_DIR/$UNITEX_BUILD_REPOSITORY_CORE_NAME"
+    stage_unitex_core_make_osx
+
+    # Linux Intel (i686)
+    UNITEX_BUILD_CORE_LINUX_I686_DIR="$UNITEX_BUILD_TEMPORAL_WORKSPACE/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_LINUX_I686_HOME_NAME"
+    UNITEX_BUILD_CORE_LINUX_I686_SOURCES_DIR="$UNITEX_BUILD_CORE_LINUX_I686_DIR/$UNITEX_BUILD_REPOSITORY_CORE_NAME"
+    stage_unitex_core_make_linux_i686    
+
+    # Linux Intel 64-bit (x86_64) debug
+    UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_DIR="$UNITEX_BUILD_TEMPORAL_WORKSPACE/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_LINUX_X86_64_HOME_NAME-debug"
+    UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_SOURCES_DIR="$UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_DIR/$UNITEX_BUILD_REPOSITORY_CORE_NAME"
+    stage_unitex_core_make_linux_x86_64_debug
+
+    # Linux Intel 64-bit (x86_64)
+    UNITEX_BUILD_CORE_LINUX_X86_64_DIR="$UNITEX_BUILD_TEMPORAL_WORKSPACE/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_LINUX_X86_64_HOME_NAME"
+    UNITEX_BUILD_CORE_LINUX_X86_64_SOURCES_DIR="$UNITEX_BUILD_CORE_LINUX_X86_64_DIR/$UNITEX_BUILD_REPOSITORY_CORE_NAME"
+    stage_unitex_core_make_linux_x86_64
   fi
 
   pop_directory  # "$UNITEX_BUILD_SOURCE_DIR"
   pop_build_stage 
 }  # stage_unitex_core_check_for_updates
-  
 
 # =============================================================================
-# 
+# Win32
 # =============================================================================
-function stage_unitex_core_make_linux() {
+function stage_unitex_core_make_win32() {
   push_stage "Core"
-  push_directory "$UNITEX_BUILD_SOURCE_DIR"
-  push_directory "$UNITEX_BUILD_CORE_SOURCES_DIR/build"
+  # create a build environment for this platform
+  if [ ! -d "${UNITEX_BUILD_CORE_WIN32_DIR:?}" ]
+  then    
+    # try to create the directory
+    mkdir -p "${UNITEX_BUILD_CORE_WIN32_DIR:?}" || {
+      die_with_critical_error "Aborting" "Failed to create a directory in ${UNITEX_BUILD_CORE_WIN32_DIR:?}"
+    }
+
+    push_directory "$UNITEX_BUILD_SOURCE_DIR"
+
+    # try to copy source files
+    cp    -r "${UNITEX_BUILD_REPOSITORY_CORE_NAME:?}" "${UNITEX_BUILD_CORE_WIN32_DIR:?}" || {
+     die_with_critical_error "Compilation failed" "There was a problem copying $UNITEX_BUILD_REPOSITORY_CORE_NAME to $UNITEX_BUILD_CORE_WIN32_DIR" 
+    }
+    
+    pop_directory  # "$UNITEX_BUILD_SOURCE_DIR" 
+  fi  # [ ! -d "${UNITEX_BUILD_CORE_WIN32_DIR:?}" ]
+
+  push_directory "$UNITEX_BUILD_CORE_WIN32_SOURCES_DIR/build"
   
   if [ $UNITEX_BUILD_CORE_UPDATE     -ne 0 -a \
        $UNITEX_BUILD_CORE_HAS_ERRORS -eq 0 ]; then
     # ensure that we remove all binary objects
-    log_notice "Cleaning" "Unitex Core Components intermediate files will be cleaning";
-    exec_logged_command "make.linux.clean" "$UNITEX_BUILD_TOOL_MAKE" clean
+    log_notice "Cleaning" "Win32 Unitex Core sources will be cleaned up";
+    exec_logged_command "make.mingw32.clean"  "$UNITEX_BUILD_TOOL_MAKE" COMMANDPREFIXDEFINED=yes COMMANDPREFIX=$UNITEX_BUILD_MINGW32_COMMAND_PREFIX ADDITIONAL_CFLAG+="'-DUNITEX_PREVENT_USING_WINRT_API -static -static-libgcc -static-libstdc++'" SYSTEM=mingw32 clean
 
-    log_notice "Compiling" "Linux-Like Unitex Core Tool Logger with debug flag";
-    MAKE_LINUX_UNITEXTOOLLOGGERONLY_FAIL=0
-    exec_logged_command "make.linux.debug.unitextoolloggeronly" "$UNITEX_BUILD_TOOL_MAKE" DEBUG=yes \
-                   UNITEXTOOLLOGGERONLY=yes || {
-                     MAKE_LINUX_UNITEXTOOLLOGGERONLY_FAIL=1
-                   }
-
-    if [ $MAKE_LINUX_UNITEXTOOLLOGGERONLY_FAIL -ne 0 ]; then
-      UNITEX_BUILD_CORE_HAS_ERRORS=1
-      # Force update until the successful compilation of the code is assured
-      $UNITEX_BUILD_TOOL_SED -i 's/UNITEX_BUILD_CORE_FORCE_UPDATE=./UNITEX_BUILD_CORE_FORCE_UPDATE=2/'  \
-                                 "$UNITEX_BUILD_CONFIG_FILENAME"
-      log_error "Compilation failed" "C/C++ sources do not compile, SYSTEM=linux-like"
-    else
-      # Release update lock
-      $UNITEX_BUILD_TOOL_SED -i 's/UNITEX_BUILD_CORE_FORCE_UPDATE=2/UNITEX_BUILD_CORE_FORCE_UPDATE=0/' \
-                                 "$UNITEX_BUILD_CONFIG_FILENAME"    
-      log_info "Compilation finished" "Compilation completed successfully"
-    fi    
-  fi
-
-  pop_directory  # "$UNITEX_BUILD_CORE_SOURCES_DIR/build"
-  pop_directory  # "$UNITEX_BUILD_SOURCE_DIR"
-  pop_build_stage
-}
-
-# =============================================================================
-# 
-# =============================================================================
-function stage_unitex_core_make_mingw32() {
-  push_stage "Core"
-  push_directory "$UNITEX_BUILD_SOURCE_DIR"
-  push_directory "$UNITEX_BUILD_CORE_SOURCES_DIR/build"
-  
-  if [ $UNITEX_BUILD_CORE_UPDATE     -ne 0 -a \
-       $UNITEX_BUILD_CORE_HAS_ERRORS -eq 0 ]; then
-    # ensure that we remove all binary objects
-    log_notice "Cleaning" "Unitex Core Components sources will be cleaning";
-    exec_logged_command "make.mingw32.clean" "$UNITEX_BUILD_TOOL_MAKE" COMMANDPREFIXDEFINED=yes COMMANDPREFIX=$UNITEX_BUILD_MINGW_COMMAND_PREFIX ADDITIONAL_CFLAG+="'-DUNITEX_PREVENT_USING_WINRT_API -static -static-libgcc -static-libstdc++'" SYSTEM=mingw32 clean
-    exec_logged_command "make.linux.clean"   "$UNITEX_BUILD_TOOL_MAKE" clean
-    log_notice "Compiling" "MinGW32 Unitex Core Tool Logger";
-    MAKE_MINGW32_UNITEXTOOLLOGGERONLY_FAIL=0
-    exec_logged_command "make.mingw32.unitextoolloggeronly" "$UNITEX_BUILD_TOOL_MAKE" COMMANDPREFIXDEFINED=yes COMMANDPREFIX=$UNITEX_BUILD_MINGW_COMMAND_PREFIX ADDITIONAL_CFLAG+="'-DUNITEX_PREVENT_USING_WINRT_API -static -static-libgcc -static-libstdc++'" SYSTEM=mingw32 \
+    log_notice "Compiling" "Win32 Unitex Core Tool Logger";
+    local unitex_core_make_fail=0
+    exec_logged_command "make.mingw32.unitextoolloggeronly" "$UNITEX_BUILD_TOOL_MAKE" COMMANDPREFIXDEFINED=yes COMMANDPREFIX=$UNITEX_BUILD_MINGW32_COMMAND_PREFIX ADDITIONAL_CFLAG+="'-DUNITEX_PREVENT_USING_WINRT_API -static -static-libgcc -static-libstdc++'" SYSTEM=mingw32 \
                      UNITEXTOOLLOGGERONLY=yes || {
-                       MAKE_MINGW32_UNITEXTOOLLOGGERONLY_FAIL=1
+                       unitex_core_make_fail=1
                      }
                      
-    if [ $MAKE_MINGW32_UNITEXTOOLLOGGERONLY_FAIL -ne 0 ]; then
+    if [ $unitex_core_make_fail -ne 0 ]; then
       UNITEX_BUILD_CORE_HAS_ERRORS=1
       # Force update until the successful compilation of the code is assured
       $UNITEX_BUILD_TOOL_SED -i 's/UNITEX_BUILD_CORE_FORCE_UPDATE=./UNITEX_BUILD_CORE_FORCE_UPDATE=2/'  \
                                  "$UNITEX_BUILD_CONFIG_FILENAME"
-      log_error "Compilation failed" "C/C++ sources do not compile, COMMANDPREFIXDEFINED=yes COMMANDPREFIX=$UNITEX_BUILD_MINGW_COMMAND_PREFIX ADDITIONAL_CFLAG+='-DUNITEX_PREVENT_USING_WINRT_API -static -static-libgcc -static-libstdc++' SYSTEM=mingw32"
+      log_error "Compilation failed" "Win32 Unitex Core source do not compile"
     else
       # Release update lock
       $UNITEX_BUILD_TOOL_SED -i 's/UNITEX_BUILD_CORE_FORCE_UPDATE=2/UNITEX_BUILD_CORE_FORCE_UPDATE=0/' \
@@ -1878,11 +2196,293 @@ function stage_unitex_core_make_mingw32() {
     fi
   fi
 
-  pop_directory  # "$UNITEX_BUILD_CORE_SOURCES_DIR/build"
-  pop_directory  # "$UNITEX_BUILD_SOURCE_DIR" 
+  pop_directory  # "$UNITEX_BUILD_CORE_WIN32_SOURCES_DIR/build"
   pop_build_stage
 }
 
+# =============================================================================
+# Win64
+# =============================================================================
+function stage_unitex_core_make_win64() {
+  push_stage "Core"
+  # create a build environment for this platform
+  if [ ! -d "${UNITEX_BUILD_CORE_WIN64_DIR:?}" ]
+  then    
+    # try to create the directory
+    mkdir -p "${UNITEX_BUILD_CORE_WIN64_DIR:?}" || {
+      die_with_critical_error "Aborting" "Failed to create a directory in ${UNITEX_BUILD_CORE_WIN64_DIR:?}"
+    }
+
+    push_directory "$UNITEX_BUILD_SOURCE_DIR"
+
+    # try to copy source files
+    cp    -r "${UNITEX_BUILD_REPOSITORY_CORE_NAME:?}" "${UNITEX_BUILD_CORE_WIN64_DIR:?}" || {
+     die_with_critical_error "Compilation failed" "There was a problem copying $UNITEX_BUILD_REPOSITORY_CORE_NAME to $UNITEX_BUILD_CORE_WIN64_DIR" 
+    }
+    
+    pop_directory  # "$UNITEX_BUILD_SOURCE_DIR" 
+  fi  # [ ! -d "${UNITEX_BUILD_CORE_WIN64_DIR:?}" ]
+
+  push_directory "$UNITEX_BUILD_CORE_WIN64_SOURCES_DIR/build"
+  
+  if [ $UNITEX_BUILD_CORE_UPDATE     -ne 0 -a \
+       $UNITEX_BUILD_CORE_HAS_ERRORS -eq 0 ]; then
+    # ensure that we remove all binary objects
+    log_notice "Cleaning" "Win64 Unitex Core sources will be cleaned up";
+    exec_logged_command "make.mingw32.clean"  "$UNITEX_BUILD_TOOL_MAKE" 64BITS=yes COMMANDPREFIXDEFINED=yes COMMANDPREFIX=$UNITEX_BUILD_MINGW64_COMMAND_PREFIX ADDITIONAL_CFLAG+="'-DUNITEX_PREVENT_USING_WINRT_API -m64 -static -static-libgcc -static-libstdc++'" SYSTEM=mingw32 clean
+
+    log_notice "Compiling" "Win64 Unitex Core Tool Logger";
+    local unitex_core_make_fail=0
+    exec_logged_command "make.mingw32.unitextoolloggeronly" "$UNITEX_BUILD_TOOL_MAKE" 64BITS=yes COMMANDPREFIXDEFINED=yes COMMANDPREFIX=$UNITEX_BUILD_MINGW64_COMMAND_PREFIX ADDITIONAL_CFLAG+="'-DUNITEX_PREVENT_USING_WINRT_API -m64 -static -static-libgcc -static-libstdc++'" SYSTEM=mingw32 \
+                     UNITEXTOOLLOGGERONLY=yes || {
+                       unitex_core_make_fail=1
+                     }
+                     
+    if [ $unitex_core_make_fail -ne 0 ]; then
+      UNITEX_BUILD_CORE_HAS_ERRORS=1
+      # Force update until the successful compilation of the code is assured
+      $UNITEX_BUILD_TOOL_SED -i 's/UNITEX_BUILD_CORE_FORCE_UPDATE=./UNITEX_BUILD_CORE_FORCE_UPDATE=2/'  \
+                                 "$UNITEX_BUILD_CONFIG_FILENAME"
+      log_error "Compilation failed" "Win64 Unitex Core Tool Logger do not compile"
+    else
+      # Release update lock
+      $UNITEX_BUILD_TOOL_SED -i 's/UNITEX_BUILD_CORE_FORCE_UPDATE=2/UNITEX_BUILD_CORE_FORCE_UPDATE=0/' \
+                                 "$UNITEX_BUILD_CONFIG_FILENAME"
+      log_info "Compilation finished" "Compilation completed successfully"
+    fi
+  fi
+
+  pop_directory  # "$UNITEX_BUILD_CORE_WIN64_SOURCES_DIR/build"
+  pop_build_stage
+}  
+
+# =============================================================================
+# OS X
+# =============================================================================
+function stage_unitex_core_make_osx() {
+  push_stage "Core"
+  
+  # create a build environment for this platform
+  if [ ! -d "${UNITEX_BUILD_CORE_OSX_DIR:?}" ]
+  then
+    # try to create the directory
+    mkdir -p "${UNITEX_BUILD_CORE_OSX_DIR:?}" || {
+      die_with_critical_error "Aborting" "Failed to create a directory in ${UNITEX_BUILD_CORE_OSX_DIR:?}"
+    }
+
+    push_directory "$UNITEX_BUILD_SOURCE_DIR"
+
+    # try to copy source files
+    cp    -r "${UNITEX_BUILD_REPOSITORY_CORE_NAME:?}" "${UNITEX_BUILD_CORE_OSX_DIR:?}" || {
+     die_with_critical_error "Compilation failed" "There was a problem copying $UNITEX_BUILD_REPOSITORY_CORE_NAME to $UNITEX_BUILD_CORE_OSX_DIR" 
+    }
+    
+    pop_directory  # "$UNITEX_BUILD_SOURCE_DIR"
+  fi  # [ ! -d "${UNITEX_BUILD_CORE_OSX_DIR:?}" ]
+
+  push_directory "$UNITEX_BUILD_CORE_OSX_SOURCES_DIR/build"
+  
+  if [ $UNITEX_BUILD_CORE_UPDATE     -ne 0 -a \
+       $UNITEX_BUILD_CORE_HAS_ERRORS -eq 0 ]; then
+    # ensure that we remove all binary objects
+    log_notice "Cleaning" "OS X Unitex Core sources will be cleaned up";
+    exec_logged_command "make.osxcross.clean" "$UNITEX_BUILD_TOOL_MAKE" SYSTEM=osxcross clean
+
+    log_notice "Compiling" "OS X Unitex Core Tool Logger";
+    local unitex_core_make_fail=0
+    exec_logged_command "make.osxcross.debug.unitextoolloggeronly" "$UNITEX_BUILD_TOOL_MAKE" SYSTEM=osxcross \
+                   UNITEXTOOLLOGGERONLY=yes || {
+                     unitex_core_make_fail=1
+                   }
+
+    if [ $unitex_core_make_fail -ne 0 ]; then
+      UNITEX_BUILD_CORE_HAS_ERRORS=1
+      # Force update until the successful compilation of the code is assured
+      $UNITEX_BUILD_TOOL_SED -i 's/UNITEX_BUILD_CORE_FORCE_UPDATE=./UNITEX_BUILD_CORE_FORCE_UPDATE=2/'  \
+                                 "$UNITEX_BUILD_CONFIG_FILENAME"
+      log_error "Compilation failed" "OS X Unitex Core sources do not compile"
+    else
+      # Release update lock
+      $UNITEX_BUILD_TOOL_SED -i 's/UNITEX_BUILD_CORE_FORCE_UPDATE=2/UNITEX_BUILD_CORE_FORCE_UPDATE=0/' \
+                                 "$UNITEX_BUILD_CONFIG_FILENAME"    
+      log_info "Compilation finished" "Compilation completed successfully"
+    fi    
+  fi
+
+  pop_directory  # "$UNITEX_BUILD_CORE_OSX_SOURCES_DIR/build"
+  pop_build_stage
+}
+
+# =============================================================================
+# Linux Intel (i686)
+# =============================================================================
+function stage_unitex_core_make_linux_i686() {
+  push_stage "Core"
+  
+  # create a build environment for this platform
+  if [ ! -d "${UNITEX_BUILD_CORE_LINUX_I686_DIR:?}" ]
+  then
+    # try to create the directory
+    mkdir -p "${UNITEX_BUILD_CORE_LINUX_I686_DIR:?}" || {
+      die_with_critical_error "Aborting" "Failed to create a directory in ${UNITEX_BUILD_CORE_LINUX_I686_DIR:?}"
+    }
+
+    push_directory "$UNITEX_BUILD_SOURCE_DIR"
+
+    # try to copy source files
+    cp    -r "${UNITEX_BUILD_REPOSITORY_CORE_NAME:?}" "${UNITEX_BUILD_CORE_LINUX_I686_DIR:?}" || {
+     die_with_critical_error "Compilation failed" "There was a problem copying $UNITEX_BUILD_REPOSITORY_CORE_NAME to $UNITEX_BUILD_CORE_LINUX_I686_DIR" 
+    }
+
+    pop_directory  # "$UNITEX_BUILD_SOURCE_DIR"
+  fi  # [ ! -d "${UNITEX_BUILD_CORE_LINUX_I686_DIR:?}" ]
+
+  push_directory "$UNITEX_BUILD_CORE_LINUX_I686_SOURCES_DIR/build"
+  
+  if [ $UNITEX_BUILD_CORE_UPDATE     -ne 0 -a \
+       $UNITEX_BUILD_CORE_HAS_ERRORS -eq 0 ]; then
+    # ensure that we remove all binary objects
+    log_notice "Cleaning" "Linux Intel (i686) Unitex Core sources will be cleaned up";
+    exec_logged_command "make.linux.clean" "$UNITEX_BUILD_TOOL_MAKE" TRE_DIRECT_COMPILE=yes ADDITIONAL_CFLAG+="'-m32 -static -static-libgcc -static-libstdc++'"  64BITS=no TRE_CONFIGURE_OPTION="--host=i686-pc-linux-gnu"  clean
+
+    log_notice "Compiling" "Linux Intel (i686) Unitex Core Tool Logger";
+    local unitex_core_make_fail=0
+    exec_logged_command "make.linux.debug.unitextoolloggeronly" "$UNITEX_BUILD_TOOL_MAKE"  TRE_DIRECT_COMPILE=yes ADDITIONAL_CFLAG+="'-m32 -static -static-libgcc -static-libstdc++'"  64BITS=no TRE_CONFIGURE_OPTION="--host=i686-pc-linux-gnu" \
+                   UNITEXTOOLLOGGERONLY=yes || {
+                     unitex_core_make_fail=1
+                   }
+
+    if [ $unitex_core_make_fail -ne 0 ]; then
+      UNITEX_BUILD_CORE_HAS_ERRORS=1
+      # Force update until the successful compilation of the code is assured
+      $UNITEX_BUILD_TOOL_SED -i 's/UNITEX_BUILD_CORE_FORCE_UPDATE=./UNITEX_BUILD_CORE_FORCE_UPDATE=2/'  \
+                                 "$UNITEX_BUILD_CONFIG_FILENAME"
+      log_error "Compilation failed" "Linux Intel (i686) Unitex Core sources do not compile"
+    else
+      # Release update lock
+      $UNITEX_BUILD_TOOL_SED -i 's/UNITEX_BUILD_CORE_FORCE_UPDATE=2/UNITEX_BUILD_CORE_FORCE_UPDATE=0/' \
+                                 "$UNITEX_BUILD_CONFIG_FILENAME"    
+      log_info "Compilation finished" "Compilation completed successfully"
+    fi    
+  fi
+
+  pop_directory  # "$UNITEX_BUILD_CORE_LINUX_I686_SOURCES_DIR/build"
+  pop_build_stage
+}
+
+# =============================================================================
+# Linux Intel 64-bit (x86_64) debug
+# =============================================================================
+function stage_unitex_core_make_linux_x86_64_debug() {
+  push_stage "Core"
+  
+  # create a build environment for this platform
+  if [ ! -d "${UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_DIR:?}" ]
+  then
+    # try to create the directory
+    mkdir -p "${UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_DIR:?}" || {
+      die_with_critical_error "Aborting" "Failed to create a directory in ${UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_DIR:?}"
+    }
+
+    push_directory "$UNITEX_BUILD_SOURCE_DIR"
+
+    # try to copy source files
+    cp    -r "${UNITEX_BUILD_REPOSITORY_CORE_NAME:?}" "${UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_DIR:?}" || {
+     die_with_critical_error "Compilation failed" "There was a problem copying $UNITEX_BUILD_REPOSITORY_CORE_NAME to $UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_DIR" 
+    }
+
+    pop_directory  # "$UNITEX_BUILD_SOURCE_DIR"
+  fi  # [ ! -d "${UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_DIR:?}" ]
+
+  push_directory "$UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_SOURCES_DIR/build"
+  
+  if [ $UNITEX_BUILD_CORE_UPDATE     -ne 0 -a \
+       $UNITEX_BUILD_CORE_HAS_ERRORS -eq 0 ]; then
+    # ensure that we remove all binary objects
+    log_notice "Cleaning" "Linux Intel 64-bit (x86_64) (with debug info) Unitex Core sources will be cleaned up";
+    exec_logged_command "make.linux.clean"    "$UNITEX_BUILD_TOOL_MAKE" SYSTEM=linux-like 64BITS=yes clean
+
+    log_notice "Compiling" "Linux Intel 64-bit (x86_64) (with debug info) Unitex Core Tool Logger";
+    local unitex_core_make_fail=0
+    exec_logged_command "make.linux.debug.unitextoolloggeronly" "$UNITEX_BUILD_TOOL_MAKE" SYSTEM=linux-like 64BITS=yes DEBUG=yes \
+                   UNITEXTOOLLOGGERONLY=yes || {
+                     unitex_core_make_fail=1
+                   }
+
+    if [ $unitex_core_make_fail -ne 0 ]; then
+      UNITEX_BUILD_CORE_HAS_ERRORS=1
+      # Force update until the successful compilation of the code is assured
+      $UNITEX_BUILD_TOOL_SED -i 's/UNITEX_BUILD_CORE_FORCE_UPDATE=./UNITEX_BUILD_CORE_FORCE_UPDATE=2/'  \
+                                 "$UNITEX_BUILD_CONFIG_FILENAME"
+      log_error "Compilation failed" "Linux Intel 64-bit (x86_64) (with debug info) Unitex Core sources do not compile"
+    else
+      # Release update lock
+      $UNITEX_BUILD_TOOL_SED -i 's/UNITEX_BUILD_CORE_FORCE_UPDATE=2/UNITEX_BUILD_CORE_FORCE_UPDATE=0/' \
+                                 "$UNITEX_BUILD_CONFIG_FILENAME"    
+      log_info "Compilation finished" "Compilation completed successfully"
+    fi    
+  fi
+
+  pop_directory  # "$UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_SOURCES_DIR/build"
+  pop_build_stage
+}
+
+# =============================================================================
+# Linux Intel 64-bit (x86_64)
+# =============================================================================
+function stage_unitex_core_make_linux_x86_64() {
+  push_stage "Core"
+  
+  # create a build environment for this platform
+  if [ ! -d "${UNITEX_BUILD_CORE_LINUX_X86_64_DIR:?}" ]
+  then
+    # try to create the directory
+    mkdir -p "${UNITEX_BUILD_CORE_LINUX_X86_64_DIR:?}" || {
+      die_with_critical_error "Aborting" "Failed to create a directory in ${UNITEX_BUILD_CORE_LINUX_X86_64_DIR:?}"
+    }
+
+    push_directory "$UNITEX_BUILD_SOURCE_DIR"
+
+    # try to copy source files
+    cp    -r "${UNITEX_BUILD_REPOSITORY_CORE_NAME:?}" "${UNITEX_BUILD_CORE_LINUX_X86_64_DIR:?}" || {
+     die_with_critical_error "Compilation failed" "There was a problem copying $UNITEX_BUILD_REPOSITORY_CORE_NAME to $UNITEX_BUILD_CORE_LINUX_X86_64_DIR" 
+    }
+
+    pop_directory  # "$UNITEX_BUILD_SOURCE_DIR"
+  fi  # [ ! -d "${UNITEX_BUILD_CORE_LINUX_X86_64_DIR:?}" ]
+
+  push_directory "$UNITEX_BUILD_CORE_LINUX_X86_64_SOURCES_DIR/build"
+  
+  if [ $UNITEX_BUILD_CORE_UPDATE     -ne 0 -a \
+       $UNITEX_BUILD_CORE_HAS_ERRORS -eq 0 ]; then
+    # ensure that we remove all binary objects
+    log_notice "Cleaning" "Linux Intel 64-bit (x86_64) Unitex Core sources will be cleaned up";
+    exec_logged_command "make.linux.clean" "$UNITEX_BUILD_TOOL_MAKE" SYSTEM=linux-like 64BITS=yes ADDITIONAL_CFLAG+="'-static -static-libgcc -static-libstdc++'" clean
+
+    log_notice "Compiling" "Linux Intel 64-bit (x86_64) Unitex Core Tool Logger";
+    local unitex_core_make_fail=0
+    exec_logged_command "make.linux.debug.unitextoolloggeronly" "$UNITEX_BUILD_TOOL_MAKE" SYSTEM=linux-like 64BITS=yes ADDITIONAL_CFLAG+="'-static -static-libgcc -static-libstdc++'" \
+                   UNITEXTOOLLOGGERONLY=yes || {
+                     unitex_core_make_fail=1
+                   }
+
+    if [ $unitex_core_make_fail -ne 0 ]; then
+      UNITEX_BUILD_CORE_HAS_ERRORS=1
+      # Force update until the successful compilation of the code is assured
+      $UNITEX_BUILD_TOOL_SED -i 's/UNITEX_BUILD_CORE_FORCE_UPDATE=./UNITEX_BUILD_CORE_FORCE_UPDATE=2/'  \
+                                 "$UNITEX_BUILD_CONFIG_FILENAME"
+      log_error "Compilation failed" "Linux Intel 64-bit (x86_64) Unitex Core sources do not compile"
+    else
+      # Release update lock
+      $UNITEX_BUILD_TOOL_SED -i 's/UNITEX_BUILD_CORE_FORCE_UPDATE=2/UNITEX_BUILD_CORE_FORCE_UPDATE=0/' \
+                                 "$UNITEX_BUILD_CONFIG_FILENAME"    
+      log_info "Compilation finished" "Compilation completed successfully"
+    fi    
+  fi
+
+  pop_directory  # "$UNITEX_BUILD_CORE_LINUX_X86_64_SOURCES_DIR/build"
+  pop_build_stage
+}
 
 # =============================================================================
 #  options, url, path
@@ -2226,10 +2826,12 @@ function git_clone_pull() {
   # this is from @source http://stackoverflow.com/a/2044677/2042871
   if [ -d "$git_clone_pull_path" ]; then
      push_directory "$git_clone_pull_path"
-     is_git_repository=1 
-     git rev-parse 2> /dev/null > /dev/null || {
-      is_git_repository=0
-     }
+     if [ -d ".git" ]; then
+      is_git_repository=1
+     fi
+     # git rev-parse 2> /dev/null > /dev/null || {
+     #  is_git_repository=0
+     # }
      pop_directory  
   fi
 
@@ -2436,9 +3038,9 @@ function stage_unitex_core_logs_run() {
     rm -f "$UNITEX_BUILD_REPOSITORY_LOGS_LOCAL_PATH/UnitexToolLogger"
 
     UNITEX_BUILD_HAS_UNITEXTOOLLOGGER=1
-    command -v "$UNITEX_BUILD_CORE_SOURCES_DIR/bin/UnitexToolLogger" > /dev/null ||\
+    command -v "$UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_SOURCES_DIR/bin/UnitexToolLogger" > /dev/null ||\
     {
-      log_error "Aborting" "UnitexToolLogger is required but it's not compiled yet"
+      log_error "Aborting" "UnitexToolLogger linux-x86_64-debug is required but it's not compiled yet"
       UNITEX_BUILD_HAS_UNITEXTOOLLOGGER=0
     }
 
@@ -2448,7 +3050,7 @@ function stage_unitex_core_logs_run() {
       UNITEXTOOLLOGGER_ERROR_SUMMARY_FULLNAME="$UNITEX_BUILD_LOG_WORKSPACE/$UNITEX_BUILD_CURRENT_STAGE.UnitexToolLogger.error_summary.$UNITEX_BUILD_LOG_FILE_EXT"
       UNITEXTOOLLOGGER_ERROR_SUMMARY_FILENAME=$(basename "$UNITEXTOOLLOGGER_ERROR_SUMMARY_FULLNAME")
       
-      cp "$UNITEX_BUILD_CORE_SOURCES_DIR/bin/UnitexToolLogger" "$UNITEX_BUILD_REPOSITORY_LOGS_LOCAL_PATH/UnitexToolLogger"
+      cp "$UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_SOURCES_DIR/bin/UnitexToolLogger" "$UNITEX_BUILD_REPOSITORY_LOGS_LOCAL_PATH/UnitexToolLogger"
       
       push_directory "$UNITEX_BUILD_REPOSITORY_LOGS_LOCAL_PATH"
       for i in ./*.ulp
@@ -2542,7 +3144,7 @@ function stage_unitex_core_dist() {
   push_directory "$UNITEX_BUILD_SOURCE_DIR"
 
   UNITEX_BUILD_CORE_DEPLOYMENT=$(( ! UNITEX_BUILD_CORE_HAS_ERRORS && ! UNITEX_BUILD_LOGS_HAS_ERRORS &&  ( UNITEX_BUILD_CORE_FORCE_DEPLOYMENT  || UNITEX_BUILD_FORCE_DEPLOYMENT ) ))
-  if [ $UNITEX_BUILD_CORE_DEPLOYMENT -eq 0 ]; then
+  if [ $UNITEX_BUILD_CORE_DEPLOYMENT  -eq 0 ]; then
    if [ $UNITEX_BUILD_CORE_UPDATE     -ne 0 -a \
         $UNITEX_BUILD_CORE_HAS_ERRORS -eq 0 -a \
         $UNITEX_BUILD_LOGS_HAS_ERRORS -eq 0 ]; then
@@ -2552,19 +3154,37 @@ function stage_unitex_core_dist() {
 
       log_info "Preparing dist" "Core distribution is being prepared..."
 
-      if [ -d  "$APPDIR" -a -d "$UNITEX_BUILD_CORE_SOURCES_DIR/bin" ]; then
-        date "+%B %d, %Y" > "$APPDIR/revision.date"
+      #-d "$UNITEX_BUILD_CORE_WIN64_SOURCES_DIR/bin"        -a \
+      if [ -d "$UNITEX_BUILD_RELEASE_APP_DIR"                    -a \
+           -d "$UNITEX_BUILD_CORE_WIN32_SOURCES_DIR/bin"         -a \
+           -d "$UNITEX_BUILD_CORE_OSX_SOURCES_DIR/bin"           -a \
+           -d "$UNITEX_BUILD_CORE_LINUX_I686_SOURCES_DIR/bin"    -a \
+           -d "$UNITEX_BUILD_CORE_LINUX_X86_64_SOURCES_DIR/bin" ]; then
+        # Put revision.date
+        date "+%B %d, %Y" > "$UNITEX_BUILD_RELEASE_APP_DIR/revision.date"
 
-        # we copy the Windows executables into the App directory
-        log_info "Copying" "Windows executables"
+        # Clean previous binaries    
+        rm -rf "${UNITEX_BUILD_RELEASE_APP_DIR:?}"/*.exe
+        rm -rf "${UNITEX_BUILD_RELEASE_APP_DIR:?}"/UnitexToolLogger
+        rm -rf "${UNITEX_BUILD_RELEASE_APP_DIR:?}"/"${UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME:?}"
 
-        #cp $UNITEX_BUILD_REPOSITORY_CORE_NAME/bin/* "$APPDIR"
-        rm -rf "${APPDIR:?}"/*.exe
-        cp "$UNITEX_BUILD_CORE_SOURCES_DIR/bin"/* "$APPDIR"
+        # Create a /platform directory
+        mkdir "${UNITEX_BUILD_RELEASE_APP_DIR:?}"/"${UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME:?}"
+
+        # Copy the Win32 executables into the /platform/win32 directory
+        mkdir "${UNITEX_BUILD_RELEASE_APP_DIR:?}/${UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME:?}/${UNITEX_BUILD_RELEASES_WIN32_HOME_NAME:?}"
+        log_info "Copying" "Win32 binaries"
+        cp "$UNITEX_BUILD_CORE_WIN32_SOURCES_DIR/bin"/* "$UNITEX_BUILD_RELEASE_APP_DIR/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_WIN32_HOME_NAME"    
+
+        # Copy the Win64 executables into the /platform/win64 directory
+        mkdir "${UNITEX_BUILD_RELEASE_APP_DIR:?}/${UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME:?}/${UNITEX_BUILD_RELEASES_WIN64_HOME_NAME:?}"
+        log_info "Copying" "Win64 binaries"
+        cp "$UNITEX_BUILD_CORE_WIN64_SOURCES_DIR/bin"/* "$UNITEX_BUILD_RELEASE_APP_DIR/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_WIN64_HOME_NAME"
 
         # Sign windows executables
         if [ -n "${UNITEX_BUILD_TOOL_SIGNCODE+1}" ]; then
-          find -L "$APPDIR" -maxdepth 1                                                                      \
+          find -L "$UNITEX_BUILD_RELEASE_APP_DIR/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_WIN32_HOME_NAME" \
+               -maxdepth 1                                                                                   \
                -not -name ".*"                                                                               \
                -type f                                                                                       \
                -name "*.exe"                                                                                 \
@@ -2575,27 +3195,70 @@ function stage_unitex_core_dist() {
                 die_with_critical_error "Sign failed" "Error signing $(basename "$executable")"
               }                                                                                              
            done
-        fi   # [ -n "${UNITEX_BUILD_TOOL_SIGNCODE+1}" ]
-      else  # [ -d  "$APPDIR" -a -d "$UNITEX_BUILD_CORE_SOURCES_DIR/bin" ];
-        die_with_critical_error "Core dist error" "Failed to create Core distribution";  
-      fi  # [ -d  "$APPDIR" -a -d "$UNITEX_BUILD_CORE_SOURCES_DIR/bin" ];
+        fi   # [ -n "${UNITEX_BUILD_TOOL_SIGNCODE+1}" ]  
+
+        # Backward compatibility
+        cp "$UNITEX_BUILD_RELEASE_APP_DIR/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_WIN32_HOME_NAME"/* "$UNITEX_BUILD_RELEASE_APP_DIR"
+
+        # Copy the OS X binaries into the /platform/osx directory
+        mkdir "${UNITEX_BUILD_RELEASE_APP_DIR:?}/${UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME:?}/${UNITEX_BUILD_RELEASES_OSX_HOME_NAME:?}"
+        log_info "Copying" "OS X binaries"
+        cp "$UNITEX_BUILD_CORE_OSX_SOURCES_DIR/bin"/* "$UNITEX_BUILD_RELEASE_APP_DIR/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_OSX_HOME_NAME"
+
+        # Copy the Linux 32-bit (i686) binaries into the /platform/linux-i686 directory
+        mkdir "${UNITEX_BUILD_RELEASE_APP_DIR:?}/${UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME:?}/${UNITEX_BUILD_RELEASES_LINUX_I686_HOME_NAME:?}"
+        log_info "Copying" "Linux 32-bit (i686) binaries"
+        cp "$UNITEX_BUILD_CORE_LINUX_I686_SOURCES_DIR/bin"/* "$UNITEX_BUILD_RELEASE_APP_DIR/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_LINUX_I686_HOME_NAME"
+ 
+        # Copy the Linux 64-bit (x86_64) binaries into the /platform/linux-x86_64 directory
+        mkdir "${UNITEX_BUILD_RELEASE_APP_DIR:?}/${UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME:?}/${UNITEX_BUILD_RELEASES_LINUX_X86_64_HOME_NAME:?}"
+        log_info "Copying" "Linux 64-bit (x86_64) binaries"
+        cp "$UNITEX_BUILD_CORE_LINUX_X86_64_SOURCES_DIR/bin"/* "$UNITEX_BUILD_RELEASE_APP_DIR/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_LINUX_X86_64_HOME_NAME"
+        
+        ## Copy the OS X binaries into the App directory
+        #log_info "Copying" "OS X binaries"
+        #push_directory "$UNITEX_BUILD_CORE_OSX_SOURCES_DIR/bin"
+        #for file in *; do  
+         #if [[ $file =~ \. ]]; then
+            #cp "$file" "$UNITEX_BUILD_RELEASE_APP_DIR/${file%.*}$UNITEX_BUILD_PACKAGE_OSX_SUFFIX.${file##*.}"
+         #else
+            #cp "$file" "$UNITEX_BUILD_RELEASE_APP_DIR/$file$UNITEX_BUILD_PACKAGE_OSX_SUFFIX"
+         #fi   
+        #done
+        #pop_directory  # "$UNITEX_BUILD_SOURCE_DIR"
+
+        # Copy the Linux 64-bit (x86_64) binaries into the App directory
+        #log_info "Copying" "Linux 64-bit (x86_64) binaries"
+        #push_directory "$UNITEX_BUILD_CORE_LINUX_X86_64_SOURCES_DIR/bin"
+        #for file in *; do  
+         #if [[ $file =~ \. ]]; then
+            #cp "$file" "$UNITEX_BUILD_RELEASE_APP_DIR/${file%.*}$UNITEX_BUILD_PACKAGE_LINUX_X86_64_SUFFIX.${file##*.}"
+         #else
+            #cp "$file" "$UNITEX_BUILD_RELEASE_APP_DIR/$file$UNITEX_BUILD_PACKAGE_LINUX_X86_64_SUFFIX"
+         #fi   
+        #done
+        #pop_directory  # "$UNITEX_BUILD_SOURCE_DIR"        
+
+      else  # [ -d  "$UNITEX_BUILD_RELEASE_APP_DIR" -a ... ];
+        die_with_critical_error "Core dist error" "Failed to create Core distribution, some platform binaries are missing" 
+      fi  # [ -d  "$UNITEX_BUILD_RELEASE_APP_DIR" -a ... ];
       
       # then, we copy the sources into the Src/C++ directory
       log_info "Copying" "Core components sources"
-      rm -rf "${CPPDIR:?}"
-      mkdir "$CPPDIR"
-      cp "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/*.cpp "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/*.h "$CPPDIR/"
-      mkdir "$CPPDIR/bin"
-      cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/build/ "$CPPDIR/"
-      rm -f "$CPPDIR"/build/*.o
-      cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/logger          "$CPPDIR/"
-      cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/vendor          "$CPPDIR/"
-      cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/UnitexLibAndJni "$CPPDIR/"
-      cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/include_tre     "$CPPDIR/"
-      cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/win32vs2008     "$CPPDIR/"
-      cp    "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/Licenses/*.txt  "$APPDIR/"
+      rm -rf "${UNITEX_BUILD_RELEASE_SRC_CORE_DIR:?}"
+      mkdir "$UNITEX_BUILD_RELEASE_SRC_CORE_DIR"
+      cp "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/*.cpp "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/*.h "$UNITEX_BUILD_RELEASE_SRC_CORE_DIR/"
+      mkdir "$UNITEX_BUILD_RELEASE_SRC_CORE_DIR/bin"
+      cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/build/          "$UNITEX_BUILD_RELEASE_SRC_CORE_DIR/"
+      rm -f "$UNITEX_BUILD_RELEASE_SRC_CORE_DIR"/build/*.o
+      cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/logger          "$UNITEX_BUILD_RELEASE_SRC_CORE_DIR/"
+      cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/vendor          "$UNITEX_BUILD_RELEASE_SRC_CORE_DIR/"
+      cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/UnitexLibAndJni "$UNITEX_BUILD_RELEASE_SRC_CORE_DIR/"
+      cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/include_tre     "$UNITEX_BUILD_RELEASE_SRC_CORE_DIR/"
+      cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/win32vs2008     "$UNITEX_BUILD_RELEASE_SRC_CORE_DIR/"
+      cp    "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/Licenses/*.txt  "$UNITEX_BUILD_RELEASE_APP_DIR/"
       # finally, we create the README.txt
-      stage_unitex_core_create_readme "$UNITEXDIR" "README.txt"
+      stage_unitex_core_create_readme "$UNITEX_BUILD_RELEASE_DIR" "README.txt"
       
       log_info "Dist prepared" "Core distribution is now prepared"
     fi
@@ -2663,7 +3326,7 @@ function stage_unitex_core_create_readme() {
     UNITEX_GOVERNANCE_URL="$UNITEX_GOVERNANCE_URL"                                   \
     UNITEX_COPYRIGHT_HOLDER="$UNITEX_COPYRIGHT_HOLDER"                               \
     UNITEX_CURRENT_YEAR=$(date '+%Y')                                                \
-    ./mo "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH/README.md.in"                    |\
+    "$SCRIPT_BASEDIR/mo" "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH/README.md.in"    |\
      fold -s -w72                                                                    \
      > "$README_FILE"
   else 
@@ -2694,18 +3357,8 @@ function create_zip() {
   exec_logged_command "zipcmd.create" "$UNITEX_BUILD_TOOL_ZIP" -r \
                       "$ZIP_FILE" "$ZIP_TARGET" "$ZIP_ARGS"
 
-
-  if [ -e "$ZIP_FILE" ]; then
-    # Calculate the SHA256 hash of the zip file
-    log_info "Computing SHA256" "Computing the SHA256 of ${ZIP_FILE// /%20}"
-    local -r zip_sha256=$(sha256sum "$ZIP_FILE"                  |\
-                          sed -e "s:$ZIP_FILE:$ZIP_FILENAME:"    |\
-                          tee "$ZIP_PATH/$ZIP_FILENAME.sha256"   |\
-                          sed "s:\s\+.*$::")
-    log_info "SHA256 Computed" "SHA256 hash ($zip_sha256) saved to $ZIP_FILENAME.sha256"
-  else
-    log_warn "File not found" "File $ZIP_FILE doesn't exist"
-  fi
+  # Calculate the checksum of the zip file
+  calculate_checksum "$ZIP_FILE" "$ZIP_PATH"
 
   pop_directory  # "$1"            
 }
@@ -2742,7 +3395,7 @@ function stage_unitex_packaging_make_installer_win32() {
     #                               -DFORCE_JRE_UPDATE_INSTALLER_LINK \ 
     exec_logged_command "nsis.win32.installer" "$UNITEX_BUILD_TOOL_MAKENSIS"             \
       $nsis_verbose_all_parameter -DINPUT_BASEDIR="$UNITEX_BUILD_BUNDLE_BASEDIR"         \
-                                  -DINPUT_UNITEXDIR="$UNITEXDIR"                         \
+                                  -DINPUT_UNITEXDIR="$UNITEX_BUILD_RELEASE_DIR"     \
                                   -DINPUT_TIMESTAMPDIR="$UNITEX_BUILD_TIMESTAMP_DIR"     \
       $nsis_sign_file_parameter   -DVER_MAJOR="$UNITEX_VER_MAJOR"                        \
                                   -DVER_MINOR="$UNITEX_VER_MINOR"                        \
@@ -2781,7 +3434,7 @@ function stage_unitex_deployment_generate_beta_downloads_webpage() {
   # The minus in "<<-__END__" suppresses leading tabs in the body of the
   # document  
 cat > "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" << __END__
-<h1>Download area for $UNITEX_BUILD_FULL_RELEASE</h1>
+<h1>Download area for the $UNITEX_BUILD_FULL_RELEASE</h1>
 <script type="text/javascript" language="JavaScript">
 <!--
 function writeCookie(name, val) {
@@ -3151,7 +3804,11 @@ function stage_unitex_deployment() {
 
     # 5
     if [ $UNITEX_BUILD_PACK_DEPLOYMENT -ne 0 ]; then
-      deploy_artifact "$UNITEX_BUILD_RELEASES_SETUP_WIN32_DIR" "$UNITEX_BUILD_DEPLOYMENT_DESTINATION/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_VERSION"
+      deploy_artifact "$UNITEX_BUILD_RELEASES_SETUP_WIN32_DIR"  "$UNITEX_BUILD_DEPLOYMENT_DESTINATION/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_VERSION"
+      deploy_artifact "$UNITEX_BUILD_RELEASES_SETUP_WIN64_DIR"  "$UNITEX_BUILD_DEPLOYMENT_DESTINATION/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_VERSION"
+      deploy_artifact "$UNITEX_BUILD_RELEASES_OSX_DIR"          "$UNITEX_BUILD_DEPLOYMENT_DESTINATION/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_VERSION"
+      deploy_artifact "$UNITEX_BUILD_RELEASES_LINUX_I686_DIR"   "$UNITEX_BUILD_DEPLOYMENT_DESTINATION/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_VERSION"
+      deploy_artifact "$UNITEX_BUILD_RELEASES_LINUX_X86_64_DIR" "$UNITEX_BUILD_DEPLOYMENT_DESTINATION/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_VERSION"
     fi
 
     # 6
@@ -3774,6 +4431,24 @@ function setup_release_information() {
   # e.g. Unitex-GramLab-3.1beta_win32-setup
   UNITEX_PACKAGE_WIN32_PREFIX="$UNITEX_PACKAGE_FULL_NAME$UNITEX_BUILD_PACKAGE_SETUP_WIN32_TAG$UNITEX_BUILD_PACKAGE_SETUP_SUFFIX"
 
+  # setup the win64 package name prefix
+  # e.g. Unitex-GramLab-3.1beta_win64-setup
+  UNITEX_PACKAGE_WIN64_PREFIX="$UNITEX_PACKAGE_FULL_NAME$UNITEX_BUILD_PACKAGE_SETUP_WIN64_TAG$UNITEX_BUILD_PACKAGE_SETUP_SUFFIX"
+  UNITEX_PACKAGE_WIN64_PREFIX="$UNITEX_PACKAGE_WIN64_PREFIX"  # FIXME(martinec) temporal assignation to avoid SC2034 warning
+  
+  # setup the OS X package name prefix
+  # e.g. Unitex-GramLab-3.1beta-osx
+  UNITEX_PACKAGE_OSX_PREFIX="$UNITEX_PACKAGE_FULL_NAME$UNITEX_BUILD_PACKAGE_OSX_SUFFIX"
+  UNITEX_PACKAGE_OSX_PREFIX="$UNITEX_PACKAGE_OSX_PREFIX"      # FIXME(martinec) temporal assignation to avoid SC2034 warning
+
+  # setup the Linux i686 package name prefix
+  # e.g. Unitex-GramLab-3.1beta-linux-i686
+  UNITEX_PACKAGE_LINUX_I686_PREFIX="$UNITEX_PACKAGE_FULL_NAME$UNITEX_BUILD_PACKAGE_LINUX_I686_SUFFIX"
+
+  # setup the Linux x86_64 package name prefix
+  # e.g. Unitex-GramLab-3.1beta-linux-x86_64
+  UNITEX_PACKAGE_LINUX_X86_64_PREFIX="$UNITEX_PACKAGE_FULL_NAME$UNITEX_BUILD_PACKAGE_LINUX_X86_64_SUFFIX"
+
   # setup the man package name prefix
   # e.g. Unitex-GramLab-3.1beta-usermanual
   UNITEX_PACKAGE_MAN_PREFIX="$UNITEX_PACKAGE_FULL_NAME$UNITEX_BUILD_PACKAGE_MAN_SUFFIX"
@@ -3993,6 +4668,13 @@ function setup_build_environment() {
   fi
   log_debug "Packaging win dir" "$UNITEX_BUILD_REPOSITORY_PACK_WIN_LOCAL_PATH"
 
+  UNITEX_BUILD_REPOSITORY_PACK_UNIX_NAME="packaging/unix"
+  UNITEX_BUILD_REPOSITORY_PACK_UNIX_LOCAL_PATH="$UNITEX_BUILD_SOURCE_DIR/$UNITEX_BUILD_REPOSITORY_PACK_UNIX_NAME"
+  if [ ! -d "$UNITEX_BUILD_REPOSITORY_PACK_UNIX_LOCAL_PATH" ]; then
+    mkdir "$UNITEX_BUILD_REPOSITORY_PACK_UNIX_LOCAL_PATH"
+  fi
+  log_debug "Packaging unix dir" "$UNITEX_BUILD_REPOSITORY_PACK_UNIX_LOCAL_PATH"  
+
   UNITEX_BUILD_REPOSITORY_LOGS_NAME="logs"
   UNITEX_BUILD_REPOSITORY_LOGS_LOCAL_PATH="$UNITEX_BUILD_SOURCE_DIR/$UNITEX_BUILD_REPOSITORY_LOGS_NAME"
   if [ ! -d "$UNITEX_BUILD_REPOSITORY_LOGS_LOCAL_PATH" ]; then
@@ -4027,42 +4709,69 @@ function setup_build_environment() {
   fi
   log_debug "Packages win32 dir" "$UNITEX_BUILD_RELEASES_SETUP_WIN32_DIR"
 
+  # e.g. /home/vinber/build/Unitex-GramLab/nightly/releases/3.1beta/win64
+  UNITEX_BUILD_RELEASES_SETUP_WIN64_DIR="$UNITEX_BUILD_RELEASES_DIR/$UNITEX_BUILD_RELEASES_WIN64_HOME_NAME"
+  if [ ! -d "$UNITEX_BUILD_RELEASES_SETUP_WIN64_DIR" ]; then
+    mkdir "$UNITEX_BUILD_RELEASES_SETUP_WIN64_DIR"
+  fi
+  log_debug "Packages win64 dir" "$UNITEX_BUILD_RELEASES_SETUP_WIN64_DIR"
+
+  # e.g. /home/vinber/build/Unitex-GramLab/nightly/releases/3.1beta/osx
+  UNITEX_BUILD_RELEASES_OSX_DIR="$UNITEX_BUILD_RELEASES_DIR/$UNITEX_BUILD_RELEASES_OSX_HOME_NAME"
+  if [ ! -d "$UNITEX_BUILD_RELEASES_OSX_DIR" ]; then
+    mkdir "$UNITEX_BUILD_RELEASES_OSX_DIR"
+  fi
+  log_debug "Packages osx dir" "$UNITEX_BUILD_RELEASES_OSX_DIR"
+
+  # e.g. /home/vinber/build/Unitex-GramLab/nightly/releases/3.1beta/linux-i686
+  UNITEX_BUILD_RELEASES_LINUX_I686_DIR="$UNITEX_BUILD_RELEASES_DIR/$UNITEX_BUILD_RELEASES_LINUX_I686_HOME_NAME"
+  if [ ! -d "$UNITEX_BUILD_RELEASES_LINUX_I686_DIR" ]; then
+    mkdir "$UNITEX_BUILD_RELEASES_LINUX_I686_DIR"
+  fi
+  log_debug "Packages linux-i686 dir" "$UNITEX_BUILD_RELEASES_LINUX_I686_DIR"
+
+  # e.g. /home/vinber/build/Unitex-GramLab/nightly/releases/3.1beta/linux-x86_64
+  UNITEX_BUILD_RELEASES_LINUX_X86_64_DIR="$UNITEX_BUILD_RELEASES_DIR/$UNITEX_BUILD_RELEASES_LINUX_X86_64_HOME_NAME"
+  if [ ! -d "$UNITEX_BUILD_RELEASES_LINUX_X86_64_DIR" ]; then
+    mkdir "$UNITEX_BUILD_RELEASES_LINUX_X86_64_DIR"
+  fi
+  log_debug "Packages Linux x86_64 dir" "$UNITEX_BUILD_RELEASES_LINUX_X86_64_DIR"
+
   # e.g. /home/vinber/build/Unitex-GramLab/nightly/dist/Unitex-GramLab-3.1beta
-  UNITEXDIR="$UNITEX_BUILD_DIST_BASEDIR/$UNITEX_PACKAGE_FULL_NAME"
-  if [ ! -d "$UNITEXDIR" ]; then
-    mkdir "$UNITEXDIR"
-  fi
-  log_debug "Unitex dir" "$UNITEXDIR" 
+  UNITEX_BUILD_RELEASE_DIR="$UNITEX_BUILD_DIST_BASEDIR/$UNITEX_PACKAGE_FULL_NAME"
+  rm -rf "${UNITEX_BUILD_RELEASE_DIR:?}"
+  mkdir "$UNITEX_BUILD_RELEASE_DIR"
+  log_debug "Unitex dir" "$UNITEX_BUILD_RELEASE_DIR" 
 
-  APPDIR="$UNITEXDIR/App"
-  if [ ! -d "$APPDIR" ]; then
-    mkdir "$APPDIR"
+  UNITEX_BUILD_RELEASE_APP_DIR="$UNITEX_BUILD_RELEASE_DIR/App"
+  if [ ! -d "$UNITEX_BUILD_RELEASE_APP_DIR" ]; then
+    mkdir "$UNITEX_BUILD_RELEASE_APP_DIR"
   fi
-  log_debug "Unitex App dir" "$APPDIR"
+  log_debug "Unitex App dir" "$UNITEX_BUILD_RELEASE_APP_DIR"
 
-  MANUALDIR="$APPDIR/manual"
-  if [ ! -d "$MANUALDIR" ]; then
-    mkdir "$MANUALDIR"
+  UNITEX_BUILD_RELEASE_APP_MANUAL_DIR="$UNITEX_BUILD_RELEASE_APP_DIR/manual"
+  if [ ! -d "$UNITEX_BUILD_RELEASE_APP_MANUAL_DIR" ]; then
+    mkdir "$UNITEX_BUILD_RELEASE_APP_MANUAL_DIR"
   fi
-  log_debug "Unitex Manual dir" "$MANUALDIR" 
+  log_debug "Unitex Manual dir" "$UNITEX_BUILD_RELEASE_APP_MANUAL_DIR" 
 
-  SRCDIR="$UNITEXDIR/Src"
-  if [ ! -d "$SRCDIR" ]; then
-    mkdir "$SRCDIR"
+  UNITEX_BUILD_RELEASE_SRC_DIR="$UNITEX_BUILD_RELEASE_DIR/Src"
+  if [ ! -d "$UNITEX_BUILD_RELEASE_SRC_DIR" ]; then
+    mkdir "$UNITEX_BUILD_RELEASE_SRC_DIR"
   fi
-  log_debug "Unitex Src dir" "$SRCDIR" 
+  log_debug "Unitex Src dir" "$UNITEX_BUILD_RELEASE_SRC_DIR" 
 
-  CPPDIR="$SRCDIR/C++"
-  if [ ! -d "$CPPDIR" ]; then
-    mkdir "$CPPDIR"
+  UNITEX_BUILD_RELEASE_SRC_CORE_DIR="$UNITEX_BUILD_RELEASE_SRC_DIR/C++"
+  if [ ! -d "$UNITEX_BUILD_RELEASE_SRC_CORE_DIR" ]; then
+    mkdir "$UNITEX_BUILD_RELEASE_SRC_CORE_DIR"
   fi
-  log_debug "Unitex Core Src dir" "$CPPDIR"
+  log_debug "Unitex Core Src dir" "$UNITEX_BUILD_RELEASE_SRC_CORE_DIR"
 
-  USERSDIR="$UNITEXDIR/Users"
-  if [ ! -d "$USERSDIR" ]; then
-    mkdir "$USERSDIR"
+  UNITEX_BUILD_RELEASE_USERS_DIR="$UNITEX_BUILD_RELEASE_DIR/Users"
+  if [ ! -d "$UNITEX_BUILD_RELEASE_USERS_DIR" ]; then
+    mkdir "$UNITEX_BUILD_RELEASE_USERS_DIR"
   fi
-  log_debug "Unitex User dir" "$USERSDIR"
+  log_debug "Unitex User dir" "$UNITEX_BUILD_RELEASE_USERS_DIR"
 
   UNITEX_BUILD_DOWNLOAD_WEB_PAGE="$UNITEX_BUILD_RELEASES_DIR/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME.html"
 
@@ -4086,9 +4795,6 @@ function setup_build_environment() {
     mkdir "$UNITEX_BUILD_RELEASES_MAN_DIR"
   fi
   log_debug "Unitex Man dir" "$UNITEX_BUILD_RELEASES_MAN_DIR"
-
-  UNITEX_BUILD_CORE_SOURCES_DIR="$UNITEX_BUILD_TEMPORAL_WORKSPACE/$UNITEX_BUILD_REPOSITORY_CORE_NAME"
-  log_debug "Core sources directory" "$UNITEX_BUILD_CORE_SOURCES_DIR"
 
   # UNITEX_BUILD_SVN_LOG_LIMIT parameter
   if [[ $UNITEX_BUILD_SVN_LOG_LIMIT -ne -1 ]]; then
@@ -4207,46 +4913,43 @@ function notify_recipients() {
   export EMAIL="$UNITEX_BUILD_VINBER_DESCRIPTION <nobody@univ-mlv.fr>"
   export REPLYTO="noreply@univ-mlv.fr"
 
-  # shellcheck disable=SC2016
-  UNITEX_BUILD_MAIL_QUOTE=$(wget --timeout=2 -O - -q \
-  "http://www.iheartquotes.com/api/v1/random?format=text&max_lines=2&show_permalink=false&show_source=false&source=prog_style" |\
-   sed '/^$/d ; s:^\s*:: ; s:^-::'               |\
-   $UNITEX_BUILD_TOOL_PHP -R 'echo html_entity_decode($argn)."\n";' |\
-   fold -s -w72)
-
   # UNITEX_BUILD_FIRST_ISSUE
   UNITEX_BUILD_FIRST_ISSUE=""
   if [ $UNITEX_BUILD_LOG_FIRST_ISSUE_NUMBER -ge 1 ]; then
-    UNITEX_BUILD_LOG_FRONTEND_URL="$UNITEX_BUILD_LOG_FRONTEND_URL&line=$UNITEX_BUILD_LOG_FIRST_ISSUE_NUMBER"
-    UNITEX_BUILD_FIRST_ISSUE=$(echo -e "The first problem I notice was:\n \n" \
+    UNITEX_BUILD_LOG_FRONTEND_URL="$UNITEX_BUILD_LOG_FRONTEND_URL&line=$UNITEX_BUILD_LOG_FIRST_ISSUE_NUMBER&action=show"
+    UNITEX_BUILD_FIRST_ISSUE=$(echo -e "The first problem I noticed was:\n \n" \
              "$UNITEX_BUILD_LOG_FIRST_ISSUE_MESSAGE: $UNITEX_BUILD_LOG_FIRST_ISSUE_DESCRIPTION\n")
+    UNITEX_BUILD_RESULT_EMOJI="✖"  # ⚠
   else
     UNITEX_BUILD_LOG_FRONTEND_URL="$UNITEX_BUILD_LOG_FRONTEND_URL"
+    UNITEX_BUILD_RESULT_EMOJI="✔"  # ✅
   fi
 
   # UNITEX_BUILD_FIRST_ISSUE_INFO
   local UNITEX_BUILD_FIRST_ISSUE_INFO=""
   # only if repository is different from not-defined
   if [[ "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" != "$UNITEX_BUILD_NOT_DEFINED" ]]; then
+    local -r first_issue_info_repository="$(get_vinber_repository_info "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" $VINBER_BUILD_REPOSITORY_URL)"
+    #"Repository: $(get_vinber_repository_info "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" $VINBER_BUILD_REPOSITORY)\n"       \
     UNITEX_BUILD_FIRST_ISSUE_INFO=$(echo -e "\n"                                                              \
-             "Repository: $(get_vinber_repository_info "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" $VINBER_BUILD_REPOSITORY)\n"       \
-             "URL: $(get_vinber_repository_info "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" $VINBER_BUILD_REPOSITORY_URL)\n"              \
-             "Commit: $(get_vinber_repository_info "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" $VINBER_BUILD_COMMIT)\n"          \
+             "Repository: $(get_repository_url "$first_issue_info_repository")\n" \
+             "Commit: $(get_commit_url "$first_issue_info_repository" "$(get_vinber_repository_info "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" $VINBER_BUILD_COMMIT)")\n"   \
+             "Message: \"$(get_vinber_repository_info "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" $VINBER_BUILD_MESSAGE)\"\n"     \
              "Author: $(get_vinber_repository_info "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" $VINBER_BUILD_AUTHOR)\n"           \
-             "Date: $(get_vinber_repository_info "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" $VINBER_BUILD_DATE)\n"             \
-             "Message: \"$(get_vinber_repository_info "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" $VINBER_BUILD_MESSAGE)\"\n \n")
+             "Date: $(get_vinber_repository_info "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" $VINBER_BUILD_DATE)\n \n")
   fi
 
   # UNITEX_BUILD_LATEST_CHANGED_INFO
   local UNITEX_BUILD_LATEST_CHANGED_INFO=""
   if [[ "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" != "$UNITEX_BUILD_NOT_DEFINED" ]]; then
+    local -r latest_changed_info_repository="$(get_vinber_repository_info "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_REPOSITORY_URL)"
+    #"Repository: $(get_vinber_repository_info "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_REPOSITORY)\n"       \
     UNITEX_BUILD_LATEST_CHANGED_INFO=$(echo -e "The latest change was:\n \n"                                 \
-             "Repository: $(get_vinber_repository_info "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_REPOSITORY)\n"       \
-             "URL: $(get_vinber_repository_info "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_REPOSITORY_URL)\n"              \
-             "Commit: $(get_vinber_repository_info "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_COMMIT)\n"          \
+             "Repository: $(get_repository_url "$latest_changed_info_repository")\n" \
+             "Commit: $(get_commit_url "$latest_changed_info_repository" "$(get_vinber_repository_info "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_COMMIT)")\n"  \
+             "Message: \"$(get_vinber_repository_info "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_MESSAGE)\"\n"     \
              "Author: $(get_vinber_repository_info "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_AUTHOR)\n"           \
-             "Date: $(get_vinber_repository_info "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_DATE)\n"             \
-             "Message: \"$(get_vinber_repository_info "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_MESSAGE)\"\n \n")
+             "Date: $(get_vinber_repository_info "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_DATE)\n \n")
   fi    
  
   if [ $UNITEX_BUILD_FINISH_WITH_ERROR_COUNT -ge 1 -a $UNITEX_BUILD_NOTIFY_ON_FAILURE -ge 1 ]; then
@@ -4266,15 +4969,12 @@ function notify_recipients() {
          $UNITEX_BUILD_VINBER_CODENAME, the $UNITEX_BUILD_VINBER_DESCRIPTION
          $UNITEX_BUILD_VINBER_REPOSITORY_URL
          
-         Quote of the day:
-         $UNITEX_BUILD_MAIL_QUOTE
-
          This is an automated notification - Please do not reply to this message
          "
          ) \
        | sed -e 's:^\s*::' | \
          $UNITEX_BUILD_TOOL_MUTT $UNITEX_BUILD_LOG_FILE_ATTACHMENT $UNITEX_BUILD_ZIPPED_LOG_WORKSPACE_ATTACHMENT \
-            -s "[$UNITEX_BUILD_VINBER_CODENAME_LOWERCASE-$UNITEX_BUILD_BUNDLE_NAME] $UNITEX_BUILD_FULL_RELEASE build issues" \
+            -s "$UNITEX_BUILD_RESULT_EMOJI [$UNITEX_BUILD_VINBER_CODENAME_LOWERCASE-$UNITEX_BUILD_BUNDLE_NAME] $UNITEX_BUILD_FULL_RELEASE build issues" \
             $EMAIL_CC -- $EMAIL_TO
   elif [ "$UNITEX_BUILD_FINISH_WITH_ERROR_COUNT" -eq 0 -a \( "$UNITEX_BUILD_NOTIFY_ON_FIXED" -ge 1 -o  "$UNITEX_BUILD_NOTIFY_ON_SUCESS" -ge 1 \) ]; then
      local subject_type="created"
@@ -4296,15 +4996,12 @@ function notify_recipients() {
          $UNITEX_BUILD_VINBER_CODENAME, the $UNITEX_BUILD_VINBER_DESCRIPTION
          $UNITEX_BUILD_VINBER_REPOSITORY_URL
          
-         Quote of the day:
-         $UNITEX_BUILD_MAIL_QUOTE
-
          This is an automated notification - Please do not reply to this message
          "
          ) \
        | sed -e 's:^\s*::' | \
          $UNITEX_BUILD_TOOL_MUTT $UNITEX_BUILD_LOG_FILE_ATTACHMENT $UNITEX_BUILD_ZIPPED_LOG_WORKSPACE_ATTACHMENT \
-            -s "[$UNITEX_BUILD_VINBER_CODENAME_LOWERCASE-$UNITEX_BUILD_BUNDLE_NAME] $UNITEX_BUILD_FULL_RELEASE build $subject_type" \
+            -s "$UNITEX_BUILD_RESULT_EMOJI [$UNITEX_BUILD_VINBER_CODENAME_LOWERCASE-$UNITEX_BUILD_BUNDLE_NAME] $UNITEX_BUILD_FULL_RELEASE build $subject_type" \
             $EMAIL_CC -- $EMAIL_TO
   fi
 }
@@ -4410,8 +5107,145 @@ function get_vinber_repository_info() {
 
   # shellcheck disable=SC2005
   echo "$(echo -n "${VINBER_BUILD_REPOSITORIES[$repository_key]}" | sed -n "$array_index"p)"
-}  
+}
 
+# =============================================================================
+# get_repository_url
+# =============================================================================
+function get_repository_url() {
+  if [ $# -ne 1  ]; then
+    die_with_critical_error "Vinber get_repository_url fails" \
+     "Function called with the wrong number of parameters"
+  fi
+  local url="$1"
+  local repository="$1"
+
+  if    [[ "$url" =~ univ-mlv.fr ]];     then
+   repository="http://gforgeigm.univ-mlv.fr/scm/viewvc.php/$(echo -n "$url" | sed -e 's|^https:\/\/svnigm\.univ-mlv\.fr\/svn\/unitex\/||g')/?root=unitex"
+  elif  [[ "$url" =~ github.com ]];      then
+   repository=$(echo -n "$url" | sed -e 's|^git|https|g ; s|\.git||g')
+  elif  [[ "$url" =~ googlecode.com ]];  then
+   repository="https://code.google.com/p/${url%%.*}"
+  fi
+
+  # if(url) {
+  #   switch(Handlebars.helpers.getURLDomain(url)) {
+  #     case 'univ-mlv.fr':
+  #       return 'http://gforgeigm.univ-mlv.fr/scm/viewvc.php/' +  url.replace(/^https:\/\/svnigm\.univ-mlv\.fr\/svn\/unitex\//mg,"") +  '/?root=unitex';
+  #       break;
+  #     case 'github.com':
+  #       return  url.replace(/^git/mg, "https");
+  #       break;
+  #     case 'googlecode.com':
+  #       return 'https://code.google.com/p/' + Handlebars.helpers.getURLSubdomain(url);
+  #       break;
+  #     default:
+  #       return url;
+  #       break;         
+  #   }
+  # }  
+  # return '#';
+
+  echo "$repository"
+}
+
+# =============================================================================
+# get_commit_url
+# =============================================================================
+function get_commit_url() {
+  if [ $# -ne 2  ]; then
+    die_with_critical_error "Vinber get_commit_url fails" \
+     "Function called with the wrong number of parameters"
+  fi
+
+  local url="$1"
+  local commit_hash="$2"
+  local commit_url="$1"
+
+  # // https://example.net/user
+  if    [[ "$url" =~ univ-mlv.fr ]];     then
+   commit_url="http://gforgeigm.univ-mlv.fr/scm/viewvc.php?view=rev&root=unitex&revision=$commit_hash"
+  elif  [[ "$url" =~ github.com ]];      then
+   commit_url="$(echo -n "$url" | sed -e 's|^git|https|g ; s|\.git||g')/commit/$commit_hash"
+  elif  [[ "$url" =~ googlecode.com ]];  then
+   commit_url="https://code.google.com/p/${url%%.*}/source/detail?r=$commit_hash"
+  fi
+
+
+  # if(url) {
+  #   switch(Handlebars.helpers.getURLDomain(url)) {
+  #     case 'univ-mlv.fr':
+  #       return 'http://gforgeigm.univ-mlv.fr/scm/viewvc.php?view=rev&root=unitex&revision=' + hash;
+  #       break;
+  #     case 'github.com':
+  #       return  url.replace(/^git/mg, "https").replace(/\.git$/mg,"") + '/commit/' + hash;
+  #       break;
+  #     case 'googlecode.com':
+  #       return 'https://code.google.com/p/' + Handlebars.helpers.getURLSubdomain(url) + '/source/detail?r=' + hash;
+  #       break;
+  #     default:
+  #       return url;
+  #       break;    
+  #   }    
+  # }
+  # return '#';
+
+  echo "$commit_url"
+}
+
+# =============================================================================
+# get_user_url
+# =============================================================================
+function get_user_url() {
+  if [ $# -ne 2  ]; then
+    die_with_critical_error "Vinber get_user_url fails" \
+     "Function called with the wrong number of parameters"
+  fi
+  local url="$1"
+  local user_name="$2"
+  local user_url="$user_name"
+
+  # // "john.doe <email@example.com>" => "john.doe"
+  if [[ "$user_name" =~ \< ]]; then
+    user_name=${user_name%%<*}
+    user_name=$(echo -n "$user_name" | sed -e 's/^ *//;s/ *$//')
+  fi
+
+  if    [[ "$url" =~ univ-mlv.fr ]];     then
+   user_url="http://gforgeigm.univ-mlv.fr/users/$user_name"
+  elif  [[ "$url" =~ github.com ]];      then
+   user_url="https://github.com/$user_name";
+  elif  [[ "$url" =~ googlecode.com ]];  then
+   user_url="https://code.google.com/p/${url%%.*}/people/detail?u=$user_name"
+  fi
+
+
+  # if(url) {
+  #   // "john.doe <email@example.com>" => "john.doe"
+  #   if(user.indexOf('<') != -1) {
+  #     user = user.substring(0,user.indexOf('<'));
+  #   }
+
+  #   // https://example.net/user    
+  #   switch(Handlebars.helpers.getURLDomain(url)) {
+  #     case 'univ-mlv.fr':
+  #       return 'http://gforgeigm.univ-mlv.fr/users/' + user;
+  #       break;
+  #     case 'github.com':
+  #       return 'https://github.com/'   + user;
+  #       break;
+  #     case 'googlecode.com':
+  #       return 'https://code.google.com/p/' + Handlebars.helpers.getURLSubdomain(url) + '/people/detail?u=' + user;
+  #       break;        
+  #     default:
+  #       return 'https://gravatar.com/' + user;
+  #       break;    
+  #   }
+  # }
+  # return '#';
+
+  echo "$user_url"  
+}
 
 # =============================================================================
 # notify_latest_changed_repository
@@ -4768,6 +5602,7 @@ function jsonize_master_log_file() {
 # =============================================================================
 function remove_intermediate_files() {
   rm -rf "${UNITEX_BUILD_TEMPORAL_WORKSPACE:?}"
+  #true;
 }
 
 # =============================================================================
