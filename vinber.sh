@@ -3195,8 +3195,8 @@ function stage_unitex_core_dist() {
                -print  |                                                                                     \
            while read -r executable ; do                                                                     \
               log_info "Signing" "$executable"                                                               
-              exec_logged_command "signcode.sh.$(basename "$executable")" "signcode.sh" "$executable" || {   \
-                die_with_critical_error "Sign failed" "Error signing $(basename "$executable")"
+              exec_logged_command "signcode.sh.win.exe" "signcode.sh" "$executable" || {   \
+                die_with_critical_error "Sign failed" "Error signing $(basename $executable)"
               }                                                                                              
            done
         fi   # [ -n "${UNITEX_BUILD_TOOL_SIGNCODE+1}" ]  
