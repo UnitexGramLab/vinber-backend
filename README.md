@@ -8,8 +8,8 @@ Vinber is a lightweight [build automation](http://en.wikipedia.org/wiki/Build_au
    - <a href="http://unitex.univ-mlv.fr/releases/latest-beta/man/" target="_blank">User's Manual</a>
    - <a href="http://unitex.univ-mlv.fr/releases/latest-beta/changes/" target="_blank">Release Notes</a> (work-in-progress)
  - Compiling code
-   - Core Components
-   - Integrate Development Environments (Classic and GramLab)
+   - Core C++ Components for Windows 32-bit, Windows 64-bit, GNU/Linux Intel, GNU/Linux Intel 64-bit and OS X (10.7+)
+   - Java Integrate Development Environments (Classic: Unitex.jar and GramLab: GramLab.jar)
  - Running automated tests
    - Memory leaks
    - Non-regression
@@ -17,6 +17,8 @@ Vinber is a lightweight [build automation](http://en.wikipedia.org/wiki/Build_au
    - <a href="http://unitex.univ-mlv.fr/releases/latest-beta/source/" target="_blank">Source Distribution Package</a>
    - <a href="http://unitex.univ-mlv.fr/releases/latest-beta/lingua/" target="_blank">Official Linguistic Packages</a>
    - <a href="http://unitex.univ-mlv.fr/releases/latest-beta/win32/" target="_blank">Windows Setup Installer</a>
+   - <a href="http://unitex.univ-mlv.fr/releases/latest-beta/linux-i686/" target="_blank">GNU/Linux i686 Setup Installer</a>
+   - <a href="http://unitex.univ-mlv.fr/releases/latest-beta/linux-x86_64/" target="_blank">GNU/Linux x86_64 Setup Installer</a>
    - OS X Setup Installer (work-in-progress)
  - Deploying
    - Releases page update: <a href="http://www-igm.univ-mlv.fr/~unitex/index.php?page=3&html=latest-beta.html" target="_blank">Old-style page</a>, <a href="http://unitex.univ-mlv.fr/releases" target="_blank">New page</a>
