@@ -3187,18 +3187,14 @@ function stage_unitex_core_dist() {
         
         # Sign windows executables
         if [ -n "${UNITEX_BUILD_TOOL_SIGNCODE+1}" ]; then
-          find -L "$UNITEX_BUILD_RELEASE_APP_DIR/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_WIN32_HOME_NAME" \
-               -maxdepth 1                                                                                   \
-               -not -name ".*"                                                                               \
-               -type f                                                                                       \
-               -name "*.exe"                                                                                 \
-               -print  |                                                                                     \
-           while read -r executable ; do                                                                     \
-              log_info "Signing" "$executable"                                                               
-              exec_logged_command "signcode.sh.win.exe" "signcode.sh" "$executable" || {   \
-                die_with_critical_error "Sign failed" "Error signing $executable"
-              }                                                                                              
-           done
+          push_directory "$UNITEX_BUILD_RELEASE_APP_DIR/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_WIN32_HOME_NAME"
+          for executable in ./*.exe; do
+            log_info "Signing" "$executable"
+            exec_logged_command "signcode.sh.win.exe" "signcode.sh" "$executable" || { \
+              die_with_critical_error "Sign failed" "Error signing $executable"
+            }            
+          done  # for executable
+          pop_directory
         fi   # [ -n "${UNITEX_BUILD_TOOL_SIGNCODE+1}" ]  
 
         # Backward compatibility
