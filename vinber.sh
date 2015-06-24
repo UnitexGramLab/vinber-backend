@@ -1416,7 +1416,7 @@ function stage_unitex_packaging_unix_dist() {
       calculate_checksum "$UNITEX_BUILD_RELEASES_LINUX_I686_DIR/$UNITEX_PACKAGE_LINUX_I686_PREFIX.run"     "$UNITEX_BUILD_RELEASES_LINUX_I686_DIR"
 
       # Linux Intel 64-bit (x86_64) distribution package checksum
-      calculate_checksum "$UNITEX_BUILD_RELEASES_LINUX_X86_64_DIR/$UNITEX_PACKAGE_LINUX_X86_64_PREFIX.run" "$UNITEX_BUILD_RELEASES_LINUX_I686_DIR"
+      calculate_checksum "$UNITEX_BUILD_RELEASES_LINUX_X86_64_DIR/$UNITEX_PACKAGE_LINUX_X86_64_PREFIX.run" "$UNITEX_BUILD_RELEASES_LINUX_X86_64_DIR"
 
       log_info "Dist prepared"    "Unix distribution is now prepared"     
     fi
