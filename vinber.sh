@@ -581,13 +581,13 @@ function json_printf() {
         sed -e "s|$UNITEX_BUILD_DEPLOYMENT_DESTINATION|$UNITEX_WEBSITE_URL|g ; s|$UNITEX_BUILD_RELEASES_BASEDIR|$UNITEX_WEBSITE_URL/$UNITEX_BUILD_VINBER_BUILD_HOME_NAME/$UNITEX_BUILD_BUNDLE_NAME/$UNITEX_BUILD_RELEASES_HOME_NAME|g ; s|$UNITEX_BUILD_LOG_WORKSPACE/||g ; s|$UNITEX_BUILD_LOGGER_PATH|$UNITEX_BUILD_LOGGER_WEB_HOME|g ; s|$UNITEX_BUILD_BASEDIR/||g"\
         )")
 
-  (echo -e "        {\n"                                               \
-           "            \"number\": \"$message_number\",\n"            \
-           "            \"level\": \"$message_level\",\n"              \
-           "            \"stage\": \"$message_stage\",\n"              \
-           "            \"message\": \"$message_action\",\n"           \
-           "            \"description\": \"$message_description\"\n"   \
-           "        },\n")
+  echo -E  "        {"
+  echo -E  "            \"number\": \"$message_number\","
+  echo -E  "            \"level\": \"$message_level\","
+  echo -E  "            \"stage\": \"$message_stage\","
+  echo -E  "            \"message\": \"$message_action\","
+  echo -E  "            \"description\": \"$message_description\""
+  echo -E  "        },"
 }
 
 # =============================================================================
