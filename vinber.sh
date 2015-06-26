@@ -4745,8 +4745,11 @@ function setup_build_environment() {
 
   # e.g. /home/vinber/build/Unitex-GramLab/nightly/dist/Unitex-GramLab-3.1beta
   UNITEX_BUILD_RELEASE_DIR="$UNITEX_BUILD_DIST_BASEDIR/$UNITEX_PACKAGE_FULL_NAME"
-  rm -rf "${UNITEX_BUILD_RELEASE_DIR:?}"
-  mkdir "$UNITEX_BUILD_RELEASE_DIR"
+  # rm -rf "${UNITEX_BUILD_RELEASE_DIR:?}"
+  # mkdir "$UNITEX_BUILD_RELEASE_DIR"
+  if [ ! -d "$UNITEX_BUILD_RELEASE_DIR" ]; then
+    mkdir "$UNITEX_BUILD_RELEASE_DIR"
+  fi
   log_debug "Unitex dir" "$UNITEX_BUILD_RELEASE_DIR" 
 
   UNITEX_BUILD_RELEASE_APP_DIR="$UNITEX_BUILD_RELEASE_DIR/App"
