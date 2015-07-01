@@ -630,10 +630,11 @@ function exec_logged_command() {
 
   # redirect stdout and stderr to logfile
   # starting 1.4.0 redirect_std_name is defined here as
-  redirect_std_name=$(printf "%s_%0.3d_%s"                    \
-                      "$UNITEX_BUILD_CURRENT_STAGE"           \
+  redirect_std_name=$(printf "%0.3d_%s_%s"                    \
                       "$((UNITEX_BUILD_LOG_MESSAGE_COUNT+1))" \
+                      "$UNITEX_BUILD_CURRENT_STAGE"           \
                       "$command_name")
+  # do not to use especial characters for the file name
   redirect_std_name="$(echo -n  "${redirect_std_name,,}" | sed -e 's/[^a-z0-9_-]/_/g')"
   redirect_std "$redirect_std_name"
   
@@ -697,10 +698,10 @@ function exec_logged_command() {
     # All untraced execution commands, i.e. not running thorough
     # exec_logged_command call, will be kept in an .untraced.log file
     # starting 1.4.0 redirect_std_name is defined here as
-    redirect_std_name=$(printf "%s_%s_%0.3d_%s"                 \
+    redirect_std_name=$(printf "%s_%0.3d_%s_%s"                 \
                       "$UNITEX_BUILD_UNTRACED"                  \
-                      "$UNITEX_BUILD_CURRENT_STAGE"             \
                       "$((UNITEX_BUILD_LOG_MESSAGE_COUNT + 1))" \
+                      "$UNITEX_BUILD_CURRENT_STAGE"             \
                       "$command_name")
     redirect_std_name="$(echo -n  "${redirect_std_name,,}" | sed -e 's/[^a-z0-9_-]/_/g')"                       
     redirect_std "$redirect_std_name" NO_LOG_DEBUG
@@ -989,15 +990,18 @@ function stage_unitex_packaging_windows_dist() {
     if [ $UNITEX_BUILD_PACK_UPDATE     -ne 0 -a \
          $UNITEX_BUILD_PACK_HAS_ERRORS -eq 0 ]; then
       UNITEX_BUILD_PACK_DEPLOYMENT=1
-      log_info "Preparing dist"   "Win32 setup distribution is being prepared..."
+      log_info "Preparing dist"   "Windows setup distribution is being prepared..."
 
       # Win32 distribution package checksum
       calculate_checksum "$UNITEX_BUILD_RELEASES_SETUP_WIN32_DIR/$UNITEX_PACKAGE_WIN32_PREFIX.exe" "$UNITEX_BUILD_RELEASES_SETUP_WIN32_DIR"
 
-      log_info "Dist prepared"    "Win32 setup distribution is now prepared"
+      # WIN64 distribution package checksum
+      calculate_checksum "$UNITEX_BUILD_RELEASES_SETUP_WIN64_DIR/$UNITEX_PACKAGE_WIN64_PREFIX.exe" "$UNITEX_BUILD_RELEASES_SETUP_WIN64_DIR"
+
+      log_info "Dist prepared"    "Windows setup distribution is now prepared"
     fi
   else
-    log_notice "Dist prepared" "Win32 setup distribution is already prepared, nevertheless, a full deployment will be forced by user request!"
+    log_notice "Dist prepared" "Windows setup distribution is already prepared, nevertheless, a full deployment will be forced by user request!"
   fi
   
   pop_directory
@@ -1030,8 +1034,8 @@ function stage_unitex_packaging_windows() {
   # 3. Windows packaging make
   # shellcheck disable=SC2086
   if [  $UNITEX_BUILD_ISSUES_BEFORE_PACKAGING_WINDOWS_MAKE -eq 0 ]; then
-    stage_unitex_packaging_make_installer_win32
-    #stage_unitex_packaging_make_installer_win64
+    stage_unitex_packaging_make_installer_win 32
+    stage_unitex_packaging_make_installer_win 64
   else
     log_warn "Compilation skipped" "Some issues prevent to compile the Windows setup installer"
   fi
@@ -3387,9 +3391,26 @@ function create_zip() {
 # =============================================================================
 # 
 # =============================================================================
-function stage_unitex_packaging_make_installer_win32() {
+function stage_unitex_packaging_make_installer_win() {
+  if [ $# -ne 1  ]; then
+    die_with_critical_error "make_installer_win fails" \
+     "Make Windows installer function called with the wrong number of parameters"
+  fi
+
+  local window_installer_bits="$1"
+  if [ "$window_installer_bits" -ne 32 -a  "$window_installer_bits" -ne 64 ]; then
+    die_with_critical_error "make_installer_win fails" \
+     "Make Windows installer function expected '32' or '64' as input parameter"
+  fi
+    
   push_stage "PackWin"
   push_directory "$UNITEX_BUILD_BUNDLE_BASEDIR"
+
+  # Setup the NSIS arch 64 parameter
+  local nsis_arch_64_parameter=""
+  if [ "$window_installer_bits" -eq 64 ]; then
+    nsis_arch_64_parameter="-DVER_ARCH_64"
+  fi
 
   UNITEX_BUILD_PACK_HAS_ERRORS=0
   if [ $UNITEX_BUILD_PACK_UPDATE -ne 0 ]; then
@@ -3414,15 +3435,15 @@ function stage_unitex_packaging_make_installer_win32() {
     fi
     
     #                               -DFORCE_JRE_UPDATE_INSTALLER_LINK \ 
-    exec_logged_command "nsis.win32.installer" "$UNITEX_BUILD_TOOL_MAKENSIS"             \
+    exec_logged_command "nsis.win.installer" "$UNITEX_BUILD_TOOL_MAKENSIS"               \
       $nsis_verbose_all_parameter -DINPUT_BASEDIR="$UNITEX_BUILD_BUNDLE_BASEDIR"         \
-                                  -DINPUT_UNITEXDIR="$UNITEX_BUILD_RELEASE_DIR"     \
+                                  -DINPUT_UNITEXDIR="$UNITEX_BUILD_RELEASE_DIR"          \
                                   -DINPUT_TIMESTAMPDIR="$UNITEX_BUILD_TIMESTAMP_DIR"     \
       $nsis_sign_file_parameter   -DVER_MAJOR="$UNITEX_VER_MAJOR"                        \
                                   -DVER_MINOR="$UNITEX_VER_MINOR"                        \
                                   -DVER_REVISION="$UNITEX_VER_REVISION"                  \
                                   -DVER_SUFFIX="$UNITEX_VER_SUFFIX"                      \
-                                  -DOUTPUT_RELEASES_DIR="$UNITEX_BUILD_RELEASES_BASEDIR" \
+      $nsis_arch_64_parameter     -DOUTPUT_RELEASES_DIR="$UNITEX_BUILD_RELEASES_BASEDIR" \
                                   "$UNITEX_BUILD_REPOSITORY_PACK_LOCAL_PATH/windows/unitex.nsi" || {
         UNITEX_BUILD_PACK_HAS_ERRORS=1
       }
@@ -4455,7 +4476,6 @@ function setup_release_information() {
   # setup the win64 package name prefix
   # e.g. Unitex-GramLab-3.1beta_win64-setup
   UNITEX_PACKAGE_WIN64_PREFIX="$UNITEX_PACKAGE_FULL_NAME$UNITEX_BUILD_PACKAGE_SETUP_WIN64_TAG$UNITEX_BUILD_PACKAGE_SETUP_SUFFIX"
-  UNITEX_PACKAGE_WIN64_PREFIX="$UNITEX_PACKAGE_WIN64_PREFIX"  # FIXME(martinec) temporal assignation to avoid SC2034 warning
   
   # setup the OS X package name prefix
   # e.g. Unitex-GramLab-3.1beta-osx
