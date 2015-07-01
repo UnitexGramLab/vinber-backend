@@ -32,7 +32,7 @@
 # This program is loosely based on a previous work by Sebastien Paumier 
 # (paumier). The Unitex creator and former project maintainer.
 # =============================================================================
-UNITEX_BUILD_VINBER_VERSION="1.6.0"
+UNITEX_BUILD_VINBER_VERSION="1.6.1"
 UNITEX_BUILD_VINBER_CODENAME="Vinber"
 UNITEX_BUILD_VINBER_DESCRIPTION="Unitex/GramLab Build Automation Service"
 UNITEX_BUILD_VINBER_REPOSITORY_URL="https://github.com/UnitexGramLab/vinber-backend"
@@ -123,7 +123,7 @@ UNITEX_WEBSITE_URL="http://unitex.univ-mlv.fr"           # Website URL
 # =============================================================================
 UNITEX_BUILD_SVN_LOG_LIMIT=100
 UNITEX_BUILD_MINGW32_COMMAND_PREFIX="mingw32-"
-UNITEX_BUILD_MINGW64_COMMAND_PREFIX="mingw32-"
+UNITEX_BUILD_MINGW64_COMMAND_PREFIX="x86_64-w64-mingw32-"
 # =============================================================================
 UNITEX_BUILD_VINBER_BACKEND_UPDATE=0
 UNITEX_BUILD_DOCS_UPDATE=0
@@ -266,6 +266,9 @@ UNITEX_BUILD_NOTIFY_MAINTAINER=1
 UNITEX_BUILD_NOTIFY_ON_SUCESS=0
 UNITEX_BUILD_NOTIFY_ON_FAILURE=1
 UNITEX_BUILD_NOTIFY_ON_FIXED=1
+# =============================================================================
+UNITEX_BUILD_SERVICE_GITTER_NOTIFICATIONS=0
+UNITEX_BUILD_SERVICE_GITTER_WEBHOOK_URL="https://webhooks.gitter.im/e"
 # =============================================================================
 # Hold a list of used repositories
 declare -A VINBER_BUILD_REPOSITORIES
@@ -2117,7 +2120,7 @@ function stage_unitex_core_make() {
     # MinGW64    
     UNITEX_BUILD_CORE_WIN64_DIR="$UNITEX_BUILD_TEMPORAL_WORKSPACE/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_WIN64_HOME_NAME" 
     UNITEX_BUILD_CORE_WIN64_SOURCES_DIR="$UNITEX_BUILD_CORE_WIN64_DIR/$UNITEX_BUILD_REPOSITORY_CORE_NAME"
-    #stage_unitex_core_make_win64
+    stage_unitex_core_make_win64
 
     # OS X
     UNITEX_BUILD_CORE_OSX_DIR="$UNITEX_BUILD_TEMPORAL_WORKSPACE/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_OSX_HOME_NAME"
@@ -3153,10 +3156,10 @@ function stage_unitex_core_dist() {
       UNITEX_BUILD_CORE_DEPLOYMENT=1
 
       log_info "Preparing dist" "Core distribution is being prepared..."
-
-      #-d "$UNITEX_BUILD_CORE_WIN64_SOURCES_DIR/bin"        -a \
+      
       if [ -d "$UNITEX_BUILD_RELEASE_APP_DIR"                    -a \
            -d "$UNITEX_BUILD_CORE_WIN32_SOURCES_DIR/bin"         -a \
+           -d "$UNITEX_BUILD_CORE_WIN64_SOURCES_DIR/bin"         -a \
            -d "$UNITEX_BUILD_CORE_OSX_SOURCES_DIR/bin"           -a \
            -d "$UNITEX_BUILD_CORE_LINUX_I686_SOURCES_DIR/bin"    -a \
            -d "$UNITEX_BUILD_CORE_LINUX_X86_64_SOURCES_DIR/bin" ]; then
@@ -3177,15 +3180,8 @@ function stage_unitex_core_dist() {
          log_info "Copying" "Win32 binaries"
          cp "$UNITEX_BUILD_CORE_WIN32_SOURCES_DIR/bin"/* "$UNITEX_BUILD_RELEASE_APP_DIR/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_WIN32_HOME_NAME"    
         fi
-        
-        # Copy the Win64 executables into the /platform/win64 directory
-        if [ -d "$UNITEX_BUILD_CORE_WIN64_SOURCES_DIR/bin" ]; then
-         mkdir "${UNITEX_BUILD_RELEASE_APP_DIR:?}/${UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME:?}/${UNITEX_BUILD_RELEASES_WIN64_HOME_NAME:?}"
-         log_info "Copying" "Win64 binaries"
-         cp "$UNITEX_BUILD_CORE_WIN64_SOURCES_DIR/bin"/* "$UNITEX_BUILD_RELEASE_APP_DIR/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_WIN64_HOME_NAME"
-        fi
-        
-        # Sign windows executables
+
+        # Sign Win32 executables
         if [ -n "${UNITEX_BUILD_TOOL_SIGNCODE+1}" ]; then
           push_directory "$UNITEX_BUILD_RELEASE_APP_DIR/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_WIN32_HOME_NAME"
           for executable in ./*.exe; do
@@ -3196,6 +3192,25 @@ function stage_unitex_core_dist() {
           done  # for executable
           pop_directory
         fi   # [ -n "${UNITEX_BUILD_TOOL_SIGNCODE+1}" ]  
+        
+        # Copy the Win64 executables into the /platform/win64 directory
+        if [ -d "$UNITEX_BUILD_CORE_WIN64_SOURCES_DIR/bin" ]; then
+         mkdir "${UNITEX_BUILD_RELEASE_APP_DIR:?}/${UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME:?}/${UNITEX_BUILD_RELEASES_WIN64_HOME_NAME:?}"
+         log_info "Copying" "Win64 binaries"
+         cp "$UNITEX_BUILD_CORE_WIN64_SOURCES_DIR/bin"/* "$UNITEX_BUILD_RELEASE_APP_DIR/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_WIN64_HOME_NAME"
+        fi
+
+        # Sign Win64 executables
+        if [ -n "${UNITEX_BUILD_TOOL_SIGNCODE+1}" ]; then
+          push_directory "$UNITEX_BUILD_RELEASE_APP_DIR/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_WIN64_HOME_NAME"
+          for executable in ./*.exe; do
+            log_info "Signing" "$executable"
+            exec_logged_command "signcode.sh.win.exe" "signcode.sh" "$executable" || { \
+              die_with_critical_error "Sign failed" "Error signing $executable"
+            }            
+          done  # for executable
+          pop_directory
+        fi   # [ -n "${UNITEX_BUILD_TOOL_SIGNCODE+1}" ]          
 
         # Backward compatibility
         cp "$UNITEX_BUILD_RELEASE_APP_DIR/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_WIN32_HOME_NAME"/* "$UNITEX_BUILD_RELEASE_APP_DIR"
@@ -4929,36 +4944,60 @@ function notify_recipients() {
     UNITEX_BUILD_FIRST_ISSUE=$(echo -e "The first problem I noticed was:\n \n" \
              "$UNITEX_BUILD_LOG_FIRST_ISSUE_MESSAGE: $UNITEX_BUILD_LOG_FIRST_ISSUE_DESCRIPTION\n")
     UNITEX_BUILD_RESULT_EMOJI="✖"  # ⚠
+    UNITEX_BUILD_RESULT_GITTER_LEVEL="-d level=error"
   else
     UNITEX_BUILD_LOG_FRONTEND_URL="$UNITEX_BUILD_LOG_FRONTEND_URL"
     UNITEX_BUILD_RESULT_EMOJI="✔"  # ✅
+    UNITEX_BUILD_RESULT_GITTER_LEVEL="-d level=info"
   fi
+
+  # UNITEX_BUILD_FIRST_ISSUE_INFO
+  local UNITEX_BUILD_INFO_MARKDOWN=""
 
   # UNITEX_BUILD_FIRST_ISSUE_INFO
   local UNITEX_BUILD_FIRST_ISSUE_INFO=""
   # only if repository is different from not-defined
   if [[ "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" != "$UNITEX_BUILD_NOT_DEFINED" ]]; then
     local -r first_issue_info_repository="$(get_vinber_repository_info "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" $VINBER_BUILD_REPOSITORY_URL)"
-    #"Repository: $(get_vinber_repository_info "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" $VINBER_BUILD_REPOSITORY)\n"       \
     UNITEX_BUILD_FIRST_ISSUE_INFO=$(echo -e "\n"                                                              \
              "Repository: $(get_repository_url "$first_issue_info_repository")\n" \
              "Commit: $(get_commit_url "$first_issue_info_repository" "$(get_vinber_repository_info "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" $VINBER_BUILD_COMMIT)")\n"   \
              "Message: \"$(get_vinber_repository_info "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" $VINBER_BUILD_MESSAGE)\"\n"     \
              "Author: $(get_vinber_repository_info "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" $VINBER_BUILD_AUTHOR)\n"           \
              "Date: $(get_vinber_repository_info "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" $VINBER_BUILD_DATE)\n \n")
+   UNITEX_BUILD_INFO_MARKDOWN=$(echo -e "**Release**:    $UNITEX_BUILD_FULL_RELEASE\n"                 \
+             "**Bundle**:     $UNITEX_BUILD_BUNDLE_NAME\n"                                                         \
+             "**Build**:      [$UNITEX_BUILD_LOG_NAME]($UNITEX_BUILD_LOG_FRONTEND_URL)\n"                       \
+             "**Status**:     $UNITEX_BUILD_RESULT_EMOJI $UNITEX_BUILD_STATUS_FAILED\n"                                                       \
+             "**Error**:      $UNITEX_BUILD_LOG_FIRST_ISSUE_MESSAGE: $UNITEX_BUILD_LOG_FIRST_ISSUE_DESCRIPTION\n"  \
+             "**Duration**:   $TOTAL_ELAPSED_TIME\n"                                                               \
+             "**Repository**: [$(get_vinber_repository_info "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" $VINBER_BUILD_REPOSITORY)]($(get_repository_url "$first_issue_info_repository"))\n" \
+             "**Commit**:     [$(get_vinber_repository_info "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" $VINBER_BUILD_COMMIT)]($(get_commit_url "$first_issue_info_repository" "$(get_vinber_repository_info "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" $VINBER_BUILD_COMMIT)"))\n"   \
+             "**Message**:    *$(get_vinber_repository_info "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" $VINBER_BUILD_MESSAGE)*\n"        \
+             "**Author**:     @$(get_vinber_repository_info "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" $VINBER_BUILD_AUTHOR)\n"         \
+             "**Date**:       $(get_vinber_repository_info "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" $VINBER_BUILD_DATE)\n \n")
   fi
-
+  
   # UNITEX_BUILD_LATEST_CHANGED_INFO
   local UNITEX_BUILD_LATEST_CHANGED_INFO=""
   if [[ "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" != "$UNITEX_BUILD_NOT_DEFINED" ]]; then
     local -r latest_changed_info_repository="$(get_vinber_repository_info "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_REPOSITORY_URL)"
-    #"Repository: $(get_vinber_repository_info "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_REPOSITORY)\n"       \
     UNITEX_BUILD_LATEST_CHANGED_INFO=$(echo -e "The latest change was:\n \n"                                 \
              "Repository: $(get_repository_url "$latest_changed_info_repository")\n" \
              "Commit: $(get_commit_url "$latest_changed_info_repository" "$(get_vinber_repository_info "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_COMMIT)")\n"  \
              "Message: \"$(get_vinber_repository_info "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_MESSAGE)\"\n"     \
              "Author: $(get_vinber_repository_info "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_AUTHOR)\n"           \
              "Date: $(get_vinber_repository_info "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_DATE)\n \n")
+   UNITEX_BUILD_INFO_MARKDOWN=$(echo -e "**Release**:    $UNITEX_BUILD_FULL_RELEASE\n"            \
+             "**Bundle**:     $UNITEX_BUILD_BUNDLE_NAME\n"                                                       \
+             "**Build**:      [$UNITEX_BUILD_LOG_NAME]($UNITEX_BUILD_LOG_FRONTEND_URL)\n"                     \
+             "**Status**:     $UNITEX_BUILD_RESULT_EMOJI $UNITEX_BUILD_STATUS_PASSED\n"                                                     \
+             "**Duration**:   $TOTAL_ELAPSED_TIME\n"                                                             \
+             "**Repository**: [$(get_vinber_repository_info "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_REPOSITORY)]($(get_repository_url "$latest_changed_info_repository"))\n" \
+             "**Commit**:     [$(get_vinber_repository_info "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_COMMIT)]($(get_commit_url "$latest_changed_info_repository" "$(get_vinber_repository_info "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_COMMIT)"))\n"  \
+             "**Message**:    *$(get_vinber_repository_info "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_MESSAGE)*\n"     \
+             "**Author**:     @$(get_vinber_repository_info "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_AUTHOR)\n"       \
+             "**Date**:       $(get_vinber_repository_info "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_DATE)\n \n")
   fi    
  
   if [ $UNITEX_BUILD_FINISH_WITH_ERROR_COUNT -ge 1 -a $UNITEX_BUILD_NOTIFY_ON_FAILURE -ge 1 ]; then
@@ -4985,6 +5024,11 @@ function notify_recipients() {
          $UNITEX_BUILD_TOOL_MUTT $UNITEX_BUILD_LOG_FILE_ATTACHMENT $UNITEX_BUILD_ZIPPED_LOG_WORKSPACE_ATTACHMENT \
             -s "$UNITEX_BUILD_RESULT_EMOJI [$UNITEX_BUILD_VINBER_CODENAME_LOWERCASE-$UNITEX_BUILD_BUNDLE_NAME] $UNITEX_BUILD_FULL_RELEASE build issues" \
             $EMAIL_CC -- $EMAIL_TO
+
+    # Push Gitter Webhook
+    if [ "$UNITEX_BUILD_SERVICE_GITTER_NOTIFICATIONS" -ge 1 -a -n "${UNITEX_BUILD_SERVICE_GITTER_WEBHOOK_TOKEN+1}" ]; then
+      $UNITEX_BUILD_TOOL_CURL -s "$UNITEX_BUILD_RESULT_GITTER_LEVEL" --data-urlencode "message=$UNITEX_BUILD_INFO_MARKDOWN" "$UNITEX_BUILD_SERVICE_GITTER_WEBHOOK_URL/$UNITEX_BUILD_SERVICE_GITTER_WEBHOOK_TOKEN" &> /dev/null
+    fi
   elif [ "$UNITEX_BUILD_FINISH_WITH_ERROR_COUNT" -eq 0 -a \( "$UNITEX_BUILD_NOTIFY_ON_FIXED" -ge 1 -o  "$UNITEX_BUILD_NOTIFY_ON_SUCESS" -ge 1 \) ]; then
      local subject_type="created"
      if [ "$UNITEX_BUILD_NOTIFY_ON_FIXED" -ge 1 ]; then
@@ -5012,6 +5056,11 @@ function notify_recipients() {
          $UNITEX_BUILD_TOOL_MUTT $UNITEX_BUILD_LOG_FILE_ATTACHMENT $UNITEX_BUILD_ZIPPED_LOG_WORKSPACE_ATTACHMENT \
             -s "$UNITEX_BUILD_RESULT_EMOJI [$UNITEX_BUILD_VINBER_CODENAME_LOWERCASE-$UNITEX_BUILD_BUNDLE_NAME] $UNITEX_BUILD_FULL_RELEASE build $subject_type" \
             $EMAIL_CC -- $EMAIL_TO
+
+    # Push Gitter Webhook
+    if [  "$UNITEX_BUILD_SERVICE_GITTER_NOTIFICATIONS" -ge 1 -a -n "${UNITEX_BUILD_SERVICE_GITTER_WEBHOOK_TOKEN+1}" ]; then
+      $UNITEX_BUILD_TOOL_CURL -s "$UNITEX_BUILD_RESULT_GITTER_LEVEL" --data-urlencode "message=$UNITEX_BUILD_INFO_MARKDOWN" "$UNITEX_BUILD_SERVICE_GITTER_WEBHOOK_URL/$UNITEX_BUILD_SERVICE_GITTER_WEBHOOK_TOKEN" &> /dev/null
+    fi        
   fi
 }
 
