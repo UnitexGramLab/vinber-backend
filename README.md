@@ -8,8 +8,13 @@ Vinber is a lightweight [build automation](http://en.wikipedia.org/wiki/Build_au
    - <a href="http://unitex.univ-mlv.fr/releases/latest-beta/man/" target="_blank">User's Manual</a>
    - <a href="http://unitex.univ-mlv.fr/releases/latest-beta/changes/" target="_blank">Release Notes</a> (work-in-progress)
  - Compiling code
-   - Core C++ Components for Windows 32-bit, Windows 64-bit, GNU/Linux Intel, GNU/Linux Intel 64-bit and OS X (10.7+)
-   - Java Integrate Development Environments (Classic: Unitex.jar and GramLab: GramLab.jar)
+   - Core C++ for Windows 32-bit
+   - Core C++ for Windows 64-bit
+   - Core C++ for GNU/Linux Intel
+   - Core C++ for GNU/Linux Intel 64-bit
+   - Core C++ for OS X (10.7+)
+   - Classic Visual Integrate Development Environment (Unitex.jar)
+   - GramLab Visual Integrate Development Environment (GramLab.jar)
  - Running automated tests
    - Memory leaks
    - Non-regression
