@@ -23,7 +23,8 @@ Vinber is a lightweight [build automation](http://en.wikipedia.org/wiki/Build_au
  - Packaging and signing binaries
    - <a href="http://unitex.univ-mlv.fr/releases/latest-beta/source/" target="_blank">Source Distribution Package</a>
    - <a href="http://unitex.univ-mlv.fr/releases/latest-beta/lingua/" target="_blank">Official Linguistic Packages</a>
-   - <a href="http://unitex.univ-mlv.fr/releases/latest-beta/win32/" target="_blank">Windows Setup Installer</a>
+   - <a href="http://unitex.univ-mlv.fr/releases/latest-beta/win32/" target="_blank">Windows 32-bit Setup Installer</a>
+   - <a href="http://unitex.univ-mlv.fr/releases/latest-beta/win64/" target="_blank">Windows 64-bit Setup Installer</a>
    - <a href="http://unitex.univ-mlv.fr/releases/latest-beta/linux-i686/" target="_blank">GNU/Linux i686 Setup Installer</a>
    - <a href="http://unitex.univ-mlv.fr/releases/latest-beta/linux-x86_64/" target="_blank">GNU/Linux x86_64 Setup Installer</a>
    - OS X Setup Installer (work-in-progress)
