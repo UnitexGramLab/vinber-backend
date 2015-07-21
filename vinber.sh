@@ -1824,20 +1824,17 @@ function stage_unitex_classic_ide() {
 function stage_unitex_gramlab_ide_checkout () {
   push_directory "$UNITEX_BUILD_SOURCE_DIR"
 
-  # FIXME(martinec) this isn't necessary
-  rm -rf "trunk" >&3
-
-  svn_checkout ""                                                    \
-               "http://gramlab-ideling.googlecode.com/svn/trunk/"    \
+  svn_checkout "--trust-server-cert --non-interactive --username anonsvn --password anonsvn" \
+               "https://svnigm.univ-mlv.fr/svn/unitex/GramLab"                               \
                "$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_NAME"
                
   svn_info    GRAMLAB_IDE_SVN_CHECKOUT_DETAILS       \
               "$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_NAME"
               
   # Saving SVN last date changed
-  echo "${GRAMLAB_IDE_SVN_CHECKOUT_DETAILS[2]}" > "$UNITEX_BUILD_TIMESTAMP_DIR/Gramlab.current"
+  echo "${GRAMLAB_IDE_SVN_CHECKOUT_DETAILS[2]}" > "$UNITEX_BUILD_TIMESTAMP_DIR/$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_NAME.current"
 
-  pop_directory            
+  pop_directory
 }  # stage_unitex_gramlab_ide_checkout()
 
 # =============================================================================
@@ -1854,12 +1851,9 @@ function stage_unitex_gramlab_ide_make () {
     if [ -e "$UNITEX_BUILD_RELEASE_APP_DIR/Unitex.jar" ]; then
       # we update the log file
       log_info "Updating"  "$UNITEX_BUILD_RELEASES_CHANGES_DIR/Gramlab.txt"
-      # svn log --trust-server-cert --non-interactive --username anonsvn --password anonsvn $UNITEX_BUILD_SVN_LOG_LIMIT_PARAMETER "$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_NAME" > "$UNITEX_BUILD_RELEASES_CHANGES_DIR/Gramlab.txt"
-      # svn log of "$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_NAME" not show all revisions, this is
-      # because some revisions didn't apply to trunk.
-      # FIXME(martinec) This is a temporal workaround
-      # shellcheck disable=SC2086
-      svn log --trust-server-cert --non-interactive --username anonsvn --password anonsvn $UNITEX_BUILD_SVN_LOG_LIMIT_PARAMETER "http://gramlab-ideling.googlecode.com/svn" > "$UNITEX_BUILD_RELEASE_DIR/Src/log_svn_Gramlab.txt"
+      svn log --trust-server-cert --non-interactive --username anonsvn --password anonsvn "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_NAME" > "$UNITEX_BUILD_RELEASE_DIR/Src/log_svn_Gramlab.txt"
+      # keep the forked gramlab-ideling repository log
+      cat "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_NAME/gramlab-ideling_r1-r1139_history.txt" >> "$UNITEX_BUILD_RELEASE_DIR/Src/log_svn_Gramlab.txt"
       cp "$UNITEX_BUILD_RELEASE_DIR/Src/log_svn_Gramlab.txt" "$UNITEX_BUILD_RELEASES_CHANGES_DIR/Gramlab.txt" 
       
       push_directory "$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_LOCAL_PATH"
@@ -4674,7 +4668,7 @@ function setup_build_environment() {
   fi
   log_debug "CLASSICIDEDIR dir" "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_LOCAL_PATH"
 
-  UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_NAME="gramlab-ideling-read-only"
+  UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_NAME="GramLab"
   UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_LOCAL_PATH="$UNITEX_BUILD_SOURCE_DIR/$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_NAME"
   if [ ! -d "$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_LOCAL_PATH" ]; then
     mkdir "$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_LOCAL_PATH"
