@@ -1961,7 +1961,7 @@ function stage_unitex_gramlab_ide() {
   stage_unitex_gramlab_ide_checkout
 
   # 2. GramLab IDE check for updates
-  check_for_updates UNITEX_BUILD_GRAMLAB_IDE_UPDATE "Gramlab" \
+  check_for_updates UNITEX_BUILD_GRAMLAB_IDE_UPDATE "$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_NAME" \
                     $UNITEX_BUILD_GRAMLAB_IDE_FORCE_UPDATE    \
                     $UNITEX_BUILD_CLASSIC_IDE_UPDATE
 
