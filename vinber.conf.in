@@ -58,6 +58,7 @@ UNITEX_BUILD_SKIP_STAGE_LOGS=0
 UNITEX_BUILD_SKIP_STAGE_CORE=0
 # =============================================================================
 UNITEX_BUILD_SKIP_ULP_TESTS=1
+UNITEX_BUILD_SKIP_ULP_VALGRIND_TESTS=1
 # =============================================================================
 UNITEX_BUILD_BUNDLE_NAME=debug
 # ============================================================================
