@@ -32,7 +32,7 @@
 # This program is loosely based on a previous work by Sebastien Paumier 
 # (paumier). The Unitex creator and former project maintainer.
 # =============================================================================
-UNITEX_BUILD_VINBER_VERSION="1.6.1"
+UNITEX_BUILD_VINBER_VERSION="1.6.2"
 UNITEX_BUILD_VINBER_CODENAME="Vinber"
 UNITEX_BUILD_VINBER_DESCRIPTION="Unitex/GramLab Build Automation Service"
 UNITEX_BUILD_VINBER_REPOSITORY_URL="https://github.com/UnitexGramLab/vinber-backend"
@@ -201,6 +201,7 @@ UNITEX_BUILD_SKIP_STAGE_CORE=0
 # =============================================================================
 UNITEX_BUILD_SKIP_DEPLOYMENT=0
 UNITEX_BUILD_SKIP_ULP_TESTS=0
+UNITEX_BUILD_SKIP_ULP_VALGRIND_TESTS=0
 # =============================================================================
 UNITEX_BUILD_BUNDLE_NAME="nightly"
 UNITEX_BUILD_LATEST_NAME="latest"
@@ -3034,8 +3035,7 @@ function stage_unitex_core_logs_run() {
        $UNITEX_BUILD_CORE_UPDATE     -ne 0 -a \
        $UNITEX_BUILD_CORE_HAS_ERRORS -eq 0 ]; then
     # if the sources compile, now, we try to replay all logs
-    log_info "Replaying logs" "Preparing to replay all ULPs files";
-    
+
     rm -f "$UNITEX_BUILD_REPOSITORY_LOGS_LOCAL_PATH/UnitexToolLogger"
 
     UNITEX_BUILD_HAS_UNITEXTOOLLOGGER=1
@@ -3045,56 +3045,93 @@ function stage_unitex_core_logs_run() {
       UNITEX_BUILD_HAS_UNITEXTOOLLOGGER=0
     }
 
+
     if [ $UNITEX_BUILD_HAS_UNITEXTOOLLOGGER -ne 0 ]; then
+      # copy UnitexToolLogger
+      cp "$UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_SOURCES_DIR/bin/UnitexToolLogger" "$UNITEX_BUILD_REPOSITORY_LOGS_LOCAL_PATH/UnitexToolLogger"
+
       UNITEXTOOLLOGGER_EXECUTION_SUMMARY_FULLNAME="$UNITEX_BUILD_LOG_WORKSPACE/$UNITEX_BUILD_CURRENT_STAGE.UnitexToolLogger.execution_summary.$UNITEX_BUILD_LOG_FILE_EXT"
       UNITEXTOOLLOGGER_EXECUTION_SUMMARY_FILENAME=$(basename "$UNITEXTOOLLOGGER_EXECUTION_SUMMARY_FULLNAME")
       UNITEXTOOLLOGGER_ERROR_SUMMARY_FULLNAME="$UNITEX_BUILD_LOG_WORKSPACE/$UNITEX_BUILD_CURRENT_STAGE.UnitexToolLogger.error_summary.$UNITEX_BUILD_LOG_FILE_EXT"
       UNITEXTOOLLOGGER_ERROR_SUMMARY_FILENAME=$(basename "$UNITEXTOOLLOGGER_ERROR_SUMMARY_FULLNAME")
-      
-      cp "$UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_SOURCES_DIR/bin/UnitexToolLogger" "$UNITEX_BUILD_REPOSITORY_LOGS_LOCAL_PATH/UnitexToolLogger"
-      
+        
       push_directory "$UNITEX_BUILD_REPOSITORY_LOGS_LOCAL_PATH"
+
+      # Only ULP tests
+      log_info "Running logs" "Preparing to replay all ULPs files"
       for i in ./*.ulp
       do
-        log_debug "Running log" "$i"
-        VALGRIND_LOG_NAME=$(basename "$i" | sed -e 's/[^A-Za-z0-9_-]/_/g')
-        VALGRIND_LOG_FULLNAME="$UNITEX_BUILD_LOG_WORKSPACE/$UNITEX_BUILD_CURRENT_STAGE.valgrind.$VALGRIND_LOG_NAME.$UNITEX_BUILD_LOG_FILE_EXT"
-        VALGRIND_EXECUTION_FAIL=0
-        exec_logged_command "UnitexToolLogger.$VALGRIND_LOG_NAME"                       \
-                            "$UNITEX_BUILD_TOOL_VALGRIND"                               \
-                            --tool=memcheck                                             \
-                            -q                                                          \
-                            --error-exitcode=66                                         \
-                            --leak-check=full                                           \
-                            --vex-iropt-level=1                                         \
-                            --show-reachable=yes                                        \
-                            --track-origins=yes                                         \
-                            --log-fd=6                                                  \
+        log_debug "Running" "$i"
+        RUNLOG_EXECUTION_FAIL=0
+        exec_logged_command "UnitexToolLogger.ulpfile"                                  \
                             "$UNITEX_BUILD_REPOSITORY_LOGS_LOCAL_PATH/UnitexToolLogger" \
                             RunLog "\"$i\""                                             \
                             -s "$UNITEXTOOLLOGGER_EXECUTION_SUMMARY_FULLNAME"           \
                             -e "$UNITEXTOOLLOGGER_ERROR_SUMMARY_FULLNAME.once"          \
-                            --cleanlog 6> "$VALGRIND_LOG_FULLNAME" || {
-                              VALGRIND_EXECUTION_FAIL=1
+                            --cleanlog || {
+                              RUNLOG_EXECUTION_FAIL=1
                             }
 
-        if [ $VALGRIND_EXECUTION_FAIL -ne 0 ]; then
-          log_error "[TEST FAIL]" "Valgrind detected an error, check $VALGRIND_LOG_NAME for more details"
+        if [ $RUNLOG_EXECUTION_FAIL -ne 0 ]; then
+          log_error "[TEST FAIL]" "RunLog detected a regression while replaying $i"
           UNITEX_BUILD_LOGS_HAS_ERRORS=1
         else
-          log_notice  "[TEST PASS]"  "Valgrind does not detect any memory leaks replaying $i"
-          rm -f "$VALGRIND_LOG_FULLNAME"
+          log_notice  "[TEST PASS]"  "RunLog does not detect any regression while replaying $i"
         fi
         
         if [ -f "$UNITEXTOOLLOGGER_ERROR_SUMMARY_FULLNAME.once" ]; then
-          log_warn  "[TEST FAIL]" "UnitexToolLogger detected an error replaying $i"
           UNITEX_BUILD_LOGS_HAS_ERRORS=1
           cat   "$UNITEXTOOLLOGGER_ERROR_SUMMARY_FULLNAME.once" >> "$UNITEXTOOLLOGGER_ERROR_SUMMARY_FULLNAME"
           rm -f "$UNITEXTOOLLOGGER_ERROR_SUMMARY_FULLNAME.once"
-        else
-          log_notice  "[TEST PASS]"  "UnitexToolLogger does not detect any problem replaying $i"
         fi
-      done
+      done  # for i in ./*.ulp    
+
+      # Valgrind + ULP tests
+      if [ $UNITEX_BUILD_LOGS_HAS_ERRORS         -eq 0 -a \
+           $UNITEX_BUILD_SKIP_ULP_VALGRIND_TESTS -eq 0 ]; then
+        log_info "Running valgrind" "Preparing to replay all ULPs files using Valgrind"
+        for i in ./*.ulp
+        do
+          log_debug "Running valgrind" "$i"
+          VALGRIND_LOG_NAME=$(basename "$i" | sed -e 's/[^A-Za-z0-9_-]/_/g')
+          VALGRIND_LOG_FULLNAME="$UNITEX_BUILD_LOG_WORKSPACE/$UNITEX_BUILD_CURRENT_STAGE.valgrind.$VALGRIND_LOG_NAME.$UNITEX_BUILD_LOG_FILE_EXT"
+          VALGRIND_EXECUTION_FAIL=0
+          exec_logged_command "UnitexToolLogger.$VALGRIND_LOG_NAME"                       \
+                              "$UNITEX_BUILD_TOOL_VALGRIND"                               \
+                              --tool=memcheck                                             \
+                              -q                                                          \
+                              --error-exitcode=66                                         \
+                              --leak-check=full                                           \
+                              --vex-iropt-level=1                                         \
+                              --show-reachable=yes                                        \
+                              --track-origins=yes                                         \
+                              --log-fd=6                                                  \
+                              "$UNITEX_BUILD_REPOSITORY_LOGS_LOCAL_PATH/UnitexToolLogger" \
+                              RunLog "\"$i\""                                             \
+                              -s "$UNITEXTOOLLOGGER_EXECUTION_SUMMARY_FULLNAME"           \
+                              -e "$UNITEXTOOLLOGGER_ERROR_SUMMARY_FULLNAME.once"          \
+                              --cleanlog 6> "$VALGRIND_LOG_FULLNAME" || {
+                                VALGRIND_EXECUTION_FAIL=1
+                              }
+
+          if [ $VALGRIND_EXECUTION_FAIL -ne 0 ]; then
+            log_error "[TEST FAIL]" "Valgrind detected an error, check $VALGRIND_LOG_NAME for more details"
+            UNITEX_BUILD_LOGS_HAS_ERRORS=1
+          else
+            log_notice  "[TEST PASS]"  "Valgrind does not detect any memory leaks replaying $i"
+            rm -f "$VALGRIND_LOG_FULLNAME"
+          fi
+          
+          if [ -f "$UNITEXTOOLLOGGER_ERROR_SUMMARY_FULLNAME.once" ]; then
+            log_warn  "[TEST FAIL]" "RunLog under Valgrind detected a regression while replaying $i"
+            UNITEX_BUILD_LOGS_HAS_ERRORS=1
+            cat   "$UNITEXTOOLLOGGER_ERROR_SUMMARY_FULLNAME.once" >> "$UNITEXTOOLLOGGER_ERROR_SUMMARY_FULLNAME"
+            rm -f "$UNITEXTOOLLOGGER_ERROR_SUMMARY_FULLNAME.once"
+          else
+            log_notice  "[TEST PASS]"  "RunLog under Valgrind does not detect any regression while replaying $i"
+          fi
+        done  # for i in ./*.ulp
+      fi  # $UNITEX_BUILD_SKIP_ULP_VALGRIND_TESTS -eq 0  
 
       if [ $UNITEX_BUILD_LOGS_HAS_ERRORS -ne 0 ]; then
         # Force update until the successful compilation of the code is assured
