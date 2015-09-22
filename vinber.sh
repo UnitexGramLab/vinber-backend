@@ -3074,8 +3074,9 @@ function stage_unitex_core_logs_run() {
         # save return code
         RUNLOG_EXIT_STATUS=$?
         if [ $RUNLOG_EXECUTION_FAIL -ne 0 ]; then
+          # RunLog warning return code is equal to 79
           if [  $RUNLOG_EXIT_STATUS -eq 79 ]; then
-            log_error "[TEST WARN]" "RunLog detected a warning while replaying $i"
+            log_warn  "[TEST WARN]" "RunLog detected a warning while replaying $i"
           else
             log_error "[TEST FAIL]" "RunLog detected a regression while replaying $i"
             UNITEX_BUILD_LOGS_HAS_ERRORS=1
