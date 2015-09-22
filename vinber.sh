@@ -3071,10 +3071,15 @@ function stage_unitex_core_logs_run() {
                             --cleanlog || {
                               RUNLOG_EXECUTION_FAIL=1
                             }
-
+        # save return code
+        RUNLOG_EXIT_STATUS=$?
         if [ $RUNLOG_EXECUTION_FAIL -ne 0 ]; then
-          log_error "[TEST FAIL]" "RunLog detected a regression while replaying $i"
-          UNITEX_BUILD_LOGS_HAS_ERRORS=1
+          if [  $RUNLOG_EXIT_STATUS -eq 79 ]; then
+            log_error "[TEST WARN]" "RunLog detected a warning while replaying $i"
+          else
+            log_error "[TEST FAIL]" "RunLog detected a regression while replaying $i"
+            UNITEX_BUILD_LOGS_HAS_ERRORS=1
+          fi
         else
           log_notice  "[TEST PASS]"  "RunLog does not detect any regression while replaying $i"
         fi
@@ -3099,7 +3104,6 @@ function stage_unitex_core_logs_run() {
           exec_logged_command "UnitexToolLogger.$VALGRIND_LOG_NAME"                       \
                               "$UNITEX_BUILD_TOOL_VALGRIND"                               \
                               --tool=memcheck                                             \
-                              -q                                                          \
                               --error-exitcode=66                                         \
                               --leak-check=full                                           \
                               --vex-iropt-level=1                                         \
