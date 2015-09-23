@@ -5067,7 +5067,7 @@ function notify_recipients() {
   # shellcheck disable=SC2086
   (echo "Dear developer,
 
-         On $TIMESTAMP_START_C, I started to built the $UNITEX_BUILD_FULL_RELEASE distribution, but there are some issues which cannot be addressed without human intervention. $UNITEX_BUILD_FIRST_ISSUE
+         On $TIMESTAMP_START_C, I started to build the $UNITEX_BUILD_FULL_RELEASE distribution, but there are some issues which cannot be addressed without human intervention. $UNITEX_BUILD_FIRST_ISSUE
          $UNITEX_BUILD_FIRST_ISSUE_INFO
          For more details, please check out the full $UNITEX_BUILD_BUNDLE_NAME build-log:
          $UNITEX_BUILD_LOG_FRONTEND_URL
