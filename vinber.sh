@@ -3375,6 +3375,7 @@ function stage_unitex_core_create_readme() {
   if [ -e  "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH/README.md.in" ]; then
     log_info "Creating Readme" "Creating a Readme file in $README_FILE"
     UNITEX_VER_FULL="$UNITEX_VER_FULL"                                               \
+    UNITEX_VERSION="$UNITEX_VERSION"                                                 \
     UNITEX_BUILD_DATE=$(date '+%B %d, %Y')                                           \
     UNITEX_DESCRIPTION="$UNITEX_DESCRIPTION"                                         \
     UNITEX_HOMEPAGE_URL="$UNITEX_HOMEPAGE_URL"                                       \
