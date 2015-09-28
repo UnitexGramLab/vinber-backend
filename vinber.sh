@@ -3613,7 +3613,7 @@ cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
 <p>
 In order to coordinate the cooperative development, $UNITEX_PRETTYAPPNAME programs
 and resources are now maintained on a Version Control System. This page is automatically regenerated,
-at regular intervals using the latest changes, by $UNITEX_BUILD_VINBER_CODENAME,
+at regular intervals using the latest changes, by <a href="$UNITEX_BUILD_VINBER_REPOSITORY_URL">$UNITEX_BUILD_VINBER_CODENAME</a>,
 the $UNITEX_BUILD_VINBER_DESCRIPTION. You can download below the latest $UNITEX_BUILD_BUNDLE_NAME builds.
 </p>
 
@@ -3633,7 +3633,7 @@ if (cookiesEnabled()==true) {
 </script>
 </p>
 <br/>
-<p>Having problems? Old beta download page still <a href="http://www-igm.univ-mlv.fr/~unitex/index.php?page=3&html=beta.html">available here</a>. Looking forward for more? An alternative releases download page is <a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_RELEASES_HOME_NAME">available here</a>!</p>
+<p>Having problems? Old beta download page still <a href="http://www-igm.univ-mlv.fr/~unitex/index.php?page=3&html=beta.html">available here</a>. An alternative releases page is <a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_RELEASES_HOME_NAME">available here</a>!</p>
 __END__
 
 # shellcheck disable=SC2945
@@ -3704,9 +3704,9 @@ cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
 
 <p>
 This is the whole package that contains all the sources, all the
-linguistic resources for the languages listed below and the Windows
-executables. Please note that you need to build the executables
-for other platforms than Windows. See the README.txt for more details.
+linguistic resources for the languages listed below and the Windows 
+(32-bit, 64-bit), GNU/Linux (i686, x86_64) and OS X (10.7+) executables.
+See the README.txt for more details.
 </p>
 
 <hr>
@@ -3745,7 +3745,7 @@ cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
 );
 //-->
 </script>
-This package contains both Classic and GramLab IDEs together with the Windows executables.
+This package contains both Classic and GramLab IDEs together with the Windows (32-bit, 64-bit), GNU/Linux (i686, x86_64) and OS X (10.7+) executables.
 <br/>
 <br/>
 
@@ -3787,7 +3787,8 @@ cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
 </script>
 
 This package contains all Core and IDE components sources. You need
-them to build the executables for platforms other than Windows.
+them to build the executables for platforms other than Windows (32-bit, 64-bit), 
+GNU/Linux (i686, x86_64) and OS X (10.7+).
 <br/>
 <br/>
 Please consult the latest changes to see if the current versions are safe to use:
