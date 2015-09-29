@@ -3317,7 +3317,15 @@ function stage_unitex_core_dist() {
       cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/UnitexLibAndJni "$UNITEX_BUILD_RELEASE_SRC_CORE_DIR/"
       cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/include_tre     "$UNITEX_BUILD_RELEASE_SRC_CORE_DIR/"
       cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/win32vs2008     "$UNITEX_BUILD_RELEASE_SRC_CORE_DIR/"
-      cp    "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/Licenses/*.txt  "$UNITEX_BUILD_RELEASE_APP_DIR/"
+      
+      # App dir Licenses and Disclaimers
+      cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/Licenses/*.txt     "$UNITEX_BUILD_RELEASE_APP_LICENSES_DIR/"
+      cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/Disclaimers/*.txt  "$UNITEX_BUILD_RELEASE_APP_DISCLAIMERS_DIR/"
+      
+      # App dir files (this is only temporal for backward compatibility)
+      cp    "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/Licenses/*.txt     "$UNITEX_BUILD_RELEASE_APP_DIR/"
+      cp    "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/Disclaimers/*.txt  "$UNITEX_BUILD_RELEASE_APP_DIR/"
+
       # finally, we create the README.txt
       stage_unitex_core_create_readme "$UNITEX_BUILD_RELEASE_DIR" "README.txt"
       
@@ -4837,7 +4845,19 @@ function setup_build_environment() {
   if [ ! -d "$UNITEX_BUILD_RELEASE_APP_MANUAL_DIR" ]; then
     mkdir "$UNITEX_BUILD_RELEASE_APP_MANUAL_DIR"
   fi
-  log_debug "Unitex Manual dir" "$UNITEX_BUILD_RELEASE_APP_MANUAL_DIR" 
+  log_debug "Unitex Manual dir" "$UNITEX_BUILD_RELEASE_APP_MANUAL_DIR"
+  
+  UNITEX_BUILD_RELEASE_APP_LICENSES_DIR="$UNITEX_BUILD_RELEASE_APP_DIR/licenses"
+  if [ ! -d "$UNITEX_BUILD_RELEASE_APP_LICENSES_DIR" ]; then
+    mkdir "$UNITEX_BUILD_RELEASE_APP_LICENSES_DIR"
+  fi
+  log_debug "Unitex Licenses dir" "$UNITEX_BUILD_RELEASE_APP_LICENSES_DIR"
+  
+  UNITEX_BUILD_RELEASE_APP_DISCLAIMERS_DIR="$UNITEX_BUILD_RELEASE_APP_DIR/disclaimers"
+  if [ ! -d "$UNITEX_BUILD_RELEASE_APP_DISCLAIMERS_DIR" ]; then
+    mkdir "$UNITEX_BUILD_RELEASE_APP_DISCLAIMERS_DIR"
+  fi
+  log_debug "Unitex Disclaimers dir" "$UNITEX_BUILD_RELEASE_APP_DISCLAIMERS_DIR"
 
   UNITEX_BUILD_RELEASE_SRC_DIR="$UNITEX_BUILD_RELEASE_DIR/Src"
   if [ ! -d "$UNITEX_BUILD_RELEASE_SRC_DIR" ]; then
