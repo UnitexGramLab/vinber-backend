@@ -3380,6 +3380,7 @@ function stage_unitex_core_create_readme() {
     UNITEX_DESCRIPTION="$UNITEX_DESCRIPTION"                                         \
     UNITEX_HOMEPAGE_URL="$UNITEX_HOMEPAGE_URL"                                       \
     UNITEX_RELEASES_URL="$UNITEX_RELEASES_URL"                                       \
+    UNITEX_RELEASES_LATEST_BETA="$UNITEX_RELEASES_LATEST_BETA"                       \
     UNITEX_RELEASES_LATEST_BETA_WIN32_URL="$UNITEX_RELEASES_LATEST_BETA_WIN32_URL"   \
     UNITEX_RELEASES_LATEST_BETA_SOURCE_URL="$UNITEX_RELEASES_LATEST_BETA_SOURCE_URL" \
     UNITEX_DOCS_URL="$UNITEX_DOCS_URL"                                               \
