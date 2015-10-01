@@ -3322,10 +3322,6 @@ function stage_unitex_core_dist() {
       cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/Licenses/*.txt     "$UNITEX_BUILD_RELEASE_APP_LICENSES_DIR/"
       cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/Disclaimers/*.txt  "$UNITEX_BUILD_RELEASE_APP_DISCLAIMERS_DIR/"
       
-      # App dir files (this is only temporal for backward compatibility)
-      cp    "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/Licenses/*.txt     "$UNITEX_BUILD_RELEASE_APP_DIR/"
-      cp    "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/Disclaimers/*.txt  "$UNITEX_BUILD_RELEASE_APP_DIR/"
-
       # finally, we create the README.txt
       stage_unitex_core_create_readme "$UNITEX_BUILD_RELEASE_DIR" "README.txt"
       
