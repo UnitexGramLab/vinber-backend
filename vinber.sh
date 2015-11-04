@@ -3110,12 +3110,12 @@ function stage_unitex_core_logs_run() {
                               --vex-iropt-level=1                                         \
                               --show-reachable=yes                                        \
                               --track-origins=yes                                         \
-                              --log-fd=6                                                  \
+                              --log-fd=125                                                \
                               "$UNITEX_BUILD_REPOSITORY_LOGS_LOCAL_PATH/UnitexToolLogger" \
                               RunLog "\"$i\""                                             \
                               -s "$UNITEXTOOLLOGGER_EXECUTION_SUMMARY_FULLNAME"           \
                               -e "$UNITEXTOOLLOGGER_ERROR_SUMMARY_FULLNAME.once"          \
-                              --cleanlog 6> "$VALGRIND_LOG_FULLNAME" || {
+                              --cleanlog >/dev/null 2>&1 125>/dev/stdin || {
                                 VALGRIND_EXECUTION_FAIL=1
                               }
 
