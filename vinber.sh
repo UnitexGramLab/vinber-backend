@@ -3110,17 +3110,22 @@ function stage_unitex_core_logs_run() {
                               --vex-iropt-level=1                                         \
                               --show-reachable=yes                                        \
                               --track-origins=yes                                         \
-                              --log-fd=125                                                \
                               "$UNITEX_BUILD_REPOSITORY_LOGS_LOCAL_PATH/UnitexToolLogger" \
                               RunLog "\"$i\""                                             \
                               -s "$UNITEXTOOLLOGGER_EXECUTION_SUMMARY_FULLNAME"           \
                               -e "$UNITEXTOOLLOGGER_ERROR_SUMMARY_FULLNAME.once"          \
-                              --cleanlog >/dev/null 2>&1 125>/dev/stdin || {
+                              --cleanlog || {
                                 VALGRIND_EXECUTION_FAIL=1
                               }
-
+          # save return code
+          VALGRIND_EXIT_STATUS=$?
           if [ $VALGRIND_EXECUTION_FAIL -ne 0 ]; then
-            log_error "[TEST FAIL]" "Valgrind detected an error, check $VALGRIND_LOG_NAME for more details"
+            # Valgrind memcheck leak return code is equal to 66
+            if [  $VALGRIND_EXIT_STATUS -eq 66 ]; then
+              log_error "[TEST FAIL]" "Valgrind detect a memory leak when replaying $i"
+            else
+              log_error "[TEST FAIL]" "RunLog detected a regression while replaying $i with Valgrind"
+            fi
             UNITEX_BUILD_LOGS_HAS_ERRORS=1
           else
             log_notice  "[TEST PASS]"  "Valgrind does not detect any memory leaks replaying $i"
