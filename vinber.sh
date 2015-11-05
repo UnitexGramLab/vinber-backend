@@ -1854,7 +1854,7 @@ function stage_unitex_gramlab_ide_make () {
       log_info "Updating"  "$UNITEX_BUILD_RELEASES_CHANGES_DIR/Gramlab.txt"
       svn log --trust-server-cert --non-interactive --username anonsvn --password anonsvn "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_NAME" > "$UNITEX_BUILD_RELEASE_DIR/Src/log_svn_Gramlab.txt"
       # keep the forked gramlab-ideling repository log
-      cat "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_NAME/gramlab-ideling_r1-r1139_history.txt" >> "$UNITEX_BUILD_RELEASE_DIR/Src/log_svn_Gramlab.txt"
+      cat "$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_NAME/gramlab-ideling_r1-r1139_history.txt" >> "$UNITEX_BUILD_RELEASE_DIR/Src/log_svn_Gramlab.txt"
       cp "$UNITEX_BUILD_RELEASE_DIR/Src/log_svn_Gramlab.txt" "$UNITEX_BUILD_RELEASES_CHANGES_DIR/Gramlab.txt" 
       
       push_directory "$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_LOCAL_PATH"
