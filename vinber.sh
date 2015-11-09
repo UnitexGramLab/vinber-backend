@@ -134,6 +134,9 @@ UNITEX_BUILD_GRAMLAB_IDE_UPDATE=0
 UNITEX_BUILD_LOGS_UPDATE=0
 UNITEX_BUILD_CORE_UPDATE=0
 # =============================================================================
+# avoid to perform svn checkouts or git pulls
+UNITEX_BUILD_FREEZE_RELEASE=0
+# =============================================================================
 UNITEX_BUILD_VINBER_BACKEND_FORCE_UPDATE=0
 UNITEX_BUILD_DOCS_FORCE_UPDATE=0
 UNITEX_BUILD_PACK_FORCE_UPDATE=0
@@ -203,7 +206,7 @@ UNITEX_BUILD_SKIP_DEPLOYMENT=0
 UNITEX_BUILD_SKIP_ULP_TESTS=0
 UNITEX_BUILD_SKIP_ULP_VALGRIND_TESTS=0
 # =============================================================================
-UNITEX_BUILD_BUNDLE_NAME="nightly"
+UNITEX_BUILD_BUNDLE_NAME="debug"
 UNITEX_BUILD_LATEST_NAME="latest"
 # =============================================================================
 UNITEX_BUILD_COMMAND_EXECUTION_ERROR_COUNT=0
@@ -341,10 +344,6 @@ UNITEX_BUILD_PACKAGE_SETUP_WIN64_TAG="_$UNITEX_BUILD_RELEASES_WIN64_HOME_NAME"
 UNITEX_BUILD_PACKAGE_OSX_SUFFIX="-$UNITEX_BUILD_RELEASES_OSX_HOME_NAME"
 UNITEX_BUILD_PACKAGE_LINUX_I686_SUFFIX="-$UNITEX_BUILD_RELEASES_LINUX_I686_HOME_NAME"
 UNITEX_BUILD_PACKAGE_LINUX_X86_64_SUFFIX="-$UNITEX_BUILD_RELEASES_LINUX_X86_64_HOME_NAME"
-# =============================================================================
-UNITEX_RELEASES_LATEST_BETA="$UNITEX_RELEASES_URL/$UNITEX_BUILD_LATEST_NAME-beta"
-UNITEX_RELEASES_LATEST_BETA_WIN32_URL="$UNITEX_RELEASES_LATEST_BETA/$UNITEX_BUILD_RELEASES_WIN32_HOME_NAME"
-UNITEX_RELEASES_LATEST_BETA_SOURCE_URL="$UNITEX_RELEASES_LATEST_BETA/$UNITEX_BUILD_RELEASES_SOURCE_HOME_NAME"
 # =============================================================================
 #! UNITEX_BUILD_VINBER_HOME_PATH="$SCRIPT_BASEDIR/$UNITEX_BUILD_VINBER_HOME_NAME"
 #! UNITEX_BUILD_VINBER_BUNDLE_HOME_PATH="$SCRIPT_BASEDIR/$UNITEX_BUILD_VINBER_BUNDLE_HOME_NAME"
@@ -943,13 +942,15 @@ function stage_unitex_doc() {
     return 1
   fi   
 
-  # 1. Documentation checkout
-  stage_unitex_doc_checkout
-
-  # 2. Documentation check for updates
-  check_for_updates UNITEX_BUILD_DOCS_UPDATE "$UNITEX_BUILD_REPOSITORY_USERMANUAL_NAME" \
-                    $UNITEX_BUILD_DOCS_FORCE_UPDATE
-
+  if [ $UNITEX_BUILD_FREEZE_RELEASE -ne 1 ]; then
+    # 1. Documentation checkout
+    stage_unitex_doc_checkout
+    
+    # 2. Documentation check for updates
+    check_for_updates UNITEX_BUILD_DOCS_UPDATE "$UNITEX_BUILD_REPOSITORY_USERMANUAL_NAME" \
+                      $UNITEX_BUILD_DOCS_FORCE_UPDATE
+  fi
+  
   # 3. Documentation make
   stage_unitex_doc_make
 
@@ -1017,19 +1018,21 @@ function stage_unitex_packaging_windows() {
   push_stage "PackWin"
   push_directory "$UNITEX_BUILD_SOURCE_DIR"
 
-  # 1. Packaging checkout
-  stage_unitex_packaging_windows_checkout
+  if [ $UNITEX_BUILD_FREEZE_RELEASE -ne 1 ]; then
+    # 1. Packaging checkout
+    stage_unitex_packaging_windows_checkout
 
-  # 2. Packaging check for updates
-  check_for_updates UNITEX_BUILD_PACK_UPDATE "$UNITEX_BUILD_REPOSITORY_PACK_NAME.windows"  \
-                    "$UNITEX_BUILD_PACK_FORCE_UPDATE"             \
-                    "$UNITEX_BUILD_DOCS_UPDATE"                   \
-                    "$UNITEX_BUILD_LING_UPDATE"                   \
-                    "$UNITEX_BUILD_CLASSIC_IDE_UPDATE"            \
-                    "$UNITEX_BUILD_GRAMLAB_IDE_UPDATE"            \
-                    "$UNITEX_BUILD_CORE_UPDATE"
+    # 2. Packaging check for updates
+    check_for_updates UNITEX_BUILD_PACK_UPDATE "$UNITEX_BUILD_REPOSITORY_PACK_NAME.windows"  \
+                      "$UNITEX_BUILD_PACK_FORCE_UPDATE"             \
+                      "$UNITEX_BUILD_DOCS_UPDATE"                   \
+                      "$UNITEX_BUILD_LING_UPDATE"                   \
+                      "$UNITEX_BUILD_CLASSIC_IDE_UPDATE"            \
+                      "$UNITEX_BUILD_GRAMLAB_IDE_UPDATE"            \
+                      "$UNITEX_BUILD_CORE_UPDATE"
 
-
+  fi
+  
   count_issues_until_now UNITEX_BUILD_ISSUES_BEFORE_PACKAGING_WINDOWS_MAKE
    
   # 3. Windows packaging make
@@ -1125,22 +1128,23 @@ function stage_unitex_packaging_source() {
   push_stage "PackSrc"
   push_directory "$UNITEX_BUILD_DIST_BASEDIR"
 
-  local packaging_source_timestamp
-  if [ -e "$UNITEX_BUILD_RELEASES_SOURCE_DIR/$UNITEX_PACKAGE_SRCDIST_PREFIX.zip" ]; then
-    packaging_source_timestamp=$(stat -c %y "$UNITEX_BUILD_RELEASES_SOURCE_DIR/$UNITEX_PACKAGE_SRCDIST_PREFIX.zip")
+  if [ $UNITEX_BUILD_FREEZE_RELEASE -ne 1 ]; then
+    local packaging_source_timestamp
+    if [ -e "$UNITEX_BUILD_RELEASES_SOURCE_DIR/$UNITEX_PACKAGE_SRCDIST_PREFIX.zip" ]; then
+      packaging_source_timestamp=$(stat -c %y "$UNITEX_BUILD_RELEASES_SOURCE_DIR/$UNITEX_PACKAGE_SRCDIST_PREFIX.zip")
+    fi
+
+    # 1. Save source distribution package last date changed
+    echo "$packaging_source_timestamp" > "$UNITEX_BUILD_TIMESTAMP_DIR/$UNITEX_BUILD_REPOSITORY_PACK_NAME$UNITEX_BUILD_PACKAGE_SOURCE_DISTRIBUTION_SUFFIX.current" 
+
+    # 2. Check for source distribution package updates
+    check_for_updates UNITEX_BUILD_PACK_UPDATE "$UNITEX_BUILD_REPOSITORY_PACK_NAME$UNITEX_BUILD_PACKAGE_SOURCE_DISTRIBUTION_SUFFIX"  \
+                      "$UNITEX_BUILD_DOCS_UPDATE"                   \
+                      "$UNITEX_BUILD_LING_UPDATE"                   \
+                      "$UNITEX_BUILD_CLASSIC_IDE_UPDATE"            \
+                      "$UNITEX_BUILD_GRAMLAB_IDE_UPDATE"            \
+                      "$UNITEX_BUILD_CORE_UPDATE"
   fi
-
-  # 1. Save source distribution package last date changed
-  echo "$packaging_source_timestamp" > "$UNITEX_BUILD_TIMESTAMP_DIR/$UNITEX_BUILD_REPOSITORY_PACK_NAME$UNITEX_BUILD_PACKAGE_SOURCE_DISTRIBUTION_SUFFIX.current" 
-
-  # 2. Check for source distribution package updates
-  check_for_updates UNITEX_BUILD_PACK_UPDATE "$UNITEX_BUILD_REPOSITORY_PACK_NAME$UNITEX_BUILD_PACKAGE_SOURCE_DISTRIBUTION_SUFFIX"  \
-                    "$UNITEX_BUILD_DOCS_UPDATE"                   \
-                    "$UNITEX_BUILD_LING_UPDATE"                   \
-                    "$UNITEX_BUILD_CLASSIC_IDE_UPDATE"            \
-                    "$UNITEX_BUILD_GRAMLAB_IDE_UPDATE"            \
-                    "$UNITEX_BUILD_CORE_UPDATE"
-
 
   count_issues_until_now UNITEX_BUILD_ISSUES_BEFORE_PACKAGING_SOURCE_DISTRIBUTION
    
@@ -1208,18 +1212,21 @@ function stage_unitex_packaging_unix() {
   push_stage "PackUnix"
   push_directory "$UNITEX_BUILD_SOURCE_DIR"
 
-  # 1. Packaging checkout
-  stage_unitex_packaging_unix_checkout
+  if [ $UNITEX_BUILD_FREEZE_RELEASE -ne 1 ]; then
+    # 1. Packaging checkout
+    stage_unitex_packaging_unix_checkout
 
-  # 2. Packaging check for updates
-  check_for_updates UNITEX_BUILD_PACK_UPDATE "$UNITEX_BUILD_REPOSITORY_PACK_NAME.unix"  \
-                    "$UNITEX_BUILD_PACK_FORCE_UPDATE"             \
-                    "$UNITEX_BUILD_DOCS_UPDATE"                   \
-                    "$UNITEX_BUILD_LING_UPDATE"                   \
-                    "$UNITEX_BUILD_CLASSIC_IDE_UPDATE"            \
-                    "$UNITEX_BUILD_GRAMLAB_IDE_UPDATE"            \
-                    "$UNITEX_BUILD_CORE_UPDATE"
+    # 2. Packaging check for updates
+    check_for_updates UNITEX_BUILD_PACK_UPDATE "$UNITEX_BUILD_REPOSITORY_PACK_NAME.unix"  \
+                      "$UNITEX_BUILD_PACK_FORCE_UPDATE"             \
+                      "$UNITEX_BUILD_DOCS_UPDATE"                   \
+                      "$UNITEX_BUILD_LING_UPDATE"                   \
+                      "$UNITEX_BUILD_CLASSIC_IDE_UPDATE"            \
+                      "$UNITEX_BUILD_GRAMLAB_IDE_UPDATE"            \
+                      "$UNITEX_BUILD_CORE_UPDATE"
 
+  fi
+  
   count_issues_until_now UNITEX_BUILD_ISSUES_BEFORE_PACKAGING_UNIX_MAKE
    
   # 3. Unix packaging make
@@ -1228,6 +1235,7 @@ function stage_unitex_packaging_unix() {
     stage_unitex_packaging_configure_installer_unix
     stage_unitex_packaging_make_installer_linux_i686
     stage_unitex_packaging_make_installer_linux_x86_64
+    stage_unitex_packaging_make_installer_osx
   else
     log_warn "Compilation skipped" "Some issues prevent to compile the Unix setup installers"
   fi
@@ -1344,6 +1352,48 @@ function stage_unitex_packaging_make_installer_linux_x86_64() {
   pop_build_stage 
 }
 
+# =============================================================================
+# 
+# =============================================================================
+function stage_unitex_packaging_make_installer_osx() {
+  push_stage "PackOSX"
+  push_directory "$UNITEX_BUILD_DIST_BASEDIR"
+
+  UNITEX_BUILD_PACK_HAS_ERRORS=0
+  if [ $UNITEX_BUILD_PACK_UPDATE -ne 0 ]; then
+  
+    log_info "Packing distribution" "Packing OS X 64-bit (10.7+) distribution"
+
+    # Remove previous .run file
+    rm -rf "$UNITEX_BUILD_RELEASES_OSX_DIR/$UNITEX_PACKAGE_OSX_PREFIX.run"
+    
+    # Use makeself to build the package
+    exec_logged_command "makeself.osx" "makeself.sh"                                                \
+      --license "$UNITEX_BUILD_SOURCE_DIR/$UNITEX_BUILD_REPOSITORY_PACK_UNIX_NAME/data/LICENSE.txt" \
+      --target  "\"\\\$HOME/$UNITEX_PACKAGE_FULL_NAME\""                                            \
+      "$UNITEX_PACKAGE_FULL_NAME"                                                                   \
+      "$UNITEX_BUILD_RELEASES_OSX_DIR/$UNITEX_PACKAGE_OSX_PREFIX.run"                               \
+      "\"$UNITEX_BUILD_FULL_RELEASE OS X 64-bit (10.7+)\""                                          \
+      "./App/install/setup" || {
+         UNITEX_BUILD_PACK_HAS_ERRORS=1
+    }
+    
+    if [ $UNITEX_BUILD_PACK_HAS_ERRORS -ne 0 ]; then
+      log_error "Packing failed" "OS X 64-bit (10.7+) distribution packing process fail!"
+      # Force update until success
+      $UNITEX_BUILD_TOOL_SED -i 's/UNITEX_BUILD_PACK_FORCE_UPDATE=./UNITEX_BUILD_PACK_FORCE_UPDATE=2/'  \
+                                  "$UNITEX_BUILD_CONFIG_FILENAME"
+    else
+      log_info "Packing finished" "OS X 64-bit (10.7+) distribution packing process completed successfully"
+      # Release update lock
+      $UNITEX_BUILD_TOOL_SED -i 's/UNITEX_BUILD_PACK_FORCE_UPDATE=2/UNITEX_BUILD_PACK_FORCE_UPDATE=0/' \
+                                  "$UNITEX_BUILD_CONFIG_FILENAME" 
+    fi
+  fi  #  if [ $UNITEX_BUILD_PACK_UPDATE -ne 0 ]; then  
+    
+  pop_directory  # "$UNITEX_BUILD_DIST_BASEDIR"
+  pop_build_stage 
+}
 
 # =============================================================================
 # 
@@ -1374,8 +1424,8 @@ function stage_unitex_packaging_configure_installer_unix() {
        UNITEX_DESCRIPTION="$UNITEX_DESCRIPTION"                                                    \
        UNITEX_HOMEPAGE_URL="$UNITEX_HOMEPAGE_URL"                                                  \
        UNITEX_RELEASES_URL="$UNITEX_RELEASES_URL"                                                  \
-       UNITEX_RELEASES_LATEST_BETA_WIN32_URL="$UNITEX_RELEASES_LATEST_BETA_WIN32_URL"              \
-       UNITEX_RELEASES_LATEST_BETA_SOURCE_URL="$UNITEX_RELEASES_LATEST_BETA_SOURCE_URL"            \
+       UNITEX_RELEASES_LATEST_WIN32_URL="$UNITEX_RELEASES_LATEST_WIN32_URL"                        \
+       UNITEX_RELEASES_LATEST_SOURCE_URL="$UNITEX_RELEASES_LATEST_SOURCE_URL"                      \
        UNITEX_DOCS_URL="$UNITEX_DOCS_URL"                                                          \
        UNITEX_FORUM_URL="$UNITEX_FORUM_URL"                                                        \
        UNITEX_BUG_URL="$UNITEX_BUG_URL"                                                            \
@@ -1414,11 +1464,11 @@ function stage_unitex_packaging_unix_dist() {
   push_directory "$UNITEX_BUILD_RELEASES_DIR"
 
   UNITEX_BUILD_PACK_DEPLOYMENT=$(( ! UNITEX_BUILD_PACK_HAS_ERRORS &&  ( UNITEX_BUILD_PACK_FORCE_DEPLOYMENT  || UNITEX_BUILD_FORCE_DEPLOYMENT) ))
-  if [ $UNITEX_BUILD_PACK_DEPLOYMENT -eq 0 ]; then
+  if [ $UNITEX_BUILD_PACK_DEPLOYMENT   -eq 0 ]; then
     if [ $UNITEX_BUILD_PACK_UPDATE     -ne 0 -a \
          $UNITEX_BUILD_PACK_HAS_ERRORS -eq 0 ]; then
       UNITEX_BUILD_PACK_DEPLOYMENT=1
-      log_info "Preparing dist"   "Linux Intel 64-bit (x86_64) distribution is being prepared..."
+      log_info "Preparing dist"   "Unix distribution is being prepared..."
 
       # Linux Intel (i686) distribution package checksum
       calculate_checksum "$UNITEX_BUILD_RELEASES_LINUX_I686_DIR/$UNITEX_PACKAGE_LINUX_I686_PREFIX.run"     "$UNITEX_BUILD_RELEASES_LINUX_I686_DIR"
@@ -1426,6 +1476,9 @@ function stage_unitex_packaging_unix_dist() {
       # Linux Intel 64-bit (x86_64) distribution package checksum
       calculate_checksum "$UNITEX_BUILD_RELEASES_LINUX_X86_64_DIR/$UNITEX_PACKAGE_LINUX_X86_64_PREFIX.run" "$UNITEX_BUILD_RELEASES_LINUX_X86_64_DIR"
 
+      # OS X 64-bit (10.7+) distribution package checksum
+      calculate_checksum "$UNITEX_BUILD_RELEASES_OSX_DIR/$UNITEX_PACKAGE_OSX_PREFIX.run" "$UNITEX_BUILD_RELEASES_OSX_DIR"
+      
       log_info "Dist prepared"    "Unix distribution is now prepared"     
     fi
   else
@@ -1619,11 +1672,13 @@ function stage_unitex_lingua() {
     return 1
   fi   
 
-  # 1. Lingua checkout
-  stage_unitex_lingua_checkout
+  if [ $UNITEX_BUILD_FREEZE_RELEASE -ne 1 ]; then
+    # 1. Lingua checkout
+    stage_unitex_lingua_checkout
 
-  # 2. Lingua check for updates
-  stage_unitex_lingua_check_for_updates
+    # 2. Lingua check for updates
+    stage_unitex_lingua_check_for_updates
+  fi  
 
   # 3.
   stage_unitex_lingua_dist
@@ -1799,15 +1854,17 @@ function stage_unitex_classic_ide() {
     pop_directory   # "$UNITEX_BUILD_SOURCE_DIR"
     pop_build_stage  
     return 1
-  fi 
+  fi
 
-  # 1. Classical IDE checkout
-  stage_unitex_classic_ide_checkout
+  if [ $UNITEX_BUILD_FREEZE_RELEASE -ne 1 ]; then
+    # 1. Classical IDE checkout
+    stage_unitex_classic_ide_checkout
 
-  # 2. Classical IDE check for updates
-  check_for_updates  UNITEX_BUILD_CLASSIC_IDE_UPDATE "Java" \
-                    $UNITEX_BUILD_CLASSIC_IDE_FORCE_UPDATE  
-
+    # 2. Classical IDE check for updates
+    check_for_updates  UNITEX_BUILD_CLASSIC_IDE_UPDATE "Java" \
+                      $UNITEX_BUILD_CLASSIC_IDE_FORCE_UPDATE
+  fi
+  
   # 3. Classical IDE make
   stage_unitex_classic_ide_make
 
@@ -1958,13 +2015,15 @@ function stage_unitex_gramlab_ide() {
     return 1
   fi   
 
-  # 1. GramLab IDE checkout
-  stage_unitex_gramlab_ide_checkout
+  if [ $UNITEX_BUILD_FREEZE_RELEASE -ne 1 ]; then
+    # 1. GramLab IDE checkout
+    stage_unitex_gramlab_ide_checkout
 
-  # 2. GramLab IDE check for updates
-  check_for_updates UNITEX_BUILD_GRAMLAB_IDE_UPDATE "$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_NAME" \
-                    $UNITEX_BUILD_GRAMLAB_IDE_FORCE_UPDATE    \
-                    $UNITEX_BUILD_CLASSIC_IDE_UPDATE
+    # 2. GramLab IDE check for updates
+    check_for_updates UNITEX_BUILD_GRAMLAB_IDE_UPDATE "$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_NAME" \
+                      $UNITEX_BUILD_GRAMLAB_IDE_FORCE_UPDATE    \
+                      $UNITEX_BUILD_CLASSIC_IDE_UPDATE
+  fi
 
   if [  $UNITEX_BUILD_CLASSIC_IDE_HAS_ERRORS -eq 0 ]; then
     # 3. GramLab IDE make
@@ -2013,14 +2072,16 @@ function stage_unitex_core_logs() {
     pop_build_stage  
     return 1
   fi
+
+  if [ $UNITEX_BUILD_FREEZE_RELEASE -ne 1 ]; then  
+    # 1. Logs checkout
+    stage_unitex_core_logs_checkout
+
+    # 2. Logs check for updates
+    check_for_updates UNITEX_BUILD_LOGS_UPDATE "$UNITEX_BUILD_REPOSITORY_LOGS_NAME" \
+                      $UNITEX_BUILD_LOGS_FORCE_UPDATE
+  fi
   
-  # 1. Logs checkout
-  stage_unitex_core_logs_checkout
-
-  # 2. Logs check for updates
-  check_for_updates UNITEX_BUILD_LOGS_UPDATE "$UNITEX_BUILD_REPOSITORY_LOGS_NAME" \
-                    $UNITEX_BUILD_LOGS_FORCE_UPDATE
-
   # 3.                  
 
   pop_directory  # "$UNITEX_BUILD_SOURCE_DIR"
@@ -2993,22 +3054,24 @@ function stage_unitex_core() {
     return 1
   fi   
 
-  # unitex core regression tests
-  stage_unitex_core_logs
+  if [ $UNITEX_BUILD_FREEZE_RELEASE -ne 1 ]; then
+    # unitex core regression tests
+    stage_unitex_core_logs
 
-  # Clean previous Core sources if previous issues
-  if [ "$UNITEX_BUILD_HAS_PREVIOUS_ISSUES" -ge 1 ]; then
-    log_info "Cleaning" "Removing previous Core Components source directory"
-    rm -rf "$UNITEX_BUILD_REPOSITORY_CORE_NAME"
+    # Clean previous Core sources if previous issues
+    if [ "$UNITEX_BUILD_HAS_PREVIOUS_ISSUES" -ge 1 ]; then
+      log_info "Cleaning" "Removing previous Core Components source directory"
+      rm -rf "$UNITEX_BUILD_REPOSITORY_CORE_NAME"
+    fi
+
+    # 1. Core checkout
+    stage_unitex_core_checkout
+    
+    # 2. Core check for updates
+    check_for_updates UNITEX_BUILD_CORE_UPDATE "C++"  \
+                      $UNITEX_BUILD_CORE_FORCE_UPDATE \
+                      $UNITEX_BUILD_LOGS_UPDATE
   fi
-
-  # 1. Core checkout
-  stage_unitex_core_checkout
-  
-  # 2. Core check for updates
-  check_for_updates UNITEX_BUILD_CORE_UPDATE "C++"  \
-                    $UNITEX_BUILD_CORE_FORCE_UPDATE \
-                    $UNITEX_BUILD_LOGS_UPDATE
 
   # 3. Core make
   stage_unitex_core_make
@@ -3383,23 +3446,23 @@ function stage_unitex_core_create_readme() {
 
   if [ -e  "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH/README.md.in" ]; then
     log_info "Creating Readme" "Creating a Readme file in $README_FILE"
-    UNITEX_VER_FULL="$UNITEX_VER_FULL"                                               \
-    UNITEX_VERSION="$UNITEX_VERSION"                                                 \
-    UNITEX_BUILD_DATE=$(date '+%B %d, %Y')                                           \
-    UNITEX_DESCRIPTION="$UNITEX_DESCRIPTION"                                         \
-    UNITEX_HOMEPAGE_URL="$UNITEX_HOMEPAGE_URL"                                       \
-    UNITEX_RELEASES_URL="$UNITEX_RELEASES_URL"                                       \
-    UNITEX_RELEASES_LATEST_BETA="$UNITEX_RELEASES_LATEST_BETA"                       \
-    UNITEX_RELEASES_LATEST_BETA_WIN32_URL="$UNITEX_RELEASES_LATEST_BETA_WIN32_URL"   \
-    UNITEX_RELEASES_LATEST_BETA_SOURCE_URL="$UNITEX_RELEASES_LATEST_BETA_SOURCE_URL" \
-    UNITEX_DOCS_URL="$UNITEX_DOCS_URL"                                               \
-    UNITEX_FORUM_URL="$UNITEX_FORUM_URL"                                             \
-    UNITEX_BUG_URL="$UNITEX_BUG_URL"                                                 \
-    UNITEX_GOVERNANCE_URL="$UNITEX_GOVERNANCE_URL"                                   \
-    UNITEX_COPYRIGHT_HOLDER="$UNITEX_COPYRIGHT_HOLDER"                               \
-    UNITEX_CURRENT_YEAR=$(date '+%Y')                                                \
-    "$SCRIPT_BASEDIR/mo" "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH/README.md.in"    |\
-     fold -s -w72                                                                    \
+    UNITEX_VER_FULL="$UNITEX_VER_FULL"                                              \
+    UNITEX_VERSION="$UNITEX_VERSION"                                                \
+    UNITEX_BUILD_DATE=$(date '+%B %d, %Y')                                          \
+    UNITEX_DESCRIPTION="$UNITEX_DESCRIPTION"                                        \
+    UNITEX_HOMEPAGE_URL="$UNITEX_HOMEPAGE_URL"                                      \
+    UNITEX_RELEASES_URL="$UNITEX_RELEASES_URL"                                      \
+    UNITEX_RELEASES_LATEST_BETA="$UNITEX_RELEASES_LATEST_URL"                       \
+    UNITEX_RELEASES_LATEST_BETA_WIN32_URL="$UNITEX_RELEASES_LATEST_WIN32_URL"       \
+    UNITEX_RELEASES_LATEST_BETA_SOURCE_URL="$UNITEX_RELEASES_LATEST_SOURCE_URL"     \
+    UNITEX_DOCS_URL="$UNITEX_DOCS_URL"                                              \
+    UNITEX_FORUM_URL="$UNITEX_FORUM_URL"                                            \
+    UNITEX_BUG_URL="$UNITEX_BUG_URL"                                                \
+    UNITEX_GOVERNANCE_URL="$UNITEX_GOVERNANCE_URL"                                  \
+    UNITEX_COPYRIGHT_HOLDER="$UNITEX_COPYRIGHT_HOLDER"                              \
+    UNITEX_CURRENT_YEAR=$(date '+%Y')                                               \
+    "$SCRIPT_BASEDIR/mo" "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH/README.md.in"   |\
+     fold -s -w72                                                                   \
      > "$README_FILE"
   else 
     log_warn "File not found" "File $UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH/README.md.in doesn't exist"
@@ -3515,9 +3578,9 @@ function stage_unitex_packaging_make_installer_win() {
 # =============================================================================
 # 
 # =============================================================================
-function stage_unitex_deployment_generate_beta_downloads_webpage() {
+function stage_unitex_deployment_generate_release_downloads_webpage() {
   push_directory "$UNITEX_BUILD_BUNDLE_BASEDIR"
-  log_info "Recreating webpage" "Recreating beta webpage $UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
+  log_info "Recreating webpage" "Recreating download release webpage $UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
   #TODO(martinec) check $UNITEX_PACKAGE_SRCDIST_PREFIX.zip
   #------------------------Begin here document------------------------#
   # The minus in "<<-__END__" suppresses leading tabs in the body of the
@@ -3643,14 +3706,13 @@ if (cookiesEnabled()==true) {
 </script>
 </p>
 <br/>
-<p>Having problems? Old beta download page still <a href="http://www-igm.univ-mlv.fr/~unitex/index.php?page=3&html=beta.html">available here</a>. An alternative releases page is <a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_RELEASES_HOME_NAME">available here</a>!</p>
 __END__
 
 # shellcheck disable=SC2945
 cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
 
 <hr>
-<a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_WIN32_HOME_NAME/$UNITEX_PACKAGE_WIN32_PREFIX.exe" onClick="updateAllCookies()"><font size=3><b>$UNITEX_BUILD_RELEASE Windows Setup Installer</b></font></a> (last update: 
+<a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_WIN32_HOME_NAME/$UNITEX_PACKAGE_WIN32_PREFIX.exe" onClick="updateAllCookies()"><font size=3><b>$UNITEX_BUILD_RELEASE Windows Setup Installer (32-bit)</b></font></a> (last update: 
 __END__
 # shellcheck disable=SC2945
 echo -n "$(date -r "$UNITEX_BUILD_RELEASES_SETUP_WIN32_DIR/$UNITEX_PACKAGE_WIN32_PREFIX.exe")" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
@@ -3666,23 +3728,129 @@ cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
 
 <script type="text/javascript" language="JavaScript">
 <!--
-needToUpdate("$UNITEX_PACKAGE_SRCDIST_PREFIX",
+needToUpdate("$UNITEX_PACKAGE_WIN32_PREFIX",
 __END__
 # shellcheck disable=SC2945
 echo -n \" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
 # shellcheck disable=SC2945
-echo -n "$(date -r "$UNITEX_BUILD_RELEASES_SOURCE_DIR/$UNITEX_PACKAGE_SRCDIST_PREFIX.zip")"\" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
+echo -n "$(date -r "$UNITEX_BUILD_RELEASES_SOURCE_DIR/$UNITEX_PACKAGE_WIN32_PREFIX.exe")"\" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
 # shellcheck disable=SC2945
 cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
 );
 //-->
 </script>
+<br/>
+<a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_WIN64_HOME_NAME/$UNITEX_PACKAGE_WIN64_PREFIX.exe" onClick="updateAllCookies()"><font size=3><b>$UNITEX_BUILD_RELEASE Windows Setup Installer (64-bit)</b></font></a> (last update: 
+__END__
+# shellcheck disable=SC2945
+echo -n "$(date -r "$UNITEX_BUILD_RELEASES_SETUP_WIN64_DIR/$UNITEX_PACKAGE_WIN64_PREFIX.exe")" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
+# shellcheck disable=SC2945
+cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
+, size=
+__END__
+# shellcheck disable=SC2945
+file_size_human_readable "$UNITEX_BUILD_RELEASES_SETUP_WIN64_DIR/$UNITEX_PACKAGE_WIN64_PREFIX.exe" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
+# shellcheck disable=SC2945
+cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
+)
 
-<p>
-A common way to install Unitex/GramLab on Windows systems is via this setup installer. If you prefer a manual install, download the source distribution. See the README.txt for more details. 
-</p>
+<script type="text/javascript" language="JavaScript">
+<!--
+needToUpdate("$UNITEX_PACKAGE_WIN64_PREFIX",
+__END__
+# shellcheck disable=SC2945
+echo -n \" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
+# shellcheck disable=SC2945
+echo -n "$(date -r "$UNITEX_BUILD_RELEASES_SOURCE_DIR/$UNITEX_PACKAGE_WIN64_PREFIX.exe")"\" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
+# shellcheck disable=SC2945
+cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
+);
+//-->
+</script>
+<hr>
+<a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_LINUX_I686_HOME_NAME/$UNITEX_PACKAGE_LINUX_I686_PREFIX.run" onClick="updateAllCookies()"><font size=3><b>$UNITEX_BUILD_RELEASE GNU/Linux Setup Installer (Intel)</b></font></a> (last update: 
+__END__
+# shellcheck disable=SC2945
+echo -n "$(date -r "$UNITEX_BUILD_RELEASES_SETUP_LINUX_I686_DIR/$UNITEX_PACKAGE_LINUX_I686_PREFIX.run")" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
+# shellcheck disable=SC2945
+cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
+, size=
+__END__
+# shellcheck disable=SC2945
+file_size_human_readable "$UNITEX_BUILD_RELEASES_SETUP_LINUX_I686_DIR/$UNITEX_PACKAGE_LINUX_I686_PREFIX.run" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
+# shellcheck disable=SC2945
+cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
+)
 
+<script type="text/javascript" language="JavaScript">
+<!--
+needToUpdate("$UNITEX_PACKAGE_LINUX_I686_PREFIX",
+__END__
+# shellcheck disable=SC2945
+echo -n \" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
+# shellcheck disable=SC2945
+echo -n "$(date -r "$UNITEX_BUILD_RELEASES_SOURCE_DIR/$UNITEX_PACKAGE_LINUX_I686_PREFIX.run")"\" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
+# shellcheck disable=SC2945
+cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
+);
+//-->
+</script>
+<br/>
+<a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_LINUX_X86_64_HOME_NAME/$UNITEX_PACKAGE_LINUX_X86_64_PREFIX.run" onClick="updateAllCookies()"><font size=3><b>$UNITEX_BUILD_RELEASE GNU/Linux Setup Installer (Intel 64-bit)</b></font></a> (last update: 
+__END__
+# shellcheck disable=SC2945
+echo -n "$(date -r "$UNITEX_BUILD_RELEASES_SETUP_LINUX_X86_64_DIR/$UNITEX_PACKAGE_LINUX_X86_64_PREFIX.run")" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
+# shellcheck disable=SC2945
+cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
+, size=
+__END__
+# shellcheck disable=SC2945
+file_size_human_readable "$UNITEX_BUILD_RELEASES_SETUP_LINUX_X86_64_DIR/$UNITEX_PACKAGE_LINUX_X86_64_PREFIX.run" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
+# shellcheck disable=SC2945
+cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
+)
 
+<script type="text/javascript" language="JavaScript">
+<!--
+needToUpdate("$UNITEX_PACKAGE_LINUX_X86_64_PREFIX",
+__END__
+# shellcheck disable=SC2945
+echo -n \" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
+# shellcheck disable=SC2945
+echo -n "$(date -r "$UNITEX_BUILD_RELEASES_SOURCE_DIR/$UNITEX_PACKAGE_LINUX_X86_64_PREFIX.run")"\" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
+# shellcheck disable=SC2945
+cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
+);
+//-->
+</script>
+<hr>
+<a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_OSX_HOME_NAME/$UNITEX_PACKAGE_OSX_PREFIX.run" onClick="updateAllCookies()"><font size=3><b>$UNITEX_BUILD_RELEASE OS X Setup Installer (64-bit)</b></font></a> (last update: 
+__END__
+# shellcheck disable=SC2945
+echo -n "$(date -r "$UNITEX_BUILD_RELEASES_SETUP_OSX_DIR/$UNITEX_PACKAGE_OSX_PREFIX.run")" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
+# shellcheck disable=SC2945
+cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
+, size=
+__END__
+# shellcheck disable=SC2945
+file_size_human_readable "$UNITEX_BUILD_RELEASES_SETUP_OSX_DIR/$UNITEX_PACKAGE_OSX_PREFIX.run" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
+# shellcheck disable=SC2945
+cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
+)
+
+<script type="text/javascript" language="JavaScript">
+<!--
+needToUpdate("$UNITEX_PACKAGE_OSX_PREFIX",
+__END__
+# shellcheck disable=SC2945
+echo -n \" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
+# shellcheck disable=SC2945
+echo -n "$(date -r "$UNITEX_BUILD_RELEASES_SOURCE_DIR/$UNITEX_PACKAGE_OSX_PREFIX.run")"\" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
+# shellcheck disable=SC2945
+cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
+);
+//-->
+</script>
 <hr>
 <a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_SOURCE_HOME_NAME/$UNITEX_PACKAGE_SRCDIST_PREFIX.zip" onClick="updateAllCookies()"><font size=3><b>$UNITEX_BUILD_RELEASE Source Distribution Package</b></font></a> (last update: 
 __END__
@@ -3715,7 +3883,7 @@ cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
 <p>
 This is the whole package that contains all the sources, all the
 linguistic resources for the languages listed below and the Windows 
-(32-bit, 64-bit), GNU/Linux (i686, x86_64) and OS X (10.7+) executables.
+(32-bit, 64-bit), GNU/Linux (i686, x86_64) and OS X (10.7+) binary executables.
 See the README.txt for more details.
 </p>
 
@@ -3907,7 +4075,7 @@ function stage_unitex_deployment() {
     deploy_artifact "$UNITEX_BUILD_RELEASES_LING_DIR"        "$UNITEX_BUILD_DEPLOYMENT_DESTINATION/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_VERSION"
     deploy_artifact "$UNITEX_BUILD_RELEASES_CHANGES_DIR"     "$UNITEX_BUILD_DEPLOYMENT_DESTINATION/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_VERSION"
 
-    stage_unitex_deployment_generate_beta_downloads_webpage
+    stage_unitex_deployment_generate_release_downloads_webpage
     deploy_artifact "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"        "$UNITEX_BUILD_DEPLOYMENT_DESTINATION"
 
     deploy_artifact "$UNITEX_BUILD_RELEASES_LATESTDIR"       "$UNITEX_BUILD_DEPLOYMENT_DESTINATION/$UNITEX_BUILD_RELEASES_HOME_NAME"
@@ -3932,7 +4100,7 @@ function print_release_information() {
   log_info "Version Suffix"   "$UNITEX_VER_SUFFIX"
   log_info "Version Type"     "$UNITEX_VER_TYPE"
   log_info "Version Revision" "$UNITEX_VER_REVISION"
-  log_info "Version String"   "$UNITEX_VER_STRING"
+  log_info "Version String"   "$UNITEX_SEMVER_STRING"
   log_info "Version Full"     "$UNITEX_VER_FULL"
 }  # print_release_information()
 
@@ -3945,6 +4113,9 @@ function print_release_information() {
 # =============================================================================
 main() {
   push_directory "$UNITEX_BUILD_BUNDLE_BASEDIR"
+
+  # force compilation if the release was freezed
+  UNITEX_BUILD_FORCE_UPDATE=$(( 0 || UNITEX_BUILD_FREEZE_RELEASE > 1 ))
 
   # Vinber script itself
   stage_unitex_vinber_backend
@@ -4490,12 +4661,23 @@ function setup_release_information() {
   then
     UNITEX_VERSION="$UNITEX_VER_MAJOR.$UNITEX_VER_MINOR"
     UNITEX_VER_TYPE="stable"
-    UNITEX_BUILD_RELEASES_LATESTDIR_NAME="$UNITEX_BUILD_LATEST_NAME"
+    # e.g. latest-stable
+    UNITEX_BUILD_RELEASES_LATESTDIR_NAME="$UNITEX_BUILD_LATEST_NAME-$UNITEX_VER_TYPE"
   else
     UNITEX_VERSION="$UNITEX_VER_MAJOR.$UNITEX_VER_MINOR$UNITEX_VER_SUFFIX"
     UNITEX_VER_TYPE="unstable"
+    # e.g. latest-beta
     UNITEX_BUILD_RELEASES_LATESTDIR_NAME="$UNITEX_BUILD_LATEST_NAME-$UNITEX_VER_SUFFIX"
   fi
+
+  # e.g. http://unitex.univ-mlv.fr/releases/latest-beta
+  UNITEX_RELEASES_LATEST_URL="$UNITEX_RELEASES_URL/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME"
+
+  # e.g. http://unitex.univ-mlv.fr/releases/latest-beta/win32
+  UNITEX_RELEASES_LATEST_WIN32_URL="$UNITEX_RELEASES_LATEST_URL/$UNITEX_BUILD_RELEASES_WIN32_HOME_NAME"
+
+  # e.g. http://unitex.univ-mlv.fr/releases/latest-beta/source
+  UNITEX_RELEASES_LATEST_SOURCE_URL="$UNITEX_RELEASES_LATEST_URL/$UNITEX_BUILD_RELEASES_SOURCE_HOME_NAME"
 
   # setup the version release
   # e.g Unitex/GramLab 3.1beta
@@ -4529,7 +4711,6 @@ function setup_release_information() {
   # setup the OS X package name prefix
   # e.g. Unitex-GramLab-3.1beta-osx
   UNITEX_PACKAGE_OSX_PREFIX="$UNITEX_PACKAGE_FULL_NAME$UNITEX_BUILD_PACKAGE_OSX_SUFFIX"
-  UNITEX_PACKAGE_OSX_PREFIX="$UNITEX_PACKAGE_OSX_PREFIX"      # FIXME(martinec) temporal assignation to avoid SC2034 warning
 
   # setup the Linux i686 package name prefix
   # e.g. Unitex-GramLab-3.1beta-linux-i686
@@ -4555,10 +4736,10 @@ function setup_release_information() {
 
   # setup the version string
   # e.g 3.1.3816
-  UNITEX_VER_STRING="$UNITEX_VER_MAJOR.$UNITEX_VER_MINOR.$UNITEX_VER_REVISION"
+  UNITEX_SEMVER_STRING="$UNITEX_VER_MAJOR.$UNITEX_VER_MINOR.$UNITEX_VER_REVISION"
   if [ ! -z "${UNITEX_VER_SUFFIX}" ]; then
     # e.g 3.1.3816-beta
-    UNITEX_VER_STRING="$UNITEX_VER_STRING-$UNITEX_VER_SUFFIX"
+    UNITEX_SEMVER_STRING="$UNITEX_SEMVER_STRING-$UNITEX_VER_SUFFIX"
   fi  
   
   # setup the full version string
@@ -5613,7 +5794,7 @@ function jsonize_master_log_file() {
    | sed '/^\s*$/d')
   fi  
 
-  local -r build_information=$(echo -e ""                                                                                \
+  local -r build_information=$(echo -e ""                                                                             \
    "   \"$UNITEX_BUILD_LOG_JSON_VINBER_BUILD_KEY\": {\n"                                                              \
    "      \"builder\": {\n"                                                                                           \
    "        \"name\":                      \"$(json_escape "$UNITEX_BUILD_VINBER_CODENAME")\",\n"                     \
@@ -5623,7 +5804,7 @@ function jsonize_master_log_file() {
    "        \"name\":                      \"$(json_escape "$UNITEX_PRETTYAPPNAME")\",\n"                             \
    "        \"license\":                   \"$(json_escape "$UNITEX_LICENSE")\",\n"                                   \
    "        \"version\": {\n"                                                                                         \
-   "          \"string\":                  \"$(json_escape "$UNITEX_VER_STRING")\",\n"                                \
+   "          \"string\":                  \"$(json_escape "$UNITEX_SEMVER_STRING")\",\n"                             \
    "          \"full\":                    \"$(json_escape "$UNITEX_VER_FULL")\"\n"                                   \
    "        }\n"                                                                                                      \
    "      },\n"                                                                                                       \
