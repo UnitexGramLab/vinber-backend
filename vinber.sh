@@ -32,10 +32,24 @@
 # This program is loosely based on a previous work by Sebastien Paumier 
 # (paumier). The Unitex creator and former project maintainer.
 # =============================================================================
-UNITEX_BUILD_VINBER_VERSION="1.6.2"
+UNITEX_BUILD_VINBER_VERSION="1.6.3"
 UNITEX_BUILD_VINBER_CODENAME="Vinber"
 UNITEX_BUILD_VINBER_DESCRIPTION="Unitex/GramLab Build Automation Service"
 UNITEX_BUILD_VINBER_REPOSITORY_URL="https://github.com/UnitexGramLab/vinber-backend"
+# =============================================================================
+# Unitex/GramLab version build information
+# =============================================================================
+# shellcheck disable=SC2034
+{
+UNITEX_VERSION_BUILD_IS_ANONYMOUS=0
+UNITEX_VERSION_BUILD_NUMBER=0
+UNITEX_VERSION_BUILD_DATE=$(date '+%B %d, %Y')
+UNITEX_VERSION_BUILD_DAY=$(date '+%d')
+UNITEX_VERSION_BUILD_MONTH=$(date '+%m')
+UNITEX_VERSION_BUILD_TIMESTAMP=$(date +%s)
+UNITEX_VERSION_BUILD_YEAR=$(date '+%Y')
+UNITEX_VERSION_BUILD_SYSTEM="$UNITEX_BUILD_VINBER_CODENAME"
+}
 # =============================================================================
 # Minimal Bash version
 UNITEX_BUILD_MINIMAL_BASH_VERSION_STRING="4.2.0"
@@ -94,32 +108,69 @@ UNITEX_BUILD_AUTHORS_FILENAME="$UNITEX_BUILD_VINBER_CODENAME_LOWERCASE.commit.au
 # =============================================================================
 #!UNITEX_TYPE="Project"
 #!UNITEX_KEYWORDS="NPL,RTN"
-UNITEX_LICENSE="LGPL-2.1"
 UNITEX_PACKAGE_NAME="Unitex-GramLab"
 UNITEX_PRETTYAPPNAME="Unitex/GramLab"
-UNITEX_COPYRIGHT_HOLDER="Universite Paris-Est Marne-la-Vallee"
-UNITEX_SHORTDESCRIPTION="corpus processing suite"
-UNITEX_DESCRIPTION="an open source, cross-platform, multilingual, lexicon- and grammar-based $UNITEX_SHORTDESCRIPTION"
-UNITEX_VER_MAJOR=3
-UNITEX_VER_MINOR=1
-UNITEX_VER_SUFFIX=beta
+# =============================================================================
+# shellcheck disable=SC2034
+{
+UNITEX_VERSION_AUTHOR="The $UNITEX_PRETTYAPPNAME Authors"
+UNITEX_VERSION_COMPANY="Universite Paris-Est Marne-la-Vallee"
+UNITEX_VERSION_COPYRIGHT="Copyright (C) 2001-$UNITEX_VERSION_BUILD_YEAR"
+UNITEX_VERSION_DESCRIPTION_SHORT="corpus processing suite"
+UNITEX_VERSION_DESCRIPTION="an open source, cross-platform, multilingual, lexicon- and grammar-based $UNITEX_VERSION_DESCRIPTION_SHORT"
+UNITEX_VERSION_LICENSE="LGPL-2.1"
+}
+# =============================================================================
+# Unitex/GramLab version information
+# =============================================================================
+UNITEX_VERSION_MAJOR_NUMBER=3
+UNITEX_VERSION_MINOR_NUMBER=1
+UNITEX_VERSION_SUFFIX=beta
+# =============================================================================
+# Unitex/GramLab commit build information
+# =============================================================================
+# shellcheck disable=SC2034
+{
+UNITEX_VERSION_COMMIT_BRANCH_CORE="?"
+UNITEX_VERSION_COMMIT_DATE_CORE="?"
+UNITEX_VERSION_COMMIT_HASH_CORE="?"
+UNITEX_VERSION_COMMIT_TAG_CORE="?"
+}
 # =============================================================================
 # Unitex/GramLab related URLs
 # =============================================================================
+# shellcheck disable=SC2034
+{
 UNITEX_DOMAIN_NAME="unitexgramlab.org"
-UNITEX_HOMEPAGE_URL="http://$UNITEX_DOMAIN_NAME"
-UNITEX_RELEASES_URL="http://unitex.univ-mlv.fr/releases"
-UNITEX_SOURCE_URL="https://github.com/UnitexGramLab"
-#!UNITEX_ABOUT_URL="$UNITEX_HOMEPAGE_URL/index.php?page=1"
-#!UNITEX_UPDATE_URL="$UNITEX_HOMEPAGE_URL/index.php?page=3"
-UNITEX_BUG_URL="$UNITEX_HOMEPAGE_URL/index.php?page=6"
-#!UNITEX_LGPL_LR_URL="http://bit.do/LGPL-LR" 
-#!UNITEX_LGPL_URL="http://www.gnu.org/licenses/lgpl.html"
-UNITEX_FORUM_URL="http://forum.$UNITEX_DOMAIN_NAME"
-UNITEX_DOCS_URL="http://docs.$UNITEX_DOMAIN_NAME"
-UNITEX_GOVERNANCE_URL="$UNITEX_SOURCE_URL/unitex-governance"
+UNITEX_VERSION_URL_HOMEPAGE="http://$UNITEX_DOMAIN_NAME"
+UNITEX_VERSION_URL_RELEASES="http://unitex.univ-mlv.fr/releases"
+UNITEX_VERSION_URL_SOURCES="https://github.com/UnitexGramLab"
+#!UNITEX_VERSION_URL_ABOUT="$UNITEX_VERSION_URL_HOMEPAGE/index.php?page=1"
+#!UNITEX_VERSION_URL_UPDATE="$UNITEX_VERSION_URL_HOMEPAGE/index.php?page=3"
+#!UNITEX_VERSION_URL_LICENSE_RESOURCES="http://bit.do/LGPL-LR" 
+#!UNITEX_VERSION_URL_LICENSE_CORE="http://www.gnu.org/licenses/lgpl.html"
+UNITEX_VERSION_URL_FORUM="http://forum.$UNITEX_DOMAIN_NAME"
+UNITEX_VERSION_URL_DOCS="http://docs.$UNITEX_DOMAIN_NAME"
+}
+# =============================================================================
 UNITEX_BUILD_DEPLOYMENT_DESTINATION="/mnt/pantheon/sdb1/unitex/W3" # Website local path
-UNITEX_WEBSITE_URL="http://unitex.univ-mlv.fr"           # Website URL
+UNITEX_BUILD_URL_WEBSITE="http://unitex.univ-mlv.fr"               # Website URL
+# =============================================================================
+# Unitex/GramLab issues related URLs
+# =============================================================================
+# shellcheck disable=SC2034
+{
+UNITEX_VERSION_URL_ISSUES="$UNITEX_VERSION_URL_HOMEPAGE/index.php?page=6"
+UNITEX_VERSION_URL_ISSUES_CORE="$UNITEX_VERSION_URL_HOMEPAGE/index.php?page=6"
+}
+# =============================================================================
+# Unitex/GramLab repositories related URLs
+# =============================================================================
+# shellcheck disable=SC2034
+{
+UNITEX_VERSION_URL_REPOSITORY_CORE="https://svnigm.univ-mlv.fr/svn/unitex/Unitex-C%2B%2B"
+UNITEX_VERSION_URL_REPOSITORY_GOVERNANCE="$UNITEX_VERSION_URL_SOURCES/unitex-governance"
+}
 # =============================================================================
 UNITEX_BUILD_SVN_LOG_LIMIT=100
 UNITEX_BUILD_MINGW32_COMMAND_PREFIX="mingw32-"
@@ -513,10 +564,10 @@ function log() {
       # .log
       # Replace
       # 1. UNITEX_BUILD_DEPLOYMENT_DESTINATION(/mnt/pantheon/sdb1/unitex/W3)
-      #    UNITEX_WEBSITE_URL(http://unitex.univ-mlv.fr)
+      #    UNITEX_BUILD_URL_WEBSITE(http://unitex.univ-mlv.fr)
       #
       # 2. UNITEX_BUILD_RELEASES_DIR(/mnt/pantheon/unitex/compile/build/Unitex-GramLab/nightly/releases)
-      #    UNITEX_WEBSITE_URL(http://unitex.univ-mlv.fr/build/nightly/releases)
+      #    UNITEX_BUILD_URL_WEBSITE(http://unitex.univ-mlv.fr/build/nightly/releases)
       #
       # 3. UNITEX_BUILD_LOG_WORKSPACE(/mnt/pantheon/unitex/compile/v6/bundle/nightly/build/2015-04-06-21-34-48)
       #    ""
@@ -530,8 +581,8 @@ function log() {
        # shellcheck disable=SC2059 
        printf "$UNITEX_BUILD_LOG_FORMAT" "$2" "$UNITEX_BUILD_CURRENT_STAGE"\
               "$3" "$4"
-      } | sed -e "s|$UNITEX_BUILD_DEPLOYMENT_DESTINATION|$UNITEX_WEBSITE_URL|g" \
-        | sed -e "s|$UNITEX_BUILD_RELEASES_BASEDIR|$UNITEX_WEBSITE_URL/$UNITEX_BUILD_VINBER_BUILD_HOME_NAME/$UNITEX_BUILD_BUNDLE_NAME/$UNITEX_BUILD_RELEASES_HOME_NAME|g"   \
+      } | sed -e "s|$UNITEX_BUILD_DEPLOYMENT_DESTINATION|$UNITEX_BUILD_URL_WEBSITE|g" \
+        | sed -e "s|$UNITEX_BUILD_RELEASES_BASEDIR|$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_VINBER_BUILD_HOME_NAME/$UNITEX_BUILD_BUNDLE_NAME/$UNITEX_BUILD_RELEASES_HOME_NAME|g"   \
         | sed -e "s|$UNITEX_BUILD_LOG_WORKSPACE/||g" \
         | sed -e "s|$UNITEX_BUILD_LOGGER_PATH|$UNITEX_BUILD_LOGGER_WEB_HOME|g" \
         | sed -e "s|$UNITEX_BUILD_BASEDIR/||g" \
@@ -581,7 +632,7 @@ function json_printf() {
   fi  
 
   message_description=$(json_escape "$(echo -n "$message_description" |\
-        sed -e "s|$UNITEX_BUILD_DEPLOYMENT_DESTINATION|$UNITEX_WEBSITE_URL|g ; s|$UNITEX_BUILD_RELEASES_BASEDIR|$UNITEX_WEBSITE_URL/$UNITEX_BUILD_VINBER_BUILD_HOME_NAME/$UNITEX_BUILD_BUNDLE_NAME/$UNITEX_BUILD_RELEASES_HOME_NAME|g ; s|$UNITEX_BUILD_LOG_WORKSPACE/||g ; s|$UNITEX_BUILD_LOGGER_PATH|$UNITEX_BUILD_LOGGER_WEB_HOME|g ; s|$UNITEX_BUILD_BASEDIR/||g"\
+        sed -e "s|$UNITEX_BUILD_DEPLOYMENT_DESTINATION|$UNITEX_BUILD_URL_WEBSITE|g ; s|$UNITEX_BUILD_RELEASES_BASEDIR|$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_VINBER_BUILD_HOME_NAME/$UNITEX_BUILD_BUNDLE_NAME/$UNITEX_BUILD_RELEASES_HOME_NAME|g ; s|$UNITEX_BUILD_LOG_WORKSPACE/||g ; s|$UNITEX_BUILD_LOGGER_PATH|$UNITEX_BUILD_LOGGER_WEB_HOME|g ; s|$UNITEX_BUILD_BASEDIR/||g"\
         )")
 
   echo -E  "        {"
@@ -615,7 +666,7 @@ function exec_logged_command() {
   sed 's%\(user\(name\)\?\|pass\(word\)\?\)\( \)\+\([^ ]\+\)%\1 ********%g' |\
   sed -e :a -e 's/@\([^* .][^* .]\)\(\**\)[^* .]\([^*]*\.[^* .]*\)$/@\1\2*\3/;ta' |\
   sed -e "s|$UNITEX_BUILD_SOURCE_DIR/||g" |\
-  sed -e "s|$UNITEX_BUILD_DEPLOYMENT_DESTINATION|$UNITEX_WEBSITE_URL|g")
+  sed -e "s|$UNITEX_BUILD_DEPLOYMENT_DESTINATION|$UNITEX_BUILD_URL_WEBSITE|g")
   
   # test if command_name isn't empty
   if [ ! "$command_name" ]; then
@@ -746,6 +797,41 @@ function stage_unitex_doc_checkout() {
   pop_directory            
 }  # stage_unitex_doc_checkout()
 
+# =============================================================================
+function configure_templated_files() {
+ local directory="$1"
+ if [ -d "${directory:?}" ]; then
+    push_directory "$directory"
+
+    # export all UNITEX_* variables
+    export_unitex_variables
+
+    # find all files with .in extension
+    find -L .                           \
+     -not -path "./build/*"             \
+     -not -path "*/\.*"                 \
+     -not -name ".*"                    \
+     -name      "*.in"                  \
+     -type f -print |                   \
+    while read -r template ; do         \
+      log_info "Processing template" "Processing $template"
+      output_file=${template%.*}
+      # process foo.bar.in and save the result in foo.bar
+      sed -e 's/{{\([a-zA-Z_0-9]\+\)}}/@\1@/g ; s/{/<</g ; s/}/>>/g ; s/@\([a-zA-Z_0-9]\+\)\@/{{\1}}/g' "$template" |\
+      "$SCRIPT_BASEDIR/mo"                                                                                          |\
+      sed -e 's/<</{/g ; s/>>/}/g' > "$output_file" || {
+          log_warn "Template error" "There were a problem processing $template"
+        }
+      log_info "File created" "Template output was saved to $output_file"
+    done
+
+    pop_directory
+ else
+  log_warn "Configure fails" "directory $directory doesn't exist"
+ fi
+}  # configure_templated_files()
+
+# =============================================================================
 function stage_unitex_doc_make() {
   push_directory "$UNITEX_BUILD_REPOSITORY_USERMANUAL_LOCAL_PATH"
 
@@ -949,6 +1035,9 @@ function stage_unitex_doc() {
     # 2. Documentation check for updates
     check_for_updates UNITEX_BUILD_DOCS_UPDATE "$UNITEX_BUILD_REPOSITORY_USERMANUAL_NAME" \
                       $UNITEX_BUILD_DOCS_FORCE_UPDATE
+
+    # 3. Documentation configure
+    configure_templated_files "$UNITEX_BUILD_REPOSITORY_USERMANUAL_LOCAL_PATH"
   fi
   
   # 3. Documentation make
@@ -1225,6 +1314,8 @@ function stage_unitex_packaging_unix() {
                       "$UNITEX_BUILD_GRAMLAB_IDE_UPDATE"            \
                       "$UNITEX_BUILD_CORE_UPDATE"
 
+    # 3. Packaging configure
+    configure_templated_files "$UNITEX_BUILD_REPOSITORY_PACK_UNIX_LOCAL_PATH"
   fi
   
   count_issues_until_now UNITEX_BUILD_ISSUES_BEFORE_PACKAGING_UNIX_MAKE
@@ -1417,27 +1508,9 @@ function stage_unitex_packaging_configure_installer_unix() {
     fi
 
     # Create LICENSE.txt
-    if [ -e "$UNITEX_BUILD_SOURCE_DIR/$UNITEX_BUILD_REPOSITORY_PACK_UNIX_NAME/data/LICENSE.md.in" ];then
-       log_info "Creating License" "Creating a License file for the installer"
-       UNITEX_VER_FULL="$UNITEX_VER_FULL"                                                          \
-       UNITEX_BUILD_DATE=$(date '+%B %d, %Y')                                                      \
-       UNITEX_DESCRIPTION="$UNITEX_DESCRIPTION"                                                    \
-       UNITEX_HOMEPAGE_URL="$UNITEX_HOMEPAGE_URL"                                                  \
-       UNITEX_RELEASES_URL="$UNITEX_RELEASES_URL"                                                  \
-       UNITEX_RELEASES_LATEST_WIN32_URL="$UNITEX_RELEASES_LATEST_WIN32_URL"                        \
-       UNITEX_RELEASES_LATEST_SOURCE_URL="$UNITEX_RELEASES_LATEST_SOURCE_URL"                      \
-       UNITEX_DOCS_URL="$UNITEX_DOCS_URL"                                                          \
-       UNITEX_FORUM_URL="$UNITEX_FORUM_URL"                                                        \
-       UNITEX_BUG_URL="$UNITEX_BUG_URL"                                                            \
-       UNITEX_GOVERNANCE_URL="$UNITEX_GOVERNANCE_URL"                                              \
-       UNITEX_COPYRIGHT_HOLDER="$UNITEX_COPYRIGHT_HOLDER"                                          \
-       UNITEX_CURRENT_YEAR=$(date '+%Y')                                                           \
-       "$SCRIPT_BASEDIR/mo" "$UNITEX_BUILD_SOURCE_DIR/$UNITEX_BUILD_REPOSITORY_PACK_UNIX_NAME/data/LICENSE.md.in" |\
-        fold -s -w72                                                                               \
-        > "$UNITEX_BUILD_SOURCE_DIR/$UNITEX_BUILD_REPOSITORY_PACK_UNIX_NAME/data/LICENSE.txt"  || {
-         UNITEX_BUILD_PACK_HAS_ERRORS=1
-       }
-    fi
+    log_info "Creating License" "Creating a License file for the installer"
+    fold -s -w72 "$UNITEX_BUILD_SOURCE_DIR/$UNITEX_BUILD_REPOSITORY_PACK_UNIX_NAME/data/LICENSE.md" \
+               > "$UNITEX_BUILD_SOURCE_DIR/$UNITEX_BUILD_REPOSITORY_PACK_UNIX_NAME/data/LICENSE.txt"
     
     if [ $UNITEX_BUILD_PACK_HAS_ERRORS -ne 0 ]; then
       log_error "Configuration failed" "Unix distributions configuration process failed!"
@@ -2125,7 +2198,7 @@ function stage_unitex_core_update_source_revision_header() {
          * @file      Unitex_revision.h
          * @brief     Defines the current Unitex Core revision as the default revision
          *            
-         * @author    $UNITEX_BUILD_VINBER_CODENAME Process
+         * @author    $UNITEX_VERSION_BUILD_SYSTEM Process
          * 
          * @note      This file was overwritten by $UNITEX_BUILD_VINBER_CODENAME. $UNITEX_BUILD_VINBER_CODENAME is the
          *            $UNITEX_BUILD_VINBER_DESCRIPTION
@@ -3071,9 +3144,12 @@ function stage_unitex_core() {
     check_for_updates UNITEX_BUILD_CORE_UPDATE "C++"  \
                       $UNITEX_BUILD_CORE_FORCE_UPDATE \
                       $UNITEX_BUILD_LOGS_UPDATE
+                      
+    # 3. Core configure
+    configure_templated_files "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH"
   fi
 
-  # 3. Core make
+  # 4. Core make
   stage_unitex_core_make
 
   # unitex regression tests replay
@@ -3391,8 +3467,9 @@ function stage_unitex_core_dist() {
       cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/Disclaimers/*.txt  "$UNITEX_BUILD_RELEASE_APP_DISCLAIMERS_DIR/"
       
       # finally, we create the README.txt
-      stage_unitex_core_create_readme "$UNITEX_BUILD_RELEASE_DIR" "README.txt"
-      
+      fold -s -w72 "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH/README.md" \
+                 > "$UNITEX_BUILD_RELEASE_DIR/README.txt"
+         
       log_info "Dist prepared" "Core distribution is now prepared"
     fi
   else
@@ -3434,41 +3511,6 @@ function stage_unitex_deployment_check() {
       log_info "Preparing deployment" "$UNITEX_BUILD_FULL_RELEASE deployment is being prepared..."
     fi  
   fi
-}
-# =============================================================================
-# 
-# =============================================================================
-function stage_unitex_core_create_readme() {
-  push_directory "$SCRIPT_BASEDIR"
-  README_PATH=$1
-  README_FILENAME=$2
-  README_FILE="$README_PATH/$README_FILENAME"
-
-  if [ -e  "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH/README.md.in" ]; then
-    log_info "Creating Readme" "Creating a Readme file in $README_FILE"
-    UNITEX_VER_FULL="$UNITEX_VER_FULL"                                              \
-    UNITEX_VERSION="$UNITEX_VERSION"                                                \
-    UNITEX_BUILD_DATE=$(date '+%B %d, %Y')                                          \
-    UNITEX_DESCRIPTION="$UNITEX_DESCRIPTION"                                        \
-    UNITEX_HOMEPAGE_URL="$UNITEX_HOMEPAGE_URL"                                      \
-    UNITEX_RELEASES_URL="$UNITEX_RELEASES_URL"                                      \
-    UNITEX_RELEASES_LATEST_BETA="$UNITEX_RELEASES_LATEST_URL"                       \
-    UNITEX_RELEASES_LATEST_BETA_WIN32_URL="$UNITEX_RELEASES_LATEST_WIN32_URL"       \
-    UNITEX_RELEASES_LATEST_BETA_SOURCE_URL="$UNITEX_RELEASES_LATEST_SOURCE_URL"     \
-    UNITEX_DOCS_URL="$UNITEX_DOCS_URL"                                              \
-    UNITEX_FORUM_URL="$UNITEX_FORUM_URL"                                            \
-    UNITEX_BUG_URL="$UNITEX_BUG_URL"                                                \
-    UNITEX_GOVERNANCE_URL="$UNITEX_GOVERNANCE_URL"                                  \
-    UNITEX_COPYRIGHT_HOLDER="$UNITEX_COPYRIGHT_HOLDER"                              \
-    UNITEX_CURRENT_YEAR=$(date '+%Y')                                               \
-    "$SCRIPT_BASEDIR/mo" "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH/README.md.in"   |\
-     fold -s -w72                                                                   \
-     > "$README_FILE"
-  else 
-    log_warn "File not found" "File $UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH/README.md.in doesn't exist"
-  fi   
-  
-  pop_directory  # "$SCRIPT_BASEDIR"
 }
 
 # =============================================================================
@@ -3549,10 +3591,10 @@ function stage_unitex_packaging_make_installer_win() {
       $nsis_verbose_all_parameter -DINPUT_BASEDIR="$UNITEX_BUILD_BUNDLE_BASEDIR"         \
                                   -DINPUT_UNITEXDIR="$UNITEX_BUILD_RELEASE_DIR"          \
                                   -DINPUT_TIMESTAMPDIR="$UNITEX_BUILD_TIMESTAMP_DIR"     \
-      $nsis_sign_file_parameter   -DVER_MAJOR="$UNITEX_VER_MAJOR"                        \
-                                  -DVER_MINOR="$UNITEX_VER_MINOR"                        \
-                                  -DVER_REVISION="$UNITEX_VER_REVISION"                  \
-                                  -DVER_SUFFIX="$UNITEX_VER_SUFFIX"                      \
+      $nsis_sign_file_parameter   -DVER_MAJOR="$UNITEX_VERSION_MAJOR_NUMBER"             \
+                                  -DVER_MINOR="$UNITEX_VERSION_MINOR_NUMBER"             \
+                                  -DVER_REVISION="$UNITEX_VERSION_REVISION_NUMBER"       \
+                                  -DVER_SUFFIX="$UNITEX_VERSION_SUFFIX"                  \
       $nsis_arch_64_parameter     -DOUTPUT_RELEASES_DIR="$UNITEX_BUILD_RELEASES_BASEDIR" \
                                   "$UNITEX_BUILD_REPOSITORY_PACK_LOCAL_PATH/windows/unitex.nsi" || {
         UNITEX_BUILD_PACK_HAS_ERRORS=1
@@ -3682,7 +3724,7 @@ cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
 }
 //-->
 </script>
-<p><a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_VINBER_HOME_NAME/#bundle=$UNITEX_BUILD_BUNDLE_NAME&amp;q=$UNITEX_BUILD_LOG_NAME"><img alt="${UNITEX_BUILD_BUNDLE_NAME^} Release" src="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_VINBER_HOME_NAME/badge/$UNITEX_BUILD_BUNDLE_NAME/$UNITEX_BUILD_LOG_NAME.svg?subject=product.name&amp;status=product.version.string" style="max-width:100%;"></a> <a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_VINBER_HOME_NAME/#bundle=$UNITEX_BUILD_BUNDLE_NAME&amp;q=$UNITEX_BUILD_LOG_NAME"><img alt="${UNITEX_BUILD_BUNDLE_NAME^} Status" src="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_VINBER_HOME_NAME/badge/$UNITEX_BUILD_BUNDLE_NAME/$UNITEX_BUILD_LOG_NAME.svg?status=build.status" style="max-width:100%;"></a></p>
+<p><a href="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_VINBER_HOME_NAME/#bundle=$UNITEX_BUILD_BUNDLE_NAME&amp;q=$UNITEX_BUILD_LOG_NAME"><img alt="${UNITEX_BUILD_BUNDLE_NAME^} Release" src="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_VINBER_HOME_NAME/badge/$UNITEX_BUILD_BUNDLE_NAME/$UNITEX_BUILD_LOG_NAME.svg?subject=product.name&amp;status=product.version.string" style="max-width:100%;"></a> <a href="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_VINBER_HOME_NAME/#bundle=$UNITEX_BUILD_BUNDLE_NAME&amp;q=$UNITEX_BUILD_LOG_NAME"><img alt="${UNITEX_BUILD_BUNDLE_NAME^} Status" src="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_VINBER_HOME_NAME/badge/$UNITEX_BUILD_BUNDLE_NAME/$UNITEX_BUILD_LOG_NAME.svg?status=build.status" style="max-width:100%;"></a></p>
 <p>
 In order to coordinate the cooperative development, $UNITEX_PRETTYAPPNAME programs
 and resources are now maintained on a Version Control System. This page is automatically regenerated,
@@ -3712,7 +3754,7 @@ __END__
 cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
 
 <hr>
-<a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_WIN32_HOME_NAME/$UNITEX_PACKAGE_WIN32_PREFIX.exe" onClick="updateAllCookies()"><font size=3><b>$UNITEX_BUILD_RELEASE Windows Setup Installer (32-bit)</b></font></a> (last update: 
+<a href="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_WIN32_HOME_NAME/$UNITEX_PACKAGE_WIN32_PREFIX.exe" onClick="updateAllCookies()"><font size=3><b>$UNITEX_BUILD_RELEASE Windows Setup Installer (32-bit)</b></font></a> (last update: 
 __END__
 # shellcheck disable=SC2945
 echo -n "$(date -r "$UNITEX_BUILD_RELEASES_SETUP_WIN32_DIR/$UNITEX_PACKAGE_WIN32_PREFIX.exe")" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
@@ -3740,7 +3782,7 @@ cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
 //-->
 </script>
 <br/>
-<a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_WIN64_HOME_NAME/$UNITEX_PACKAGE_WIN64_PREFIX.exe" onClick="updateAllCookies()"><font size=3><b>$UNITEX_BUILD_RELEASE Windows Setup Installer (64-bit)</b></font></a> (last update: 
+<a href="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_WIN64_HOME_NAME/$UNITEX_PACKAGE_WIN64_PREFIX.exe" onClick="updateAllCookies()"><font size=3><b>$UNITEX_BUILD_RELEASE Windows Setup Installer (64-bit)</b></font></a> (last update: 
 __END__
 # shellcheck disable=SC2945
 echo -n "$(date -r "$UNITEX_BUILD_RELEASES_SETUP_WIN64_DIR/$UNITEX_PACKAGE_WIN64_PREFIX.exe")" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
@@ -3768,7 +3810,7 @@ cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
 //-->
 </script>
 <hr>
-<a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_LINUX_I686_HOME_NAME/$UNITEX_PACKAGE_LINUX_I686_PREFIX.run" onClick="updateAllCookies()"><font size=3><b>$UNITEX_BUILD_RELEASE GNU/Linux Setup Installer (Intel)</b></font></a> (last update: 
+<a href="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_LINUX_I686_HOME_NAME/$UNITEX_PACKAGE_LINUX_I686_PREFIX.run" onClick="updateAllCookies()"><font size=3><b>$UNITEX_BUILD_RELEASE GNU/Linux Setup Installer (Intel)</b></font></a> (last update: 
 __END__
 # shellcheck disable=SC2945
 echo -n "$(date -r "$UNITEX_BUILD_RELEASES_LINUX_I686_DIR/$UNITEX_PACKAGE_LINUX_I686_PREFIX.run")" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
@@ -3796,7 +3838,7 @@ cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
 //-->
 </script>
 <br/>
-<a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_LINUX_X86_64_HOME_NAME/$UNITEX_PACKAGE_LINUX_X86_64_PREFIX.run" onClick="updateAllCookies()"><font size=3><b>$UNITEX_BUILD_RELEASE GNU/Linux Setup Installer (Intel 64-bit)</b></font></a> (last update: 
+<a href="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_LINUX_X86_64_HOME_NAME/$UNITEX_PACKAGE_LINUX_X86_64_PREFIX.run" onClick="updateAllCookies()"><font size=3><b>$UNITEX_BUILD_RELEASE GNU/Linux Setup Installer (Intel 64-bit)</b></font></a> (last update: 
 __END__
 # shellcheck disable=SC2945
 echo -n "$(date -r "$UNITEX_BUILD_RELEASES_LINUX_X86_64_DIR/$UNITEX_PACKAGE_LINUX_X86_64_PREFIX.run")" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
@@ -3824,7 +3866,7 @@ cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
 //-->
 </script>
 <hr>
-<a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_OSX_HOME_NAME/$UNITEX_PACKAGE_OSX_PREFIX.run" onClick="updateAllCookies()"><font size=3><b>$UNITEX_BUILD_RELEASE OS X Setup Installer (64-bit)</b></font></a> (last update: 
+<a href="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_OSX_HOME_NAME/$UNITEX_PACKAGE_OSX_PREFIX.run" onClick="updateAllCookies()"><font size=3><b>$UNITEX_BUILD_RELEASE OS X Setup Installer (64-bit)</b></font></a> (last update: 
 __END__
 # shellcheck disable=SC2945
 echo -n "$(date -r "$UNITEX_BUILD_RELEASES_OSX_DIR/$UNITEX_PACKAGE_OSX_PREFIX.run")" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
@@ -3852,7 +3894,7 @@ cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
 //-->
 </script>
 <hr>
-<a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_SOURCE_HOME_NAME/$UNITEX_PACKAGE_SRCDIST_PREFIX.zip" onClick="updateAllCookies()"><font size=3><b>$UNITEX_BUILD_RELEASE Source Distribution Package</b></font></a> (last update: 
+<a href="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_SOURCE_HOME_NAME/$UNITEX_PACKAGE_SRCDIST_PREFIX.zip" onClick="updateAllCookies()"><font size=3><b>$UNITEX_BUILD_RELEASE Source Distribution Package</b></font></a> (last update: 
 __END__
 # shellcheck disable=SC2945
 echo -n "$(date -r "$UNITEX_BUILD_RELEASES_SOURCE_DIR/$UNITEX_PACKAGE_SRCDIST_PREFIX.zip")" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
@@ -3888,7 +3930,7 @@ See the README.txt for more details.
 </p>
 
 <hr>
-<a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_SOURCE_HOME_NAME/$UNITEX_PACKAGE_APP_PREFIX.zip" onClick="saveCookie('App',
+<a href="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_SOURCE_HOME_NAME/$UNITEX_PACKAGE_APP_PREFIX.zip" onClick="saveCookie('App',
 __END__
 # shellcheck disable=SC2945
 echo -n \' >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
@@ -3928,7 +3970,7 @@ This package contains both Classic and GramLab IDEs together with the Windows (3
 <br/>
 
 
-<a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_SOURCE_HOME_NAME/$UNITEX_PACKAGE_SRC_PREFIX.zip" onClick="saveCookie('Src',
+<a href="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_SOURCE_HOME_NAME/$UNITEX_PACKAGE_SRC_PREFIX.zip" onClick="saveCookie('Src',
 __END__
 # shellcheck disable=SC2945
 echo -n \' >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
@@ -3974,20 +4016,20 @@ Please consult the latest changes to see if the current versions are safe to use
 <br/>
 <br/>
 
-<a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_CHANGES_HOME_NAME/C++.txt">Changes on Core sources</a>
+<a href="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_CHANGES_HOME_NAME/C++.txt">Changes on Core sources</a>
 
 <br/>
 
-<a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_CHANGES_HOME_NAME/Java.txt">Changes on Classic IDE sources</a>
+<a href="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_CHANGES_HOME_NAME/Java.txt">Changes on Classic IDE sources</a>
 <br/>
 
-<a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_CHANGES_HOME_NAME/Gramlab.txt">Changes on GramLab IDE sources</a>
+<a href="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_CHANGES_HOME_NAME/Gramlab.txt">Changes on GramLab IDE sources</a>
 __END__
 cd "$UNITEX_BUILD_REPOSITORY_LING_LOCAL_PATH"
 for LANG in *
   do cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
     <HR>
-    <a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_LING_HOME_NAME/$LANG.zip" onClick="saveCookie('$LANG',
+    <a href="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_LING_HOME_NAME/$LANG.zip" onClick="saveCookie('$LANG',
 __END__
 # shellcheck disable=SC2945
 echo -n \' >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
@@ -4026,7 +4068,7 @@ cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
 <br/>
 <br/>
 
-<a href="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_CHANGES_HOME_NAME/$LANG.txt">Changes on resources for $LANG</a>
+<a href="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_CHANGES_HOME_NAME/$LANG.txt">Changes on resources for $LANG</a>
 __END__
 done
   #-------------------------End here document------------------------#
@@ -4092,16 +4134,17 @@ function print_release_information() {
   log_info "Name"             "$UNITEX_PRETTYAPPNAME"
   log_info "Release"          "$UNITEX_BUILD_RELEASE"
   log_info "Full Release"     "$UNITEX_BUILD_FULL_RELEASE"
-  log_info "License"          "$UNITEX_LICENSE"
-  log_info "Description"      "$UNITEX_DESCRIPTION"
-  log_info "Company"          "$UNITEX_COPYRIGHT_HOLDER"
-  log_info "Version Major"    "$UNITEX_VER_MAJOR"
-  log_info "Version Minor"    "$UNITEX_VER_MINOR"
-  log_info "Version Suffix"   "$UNITEX_VER_SUFFIX"
-  log_info "Version Type"     "$UNITEX_VER_TYPE"
-  log_info "Version Revision" "$UNITEX_VER_REVISION"
+  log_info "License"          "$UNITEX_VERSION_LICENSE"
+  log_info "Description"      "$UNITEX_VERSION_DESCRIPTION"
+  log_info "Company"          "$UNITEX_VERSION_COMPANY"
+  log_info "Version Major"    "$UNITEX_VERSION_MAJOR_NUMBER"
+  log_info "Version Minor"    "$UNITEX_VERSION_MINOR_NUMBER"
+  log_info "Version Suffix"   "$UNITEX_VERSION_SUFFIX"
+  log_info "Version Type"     "$UNITEX_VERSION_TYPE"
+  log_info "Version Unstable" "$UNITEX_VERSION_IS_UNSTABLE"
+  log_info "Version Revision" "$UNITEX_VERSION_REVISION_NUMBER"
   log_info "Version String"   "$UNITEX_SEMVER_STRING"
-  log_info "Version Full"     "$UNITEX_VER_FULL"
+  log_info "Version Full"     "$UNITEX_VERSION_FULL"
 }  # print_release_information()
 
 # =============================================================================
@@ -4263,14 +4306,14 @@ function clean_exit() {
 # test if configuration variables are non zero length
 # prevent script fails with unassigned variables
 function check_script_variables() {
-  # UNITEX_VER_MAJOR
-  if [ -z "${UNITEX_VER_MAJOR}" ]; then
-    die_with_critical_error "Aborting" "UNITEX_VER_MAJOR is unset or set to the empty string"
+  # UNITEX_VERSION_MAJOR_NUMBER
+  if [ -z "${UNITEX_VERSION_MAJOR_NUMBER}" ]; then
+    die_with_critical_error "Aborting" "UNITEX_VERSION_MAJOR_NUMBER is unset or set to the empty string"
   fi
   
-  # UNITEX_VER_MINOR
-  if [ -z "${UNITEX_VER_MINOR}" ]; then
-    die_with_critical_error "Aborting" "UNITEX_VER_MINOR is unset or set to the empty string"
+  # UNITEX_VERSION_MINOR_NUMBER
+  if [ -z "${UNITEX_VERSION_MINOR_NUMBER}" ]; then
+    die_with_critical_error "Aborting" "UNITEX_VERSION_MINOR_NUMBER is unset or set to the empty string"
   fi
 
   # UNITEX_BUILD_VERBOSITY
@@ -4309,6 +4352,20 @@ function check_build_tools() {
     {
       die_with_critical_error "Command not found" "${script_tool} is required but it's not installed" #.this
     }
+  done
+}
+
+function export_unitex_variables() {
+  # Create an array list composed by all variables having the prefix UNITEX_
+  local unitex_variable_list=()
+  unitex_variable_list=( $(set -o posix ; set    |\
+                           grep "UNITEX_"        |\
+                           cut -d= -f1) )
+  # export UNITEX_* variables
+  local unitex_variable
+  for unitex_variable in "${unitex_variable_list[@]}"
+  do
+    export "$unitex_variable"
   done
 }
 
@@ -4353,7 +4410,7 @@ function setup_path_environment() {
   UNITEX_BUILD_LOGGER_PATH="$UNITEX_BUILD_LOGS_HOME_PATH/$UNITEX_BUILD_VINBER_LOGS_HOME_NAME"
 
   # e.g http://unitex.univ-mlv.fr/vinber/bundle/nightly/build
-  UNITEX_BUILD_LOGGER_WEB_HOME="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_LOGS_HOME_NAME/$UNITEX_BUILD_VINBER_LOGS_HOME_NAME"
+  UNITEX_BUILD_LOGGER_WEB_HOME="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_LOGS_HOME_NAME/$UNITEX_BUILD_VINBER_LOGS_HOME_NAME"
 
   # e.g /home/vinber/bundle/$UNITEX_BUILD_LOG_NAME.log
   UNITEX_BUILD_LOG_FILE="$UNITEX_BUILD_LOGGER_PATH/$UNITEX_BUILD_LOG_NAME.$UNITEX_BUILD_LOG_FILE_EXT"
@@ -4378,7 +4435,7 @@ function setup_path_environment() {
   UNITEX_BUILD_LOG_WORKSPACE_LATEST_SYMBOLIC_LINK="$UNITEX_BUILD_LOGGER_PATH/$UNITEX_BUILD_LATEST_NAME"
 
   # e.g http://unitex.univ-mlv.fr/v6/#bundle=nightly&q=2015-04-08-01-16-59
-  UNITEX_BUILD_LOG_FRONTEND_URL="$UNITEX_WEBSITE_URL/$UNITEX_BUILD_VINBER_HOME_NAME/#bundle=$UNITEX_BUILD_BUNDLE_NAME&q=$UNITEX_BUILD_LOG_NAME"
+  UNITEX_BUILD_LOG_FRONTEND_URL="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_VINBER_HOME_NAME/#bundle=$UNITEX_BUILD_BUNDLE_NAME&q=$UNITEX_BUILD_LOG_NAME"
 }
 
 # =============================================================================
@@ -4657,26 +4714,30 @@ function load_previous_build_status() {
 # =============================================================================
 function setup_release_information() {
   # setup the version suffix    
-  if [ -z "${UNITEX_VER_SUFFIX}" ]
+  if [ -z "${UNITEX_VERSION_SUFFIX}" ]
   then
-    UNITEX_VERSION="$UNITEX_VER_MAJOR.$UNITEX_VER_MINOR"
-    UNITEX_VER_TYPE="stable"
+    UNITEX_VERSION="$UNITEX_VERSION_MAJOR_NUMBER.$UNITEX_VERSION_MINOR_NUMBER"
+    UNITEX_VERSION_TYPE="stable"
     # e.g. latest-stable
-    UNITEX_BUILD_RELEASES_LATESTDIR_NAME="$UNITEX_BUILD_LATEST_NAME-$UNITEX_VER_TYPE"
+    UNITEX_BUILD_RELEASES_LATESTDIR_NAME="$UNITEX_BUILD_LATEST_NAME-$UNITEX_VERSION_TYPE"
+    UNITEX_VERSION_IS_UNSTABLE=0
   else
-    UNITEX_VERSION="$UNITEX_VER_MAJOR.$UNITEX_VER_MINOR$UNITEX_VER_SUFFIX"
-    UNITEX_VER_TYPE="unstable"
+    UNITEX_VERSION="$UNITEX_VERSION_MAJOR_NUMBER.$UNITEX_VERSION_MINOR_NUMBER$UNITEX_VERSION_SUFFIX"
+    UNITEX_VERSION_TYPE="unstable"
+    UNITEX_VERSION_IS_UNSTABLE=1
     # e.g. latest-beta
-    UNITEX_BUILD_RELEASES_LATESTDIR_NAME="$UNITEX_BUILD_LATEST_NAME-$UNITEX_VER_SUFFIX"
+    UNITEX_BUILD_RELEASES_LATESTDIR_NAME="$UNITEX_BUILD_LATEST_NAME-$UNITEX_VERSION_SUFFIX"
   fi
 
   # e.g. http://unitex.univ-mlv.fr/releases/latest-beta
-  UNITEX_RELEASES_LATEST_URL="$UNITEX_RELEASES_URL/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME"
+  UNITEX_RELEASES_LATEST_URL="$UNITEX_VERSION_URL_RELEASES/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME"
 
   # e.g. http://unitex.univ-mlv.fr/releases/latest-beta/win32
+  # shellcheck disable=SC2034
   UNITEX_RELEASES_LATEST_WIN32_URL="$UNITEX_RELEASES_LATEST_URL/$UNITEX_BUILD_RELEASES_WIN32_HOME_NAME"
 
   # e.g. http://unitex.univ-mlv.fr/releases/latest-beta/source
+  # shellcheck disable=SC2034
   UNITEX_RELEASES_LATEST_SOURCE_URL="$UNITEX_RELEASES_LATEST_URL/$UNITEX_BUILD_RELEASES_SOURCE_HOME_NAME"
 
   # setup the version release
@@ -4732,23 +4793,23 @@ function setup_release_information() {
   
   # setup the version revision
   # e.g 3816
-  UNITEX_VER_REVISION=$(svn info --trust-server-cert --non-interactive --username anonsvn --password anonsvn https://svnigm.univ-mlv.fr/svn/unitex | grep "^Revision" | cut "--delimiter= " --fields=2)
+  UNITEX_VERSION_REVISION_NUMBER=$(svn info --trust-server-cert --non-interactive --username anonsvn --password anonsvn https://svnigm.univ-mlv.fr/svn/unitex | grep "^Revision" | cut "--delimiter= " --fields=2)
 
   # setup the version string
   # e.g 3.1.3816
-  UNITEX_SEMVER_STRING="$UNITEX_VER_MAJOR.$UNITEX_VER_MINOR.$UNITEX_VER_REVISION"
-  if [ ! -z "${UNITEX_VER_SUFFIX}" ]; then
+  UNITEX_SEMVER_STRING="$UNITEX_VERSION_MAJOR_NUMBER.$UNITEX_VERSION_MINOR_NUMBER.$UNITEX_VERSION_REVISION_NUMBER"
+  if [ ! -z "${UNITEX_VERSION_SUFFIX}" ]; then
     # e.g 3.1.3816-beta
-    UNITEX_SEMVER_STRING="$UNITEX_SEMVER_STRING-$UNITEX_VER_SUFFIX"
+    UNITEX_SEMVER_STRING="$UNITEX_SEMVER_STRING-$UNITEX_VERSION_SUFFIX"
   fi  
   
   # setup the full version string
   # e.g. 3.1beta Rev. 3816
-  UNITEX_VER_FULL="$UNITEX_VERSION Rev. $UNITEX_VER_REVISION"
+  UNITEX_VERSION_FULL="$UNITEX_VERSION Rev. $UNITEX_VERSION_REVISION_NUMBER"
   
   # setup the application release string
   # e.g. Unitex/Gramlab 3.1beta Rev. 3816
-  UNITEX_BUILD_FULL_RELEASE="$UNITEX_PRETTYAPPNAME $UNITEX_VER_FULL"
+  UNITEX_BUILD_FULL_RELEASE="$UNITEX_PRETTYAPPNAME $UNITEX_VERSION_FULL"
 
   # The bundle releases version base directory
   # e.g /home/vinber/build/Unitex-GramLab/nightly/releases/3.1beta
@@ -5792,7 +5853,7 @@ function jsonize_master_log_file() {
    "         }\n"                                                                                                  \
    "       },\n"                                                                                                   \
    | sed '/^\s*$/d')
-  fi  
+  fi
 
   local -r build_information=$(echo -e ""                                                                             \
    "   \"$UNITEX_BUILD_LOG_JSON_VINBER_BUILD_KEY\": {\n"                                                              \
@@ -5802,10 +5863,10 @@ function jsonize_master_log_file() {
    "      },\n"                                                                                                       \
    "      \"product\": {\n"                                                                                           \
    "        \"name\":                      \"$(json_escape "$UNITEX_PRETTYAPPNAME")\",\n"                             \
-   "        \"license\":                   \"$(json_escape "$UNITEX_LICENSE")\",\n"                                   \
+   "        \"license\":                   \"$(json_escape "$UNITEX_VERSION_LICENSE")\",\n"                           \
    "        \"version\": {\n"                                                                                         \
    "          \"string\":                  \"$(json_escape "$UNITEX_SEMVER_STRING")\",\n"                             \
-   "          \"full\":                    \"$(json_escape "$UNITEX_VER_FULL")\"\n"                                   \
+   "          \"full\":                    \"$(json_escape "$UNITEX_VERSION_FULL")\"\n"                               \
    "        }\n"                                                                                                      \
    "      },\n"                                                                                                       \
    "      \"bundle\": {\n"                                                                                            \
