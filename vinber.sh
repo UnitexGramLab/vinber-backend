@@ -2717,6 +2717,10 @@ function svn_info() {
   if [ -z "$svn_info_last_commit_message" ]; then
     svn_info_last_commit_message="$UNITEX_BUILD_NOT_DEFINED"
   fi
+
+  # remove backslashes to prevent to break json messages
+  svn_info_last_commit_message="${svn_info_last_commit_message//\\/}"
+    
   log_info "Last Changed Message" "$svn_info_last_commit_message"
 
   local -r svn_info_url=$(svn info  --trust-server-cert --non-interactive --username anonsvn --password anonsvn \
@@ -2865,6 +2869,10 @@ function git_info() {
   if [ -z "$git_info_last_commit_message" ]; then
     git_info_last_commit_message="$UNITEX_BUILD_NOT_DEFINED"
   fi
+
+  # remove backslashes to prevent to break json messages
+  git_info_last_commit_message="${git_info_last_commit_message//\\/}"
+  
   log_info "Last Changed Message" "$git_info_last_commit_message"
 
   local -r git_info_url=$(git ls-remote --get-url origin|\
