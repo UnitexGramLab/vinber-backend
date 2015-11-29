@@ -3477,9 +3477,11 @@ function stage_unitex_core_dist() {
       # we create a README.txt
       fold -s -w72 "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH/README.md" \
                  > "$UNITEX_BUILD_RELEASE_DIR/README.txt"
+      
       # we create a LICENSE.md
-      cp "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH/LICENSE.md" \
-                   "$UNITEX_BUILD_RELEASE_DIR/LICENSE.md"
+      cat "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH/LICENSE.md" <(echo) \
+          "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_LOCAL_PATH/LICENSE.md"  \
+          > "$UNITEX_BUILD_RELEASE_DIR/LICENSE.md"
          
       log_info "Dist prepared" "Core distribution is now prepared"
     fi
