@@ -3474,9 +3474,12 @@ function stage_unitex_core_dist() {
       cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/Licenses/*.txt     "$UNITEX_BUILD_RELEASE_APP_LICENSES_DIR/"
       cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/Disclaimers/*.txt  "$UNITEX_BUILD_RELEASE_APP_DISCLAIMERS_DIR/"
       
-      # finally, we create the README.txt
+      # we create a README.txt
       fold -s -w72 "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH/README.md" \
                  > "$UNITEX_BUILD_RELEASE_DIR/README.txt"
+      # we create a LICENSE.md
+      cp "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH/LICENSE.md" \
+                   "$UNITEX_BUILD_RELEASE_DIR/LICENSE.md"
          
       log_info "Dist prepared" "Core distribution is now prepared"
     fi
