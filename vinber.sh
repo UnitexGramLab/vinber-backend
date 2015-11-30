@@ -1665,46 +1665,48 @@ function stage_unitex_lingua_check_for_updates() {
  
   for lang in *
     do
-    push_stage "Ling-${ISO639_3_LANGUAGES["$lang"]}"
-    log_info "Looking for updates" "Looking for $lang updates..."
-    #lang=$(echo -n $lang | sed -e 's| |\\ |g')
-    svn_info  THIS_LANG_SVN_CHECKOUT_DETAILS        \
-              "../$UNITEX_BUILD_REPOSITORY_LING_NAME/$lang"
-
-    # Last changed date          
-    echo "${THIS_LANG_SVN_CHECKOUT_DETAILS[2]}" > "$UNITEX_BUILD_TIMESTAMP_DIR/$lang.current"
-
-    # check for this language updates
-    check_for_updates UNITEX_BUILD_THIS_LANG_UPDATE "$lang"
-    
-    if [ "$UNITEX_BUILD_THIS_LANG_UPDATE" -ne 0 ]; then
-      UNITEX_BUILD_LING_UPDATE=1
+    if [ -d "$lang" ]; then
+      push_stage "Ling-${ISO639_3_LANGUAGES["$lang"]}"
+      log_info "Looking for updates" "Looking for $lang updates..."
+      #lang=$(echo -n $lang | sed -e 's| |\\ |g')
+      svn_info  THIS_LANG_SVN_CHECKOUT_DETAILS        \
+                "../$UNITEX_BUILD_REPOSITORY_LING_NAME/$lang"
+  
+      # Last changed date          
+      echo "${THIS_LANG_SVN_CHECKOUT_DETAILS[2]}" > "$UNITEX_BUILD_TIMESTAMP_DIR/$lang.current"
+  
+      # check for this language updates
+      check_for_updates UNITEX_BUILD_THIS_LANG_UPDATE "$lang"
       
-      # create the zip file for the current language
-      rm -f "${UNITEX_BUILD_RELEASES_LING_DIR:?}/$lang.zip"
-      log_info "Creating file"  "$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip"
-      exec_logged_command "zipcmd.create.$lang" "$UNITEX_BUILD_TOOL_ZIP" -r "\"$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip\"" "\"$lang\"" -x ./*.svn*
-
-      if [ -e "$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip" ]; then
-        # calculate the checksum for the current lang zip file
-        calculate_checksum "$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip" "$UNITEX_BUILD_RELEASES_LING_DIR"
-
-        # replace the existing language directory, if any, by this new one
-        rm -rf   "${UNITEX_BUILD_RELEASE_DIR:?}/$lang"
-        log_info "Extracting"  "$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip into the $UNITEX_BUILD_RELEASE_DIR folder"
-        exec_logged_command "zipcmd.extract.$lang" "unzip" "\"$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip\"" -d "$UNITEX_BUILD_RELEASE_DIR"        
-      else
-        log_warn "File not found" "File $lang.zip doesn't exist"
+      if [ "$UNITEX_BUILD_THIS_LANG_UPDATE" -ne 0 ]; then
+        UNITEX_BUILD_LING_UPDATE=1
+        
+        # create the zip file for the current language
+        rm -f "${UNITEX_BUILD_RELEASES_LING_DIR:?}/$lang.zip"
+        log_info "Creating file"  "$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip"
+        exec_logged_command "zipcmd.create.$lang" "$UNITEX_BUILD_TOOL_ZIP" -r "\"$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip\"" "\"$lang\"" -x ./*.svn*
+  
+        if [ -e "$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip" ]; then
+          # calculate the checksum for the current lang zip file
+          calculate_checksum "$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip" "$UNITEX_BUILD_RELEASES_LING_DIR"
+  
+          # replace the existing language directory, if any, by this new one
+          rm -rf   "${UNITEX_BUILD_RELEASE_DIR:?}/$lang"
+          log_info "Extracting"  "$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip into the $UNITEX_BUILD_RELEASE_DIR folder"
+          exec_logged_command "zipcmd.extract.$lang" "unzip" "\"$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip\"" -d "$UNITEX_BUILD_RELEASE_DIR"        
+        else
+          log_warn "File not found" "File $lang.zip doesn't exist"
+        fi
+  
+        # we update the log file
+        log_info "Updating"  "$UNITEX_BUILD_RELEASES_CHANGES_DIR/$lang.txt"
+        # shellcheck disable=SC2086
+        svn log --trust-server-cert --non-interactive --username anonsvn --password anonsvn $UNITEX_BUILD_SVN_LOG_LIMIT_PARAMETER "$lang" > "$UNITEX_BUILD_RELEASE_DIR/$lang/log_svn_$lang.txt"
+        cp "$UNITEX_BUILD_RELEASE_DIR/$lang/log_svn_$lang.txt" "$UNITEX_BUILD_RELEASES_CHANGES_DIR/$lang.txt" 
       fi
-
-      # we update the log file
-      log_info "Updating"  "$UNITEX_BUILD_RELEASES_CHANGES_DIR/$lang.txt"
-      # shellcheck disable=SC2086
-      svn log --trust-server-cert --non-interactive --username anonsvn --password anonsvn $UNITEX_BUILD_SVN_LOG_LIMIT_PARAMETER "$lang" > "$UNITEX_BUILD_RELEASE_DIR/$lang/log_svn_$lang.txt"
-      cp "$UNITEX_BUILD_RELEASE_DIR/$lang/log_svn_$lang.txt" "$UNITEX_BUILD_RELEASES_CHANGES_DIR/$lang.txt" 
+  
+      pop_build_stage
     fi
-
-    pop_build_stage
   done
   pop_directory
 }  # stage_unitex_lingua_make
