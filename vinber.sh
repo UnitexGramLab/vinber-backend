@@ -837,6 +837,9 @@ function stage_unitex_doc_make() {
 
   UNITEX_BUILD_DOCS_HAS_ERRORS=0
   if [ $UNITEX_BUILD_DOCS_UPDATE -ne 0 ]; then
+    # Documentation configure
+    configure_templated_files "$UNITEX_BUILD_REPOSITORY_USERMANUAL_LOCAL_PATH"
+    
     # English User Manual
     log_info "Building manual" "Making Makefile_EN_utf8 - English User Manual"
     exec_logged_command "make.Makefile_EN_utf8" "$UNITEX_BUILD_TOOL_MAKE" \
@@ -1035,9 +1038,6 @@ function stage_unitex_doc() {
     # 2. Documentation check for updates
     check_for_updates UNITEX_BUILD_DOCS_UPDATE "$UNITEX_BUILD_REPOSITORY_USERMANUAL_NAME" \
                       $UNITEX_BUILD_DOCS_FORCE_UPDATE
-
-    # 3. Documentation configure
-    configure_templated_files "$UNITEX_BUILD_REPOSITORY_USERMANUAL_LOCAL_PATH"
   fi
   
   # 3. Documentation make
@@ -1127,6 +1127,8 @@ function stage_unitex_packaging_windows() {
   # 3. Windows packaging make
   # shellcheck disable=SC2086
   if [  $UNITEX_BUILD_ISSUES_BEFORE_PACKAGING_WINDOWS_MAKE -eq 0 ]; then
+    # 3. Windows packaging configure
+    configure_templated_files "$UNITEX_BUILD_REPOSITORY_PACK_WIN_LOCAL_PATH"
     stage_unitex_packaging_make_installer_win 32
     stage_unitex_packaging_make_installer_win 64
   else
@@ -1313,9 +1315,6 @@ function stage_unitex_packaging_unix() {
                       "$UNITEX_BUILD_CLASSIC_IDE_UPDATE"            \
                       "$UNITEX_BUILD_GRAMLAB_IDE_UPDATE"            \
                       "$UNITEX_BUILD_CORE_UPDATE"
-
-    # 3. Packaging configure
-    configure_templated_files "$UNITEX_BUILD_REPOSITORY_PACK_UNIX_LOCAL_PATH"
   fi
   
   count_issues_until_now UNITEX_BUILD_ISSUES_BEFORE_PACKAGING_UNIX_MAKE
@@ -1497,6 +1496,9 @@ function stage_unitex_packaging_configure_installer_unix() {
   if [ $UNITEX_BUILD_PACK_UPDATE -ne 0 ]; then
   
     log_info "Configuring installer" "Configuring Unix distributions"
+
+    # Packaging configure
+    configure_templated_files "$UNITEX_BUILD_REPOSITORY_PACK_UNIX_LOCAL_PATH"    
 
     # Copy all unitex-packaging-unix/resources to the $UNITEX_BUILD_RELEASE_DIR
     if [ -d "$UNITEX_BUILD_SOURCE_DIR/$UNITEX_BUILD_REPOSITORY_PACK_UNIX_NAME/resources" ]; then
@@ -1751,8 +1753,11 @@ function stage_unitex_lingua() {
 
     # 2. Lingua check for updates
     stage_unitex_lingua_check_for_updates
-  fi  
-
+    
+    # Configure Ling
+    configure_templated_files "$UNITEX_BUILD_REPOSITORY_LING_LOCAL_PATH"
+  fi
+  
   # 3.
   stage_unitex_lingua_dist
 
@@ -1787,6 +1792,9 @@ function stage_unitex_classic_ide_make() {
     
   UNITEX_BUILD_CLASSIC_IDE_HAS_ERRORS=0
   if [ $UNITEX_BUILD_CLASSIC_IDE_UPDATE -ne 0 ]; then
+    # 3. Classic IDE configure
+    configure_templated_files "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_LOCAL_PATH"
+    
     # we update the log file
     log_info "Updating"  "$UNITEX_BUILD_RELEASES_CHANGES_DIR/Java.txt"
     # shellcheck disable=SC2086
@@ -1977,9 +1985,12 @@ function stage_unitex_gramlab_ide_make () {
   UNITEX_BUILD_GRAMLAB_IDE_HAS_ERRORS=0 
   if [ $UNITEX_BUILD_GRAMLAB_IDE_UPDATE     -ne 0 -a \
        $UNITEX_BUILD_CLASSIC_IDE_HAS_ERRORS -eq 0 ]; then
-    
+       
     # Gramlab depends of Unitex.jar
     if [ -e "$UNITEX_BUILD_RELEASE_APP_DIR/Unitex.jar" ]; then
+      # GramLab configure
+      configure_templated_files "$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_LOCAL_PATH"    
+    
       # we update the log file
       log_info "Updating"  "$UNITEX_BUILD_RELEASES_CHANGES_DIR/Gramlab.txt"
       svn log --trust-server-cert --non-interactive --username anonsvn --password anonsvn "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_NAME" > "$UNITEX_BUILD_RELEASE_DIR/Src/log_svn_Gramlab.txt"
@@ -2234,6 +2245,9 @@ function stage_unitex_core_make() {
 
   UNITEX_BUILD_CORE_HAS_ERRORS=0
   if [ $UNITEX_BUILD_CORE_UPDATE -ne 0 ]; then
+    # Core configure
+    configure_templated_files "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH"
+
     # Saving SVN last revision changed
     stage_unitex_core_update_source_revision_header "${CORE_SVN_CHECKOUT_DETAILS[0]}"
 
@@ -3152,12 +3166,9 @@ function stage_unitex_core() {
     check_for_updates UNITEX_BUILD_CORE_UPDATE "C++"  \
                       $UNITEX_BUILD_CORE_FORCE_UPDATE \
                       $UNITEX_BUILD_LOGS_UPDATE
-                      
-    # 3. Core configure
-    configure_templated_files "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH"
   fi
 
-  # 4. Core make
+  # 3. Core make
   stage_unitex_core_make
 
   # unitex regression tests replay
