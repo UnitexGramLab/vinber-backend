@@ -108,8 +108,13 @@ UNITEX_BUILD_AUTHORS_FILENAME="$UNITEX_BUILD_VINBER_CODENAME_LOWERCASE.commit.au
 # =============================================================================
 #!UNITEX_TYPE="Project"
 #!UNITEX_KEYWORDS="NPL,RTN"
-UNITEX_PACKAGE_NAME="Unitex-GramLab"
-UNITEX_PRETTYAPPNAME="Unitex/GramLab"
+# shellcheck disable=SC2034
+{
+UNITEX_CORE_NAME="Unitex"
+UNITEX_IDE_NAME="GramLab"
+UNITEX_PACKAGE_NAME="$UNITEX_CORE_NAME-$UNITEX_IDE_NAME"
+UNITEX_PRETTYAPPNAME="$UNITEX_CORE_NAME/$UNITEX_IDE_NAME"
+}
 # =============================================================================
 # shellcheck disable=SC2034
 {
