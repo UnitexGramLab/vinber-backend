@@ -3495,6 +3495,7 @@ function stage_unitex_core_dist() {
       cat "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH/LICENSE.md"         <(echo) \
           "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_LOCAL_PATH/LICENSE.md"  <(echo) \
           "$UNITEX_BUILD_REPOSITORY_LING_LOCAL_PATH/LICENSE.md"         <(echo) \
+          "$UNITEX_BUILD_REPOSITORY_USERMANUAL_LOCAL_PATH/LICENSE.md"   <(echo) \
           > "$UNITEX_BUILD_RELEASE_DIR/LICENSE.md"
          
       log_info "Dist prepared" "Core distribution is now prepared"
