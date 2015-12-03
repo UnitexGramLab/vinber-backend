@@ -4186,7 +4186,7 @@ function stage_unitex_deployment() {
 function print_release_information() {
   log_info "Name"             "$UNITEX_PRETTYAPPNAME"
   log_info "Release"          "$UNITEX_BUILD_RELEASE"
-  log_info "Full Release"     "$UNITEX_BUILD_FULL_RELEASE"
+  log_info "Full Release"     "$UNITEX_VERSION_RELEASE"
   log_info "License"          "$UNITEX_VERSION_LICENSE"
   log_info "Description"      "$UNITEX_VERSION_DESCRIPTION"
   log_info "Company"          "$UNITEX_VERSION_COMPANY"
@@ -4197,7 +4197,7 @@ function print_release_information() {
   log_info "Version Unstable" "$UNITEX_VERSION_IS_UNSTABLE"
   log_info "Version Revision" "$UNITEX_VERSION_REVISION_NUMBER"
   log_info "Version String"   "$UNITEX_VERSION_SEMVER"
-  log_info "Version Full"     "$UNITEX_VERSION_FULL"
+  log_info "Version Full"     "$UNITEX_VERSION_STRING"
 }  # print_release_information()
 
 # =============================================================================
@@ -4858,11 +4858,11 @@ function setup_release_information() {
   
   # setup the full version string
   # e.g. 3.1beta Rev. 3816
-  UNITEX_VERSION_FULL="$UNITEX_VERSION Rev. $UNITEX_VERSION_REVISION_NUMBER"
+  UNITEX_VERSION_STRING="$UNITEX_VERSION Rev. $UNITEX_VERSION_REVISION_NUMBER"
   
   # setup the application release string
   # e.g. Unitex/Gramlab 3.1beta Rev. 3816
-  UNITEX_VERSION_RELEASE="$UNITEX_PRETTYAPPNAME $UNITEX_VERSION_FULL"
+  UNITEX_VERSION_RELEASE="$UNITEX_PRETTYAPPNAME $UNITEX_VERSION_STRING"
 
   # The bundle releases version base directory
   # e.g /home/vinber/build/Unitex-GramLab/nightly/releases/3.1beta
@@ -5924,8 +5924,8 @@ function jsonize_master_log_file() {
    "        \"name\":                      \"$(json_escape "$UNITEX_PRETTYAPPNAME")\",\n"                             \
    "        \"license\":                   \"$(json_escape "$UNITEX_VERSION_LICENSE")\",\n"                           \
    "        \"version\": {\n"                                                                                         \
-   "          \"string\":                  \"$(json_escape "$UNITEX_VERSION_SEMVER")\",\n"                             \
-   "          \"full\":                    \"$(json_escape "$UNITEX_VERSION_FULL")\"\n"                               \
+   "          \"string\":                  \"$(json_escape "$UNITEX_VERSION_SEMVER")\",\n"                            \
+   "          \"full\":                    \"$(json_escape "$UNITEX_VERSION_STRING")\"\n"                             \
    "        }\n"                                                                                                      \
    "      },\n"                                                                                                       \
    "      \"bundle\": {\n"                                                                                            \
