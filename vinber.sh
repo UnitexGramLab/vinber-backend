@@ -4196,7 +4196,7 @@ function print_release_information() {
   log_info "Version Type"     "$UNITEX_VERSION_TYPE"
   log_info "Version Unstable" "$UNITEX_VERSION_IS_UNSTABLE"
   log_info "Version Revision" "$UNITEX_VERSION_REVISION_NUMBER"
-  log_info "Version String"   "$UNITEX_SEMVER_STRING"
+  log_info "Version String"   "$UNITEX_VERSION_SEMVER"
   log_info "Version Full"     "$UNITEX_VERSION_FULL"
 }  # print_release_information()
 
@@ -4850,10 +4850,10 @@ function setup_release_information() {
 
   # setup the version string
   # e.g 3.1.3816
-  UNITEX_SEMVER_STRING="$UNITEX_VERSION_MAJOR_NUMBER.$UNITEX_VERSION_MINOR_NUMBER.$UNITEX_VERSION_REVISION_NUMBER"
+  UNITEX_VERSION_SEMVER="$UNITEX_VERSION_MAJOR_NUMBER.$UNITEX_VERSION_MINOR_NUMBER.$UNITEX_VERSION_REVISION_NUMBER"
   if [ ! -z "${UNITEX_VERSION_SUFFIX}" ]; then
     # e.g 3.1.3816-beta
-    UNITEX_SEMVER_STRING="$UNITEX_SEMVER_STRING-$UNITEX_VERSION_SUFFIX"
+    UNITEX_VERSION_SEMVER="$UNITEX_VERSION_SEMVER-$UNITEX_VERSION_SUFFIX"
   fi  
   
   # setup the full version string
@@ -5924,7 +5924,7 @@ function jsonize_master_log_file() {
    "        \"name\":                      \"$(json_escape "$UNITEX_PRETTYAPPNAME")\",\n"                             \
    "        \"license\":                   \"$(json_escape "$UNITEX_VERSION_LICENSE")\",\n"                           \
    "        \"version\": {\n"                                                                                         \
-   "          \"string\":                  \"$(json_escape "$UNITEX_SEMVER_STRING")\",\n"                             \
+   "          \"string\":                  \"$(json_escape "$UNITEX_VERSION_SEMVER")\",\n"                             \
    "          \"full\":                    \"$(json_escape "$UNITEX_VERSION_FULL")\"\n"                               \
    "        }\n"                                                                                                      \
    "      },\n"                                                                                                       \
