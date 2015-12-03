@@ -796,6 +796,9 @@ function stage_unitex_doc_checkout() {
   svn_info     DOC_SVN_CHECKOUT_DETAILS   \
                "$UNITEX_BUILD_REPOSITORY_USERMANUAL_NAME"
 
+  # shellcheck disable=SC2034
+  UNITEX_VERSION_DOC_REVISION_NUMBER=${DOC_SVN_CHECKOUT_DETAILS[0]}
+  
   # Saving SVN last date changed
   echo "${DOC_SVN_CHECKOUT_DETAILS[2]}" > "$UNITEX_BUILD_TIMESTAMP_DIR/$UNITEX_BUILD_REPOSITORY_USERMANUAL_NAME.current"             
 
@@ -1785,6 +1788,9 @@ function stage_unitex_classic_ide_checkout () {
   svn_info    CLASSIC_IDE_SVN_CHECKOUT_DETAILS       \
               "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_NAME"
               
+  # shellcheck disable=SC2034
+  UNITEX_VERSION_CLASSIC_IDE_REVISION_NUMBER=${CLASSIC_IDE_SVN_CHECKOUT_DETAILS[0]}
+              
   # Saving SVN last date changed
   echo "${CLASSIC_IDE_SVN_CHECKOUT_DETAILS[2]}" > "$UNITEX_BUILD_TIMESTAMP_DIR/Java.current"
 
@@ -1976,7 +1982,10 @@ function stage_unitex_gramlab_ide_checkout () {
                
   svn_info    GRAMLAB_IDE_SVN_CHECKOUT_DETAILS       \
               "$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_NAME"
-              
+
+  # shellcheck disable=SC2034
+  UNITEX_VERSION_GRAMLAB_IDE_REVISION_NUMBER=${GRAMLAB_IDE_SVN_CHECKOUT_DETAILS[0]}
+  
   # Saving SVN last date changed
   echo "${GRAMLAB_IDE_SVN_CHECKOUT_DETAILS[2]}" > "$UNITEX_BUILD_TIMESTAMP_DIR/$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_NAME.current"
 
@@ -2143,7 +2152,10 @@ function stage_unitex_core_logs_checkout() {
                
   svn_info    LOGS_SVN_CHECKOUT_DETAILS \
               "$UNITEX_BUILD_REPOSITORY_LOGS_NAME"
-              
+
+  # shellcheck disable=SC2034
+  UNITEX_VERSION_LOGS_REVISION_NUMBER=${LOGS_SVN_CHECKOUT_DETAILS[0]}
+  
   # Saving SVN last date changed
   echo "${LOGS_SVN_CHECKOUT_DETAILS[2]}" > "$UNITEX_BUILD_TIMESTAMP_DIR/$UNITEX_BUILD_REPOSITORY_LOGS_NAME.current"
 
@@ -3135,7 +3147,10 @@ function stage_unitex_core_checkout() {
                
   svn_info    CORE_SVN_CHECKOUT_DETAILS                  \
               "$UNITEX_BUILD_REPOSITORY_CORE_NAME"
-              
+  
+  # shellcheck disable=SC2034
+  UNITEX_VERSION_CORE_REVISION_NUMBER=${CORE_SVN_CHECKOUT_DETAILS[0]}
+  
   # Saving SVN last date changed
   echo "${CORE_SVN_CHECKOUT_DETAILS[2]}" > "$UNITEX_BUILD_TIMESTAMP_DIR/C++.current"
 
