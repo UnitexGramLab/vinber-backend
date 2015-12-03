@@ -3516,12 +3516,12 @@ function stage_unitex_core_dist() {
       fold -s -w72 "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH/README.md" \
                  > "$UNITEX_BUILD_RELEASE_DIR/README.txt"
       
-      # we create a LICENSE.md
-      cat "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH/LICENSE.md"         <(echo) \
-          "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_LOCAL_PATH/LICENSE.md"  <(echo) \
-          "$UNITEX_BUILD_REPOSITORY_LING_LOCAL_PATH/LICENSE.md"         <(echo) \
-          "$UNITEX_BUILD_REPOSITORY_USERMANUAL_LOCAL_PATH/LICENSE.md"   <(echo) \
-          > "$UNITEX_BUILD_RELEASE_DIR/LICENSE.md"
+      # we create a LICENSE
+      cat "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH/LICENSE"         <(echo) \
+          "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_LOCAL_PATH/LICENSE"  <(echo) \
+          "$UNITEX_BUILD_REPOSITORY_LING_LOCAL_PATH/LICENSE"         <(echo) \
+          "$UNITEX_BUILD_REPOSITORY_USERMANUAL_LOCAL_PATH/LICENSE"   <(echo) \
+        > "$UNITEX_BUILD_RELEASE_DIR/LICENSE"
          
       log_info "Dist prepared" "Core distribution is now prepared"
     fi
