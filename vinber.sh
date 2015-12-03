@@ -1905,7 +1905,7 @@ function stage_unitex_classic_ide_dist() {
       cp "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_NAME"/resources/*.ico "$UNITEX_BUILD_RELEASE_APP_DIR/"
       #we copy the library jars
       log_info "Copying" "Jar libraries"
-      cp "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_NAME"/lib/*.jar "$UNITEX_BUILD_RELEASE_APP_DIR/"
+      cp "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_NAME"/lib/*.jar "$UNITEX_BUILD_RELEASE_APP_LIB_DIR/"
 
       # Finally, we update the zip containing the source files
       log_info "Creating file"  "Java.zip"
@@ -5134,6 +5134,12 @@ function setup_build_environment() {
     mkdir "$UNITEX_BUILD_RELEASE_APP_DISCLAIMERS_DIR"
   fi
   log_debug "Unitex Disclaimers dir" "$UNITEX_BUILD_RELEASE_APP_DISCLAIMERS_DIR"
+  
+  UNITEX_BUILD_RELEASE_APP_LIB_DIR="$UNITEX_BUILD_RELEASE_APP_DIR/lib"
+  if [ ! -d "$UNITEX_BUILD_RELEASE_APP_LIB_DIR" ]; then
+    mkdir "$UNITEX_BUILD_RELEASE_APP_LIB_DIR"
+  fi
+  log_debug "Unitex App/lib dir" "$UNITEX_BUILD_RELEASE_APP_LIB_DIR"  
 
   UNITEX_BUILD_RELEASE_SRC_DIR="$UNITEX_BUILD_RELEASE_DIR/Src"
   if [ ! -d "$UNITEX_BUILD_RELEASE_SRC_DIR" ]; then
