@@ -4840,7 +4840,7 @@ function setup_release_information() {
 
   # preliminary test before version setup of the version revision
   svn info --trust-server-cert --non-interactive --username anonsvn --password anonsvn https://svnigm.univ-mlv.fr/svn/unitex > /dev/null || {
-    UNITEX_VERSION_FULL_RELEASE"$UNITEX_BUILD_RELEASE"
+    UNITEX_VERSION_RELEASE="$UNITEX_BUILD_RELEASE"
     die_with_critical_error "SVN error" "Unable to access https://svnigm.univ-mlv.fr/svn/unitex"
   }
   
@@ -4862,7 +4862,7 @@ function setup_release_information() {
   
   # setup the application release string
   # e.g. Unitex/Gramlab 3.1beta Rev. 3816
-  UNITEX_VERSION_FULL_RELEASE"$UNITEX_PRETTYAPPNAME $UNITEX_VERSION_FULL"
+  UNITEX_VERSION_RELEASE="$UNITEX_PRETTYAPPNAME $UNITEX_VERSION_FULL"
 
   # The bundle releases version base directory
   # e.g /home/vinber/build/Unitex-GramLab/nightly/releases/3.1beta
