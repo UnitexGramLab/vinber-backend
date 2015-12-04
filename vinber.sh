@@ -1390,7 +1390,7 @@ function stage_unitex_packaging_make_installer_linux_i686() {
       --target  "\"\\\$HOME/$UNITEX_PACKAGE_FULL_NAME\""                                            \
       "$UNITEX_PACKAGE_FULL_NAME"                                                                   \
       "$UNITEX_BUILD_RELEASES_LINUX_I686_DIR/$UNITEX_PACKAGE_LINUX_I686_PREFIX.run"                 \
-      "\"$UNITEX_BUILD_FULL_RELEASE Linux Intel (i686)\""                                          \
+      "\"$UNITEX_VERSION_RELEASE Linux Intel (i686)\""                                          \
       "./App/install/setup" || {
       UNITEX_BUILD_PACK_HAS_ERRORS=1
     }
@@ -1433,7 +1433,7 @@ function stage_unitex_packaging_make_installer_linux_x86_64() {
       --target  "\"\\\$HOME/$UNITEX_PACKAGE_FULL_NAME\""                                            \
       "$UNITEX_PACKAGE_FULL_NAME"                                                                   \
       "$UNITEX_BUILD_RELEASES_LINUX_X86_64_DIR/$UNITEX_PACKAGE_LINUX_X86_64_PREFIX.run"             \
-      "\"$UNITEX_BUILD_FULL_RELEASE Linux Intel 64-bit (x86_64)\""                                        \
+      "\"$UNITEX_VERSION_RELEASE Linux Intel 64-bit (x86_64)\""                                        \
       "./App/install/setup" || {
          UNITEX_BUILD_PACK_HAS_ERRORS=1
     }
@@ -1476,7 +1476,7 @@ function stage_unitex_packaging_make_installer_osx() {
       --target  "\"\\\$HOME/$UNITEX_PACKAGE_FULL_NAME\""                                            \
       "$UNITEX_PACKAGE_FULL_NAME"                                                                   \
       "$UNITEX_BUILD_RELEASES_OSX_DIR/$UNITEX_PACKAGE_OSX_PREFIX.run"                               \
-      "\"$UNITEX_BUILD_FULL_RELEASE OS X 64-bit (10.7+)\""                                          \
+      "\"$UNITEX_VERSION_RELEASE OS X 64-bit (10.7+)\""                                          \
       "./App/install/setup" || {
          UNITEX_BUILD_PACK_HAS_ERRORS=1
     }
@@ -3561,7 +3561,7 @@ function stage_unitex_deployment_check() {
   else
     UNITEX_BUILD_READY_FOR_DEPLOYMENT=1
     if [ $UNITEX_BUILD_SKIP_DEPLOYMENT -ne 1 ]; then
-      log_info "Preparing deployment" "$UNITEX_BUILD_FULL_RELEASE deployment is being prepared..."
+      log_info "Preparing deployment" "$UNITEX_VERSION_RELEASE deployment is being prepared..."
     fi  
   fi
 }
@@ -3681,7 +3681,7 @@ function stage_unitex_deployment_generate_release_downloads_webpage() {
   # The minus in "<<-__END__" suppresses leading tabs in the body of the
   # document  
 cat > "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" << __END__
-<h1>Download area for the $UNITEX_BUILD_FULL_RELEASE</h1>
+<h1>Download area for the $UNITEX_VERSION_RELEASE</h1>
 <script type="text/javascript" language="JavaScript">
 <!--
 function writeCookie(name, val) {
@@ -5347,7 +5347,7 @@ function notify_recipients() {
              "Message: \"$(get_vinber_repository_info "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" $VINBER_BUILD_MESSAGE)\"\n"     \
              "Author: $(get_vinber_repository_info "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" $VINBER_BUILD_AUTHOR)\n"           \
              "Date: $(get_vinber_repository_info "$UNITEX_BUILD_LOG_FIRST_ISSUE_REPOSITORY" $VINBER_BUILD_DATE)\n \n")
-   UNITEX_BUILD_INFO_MARKDOWN=$(echo -e "**Release**:    $UNITEX_BUILD_FULL_RELEASE\n"                 \
+   UNITEX_BUILD_INFO_MARKDOWN=$(echo -e "**Release**:    $UNITEX_VERSION_RELEASE\n"                 \
              "**Bundle**:     $UNITEX_BUILD_BUNDLE_NAME\n"                                                         \
              "**Build**:      [$UNITEX_BUILD_LOG_NAME]($UNITEX_BUILD_LOG_FRONTEND_URL)\n"                       \
              "**Status**:     $UNITEX_BUILD_RESULT_EMOJI $UNITEX_BUILD_STATUS_FAILED\n"                                                       \
@@ -5370,7 +5370,7 @@ function notify_recipients() {
              "Message: \"$(get_vinber_repository_info "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_MESSAGE)\"\n"     \
              "Author: $(get_vinber_repository_info "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_AUTHOR)\n"           \
              "Date: $(get_vinber_repository_info "$UNITEX_BUILD_LATEST_CHANGED_REPOSITORY" $VINBER_BUILD_DATE)\n \n")
-   UNITEX_BUILD_INFO_MARKDOWN=$(echo -e "**Release**:    $UNITEX_BUILD_FULL_RELEASE\n"            \
+   UNITEX_BUILD_INFO_MARKDOWN=$(echo -e "**Release**:    $UNITEX_VERSION_RELEASE\n"            \
              "**Bundle**:     $UNITEX_BUILD_BUNDLE_NAME\n"                                                       \
              "**Build**:      [$UNITEX_BUILD_LOG_NAME]($UNITEX_BUILD_LOG_FRONTEND_URL)\n"                     \
              "**Status**:     $UNITEX_BUILD_RESULT_EMOJI $UNITEX_BUILD_STATUS_PASSED\n"                                                     \
@@ -5392,7 +5392,7 @@ function notify_recipients() {
   # shellcheck disable=SC2086
   (echo "Dear developer,
 
-         On $TIMESTAMP_START_C, I started to build the $UNITEX_BUILD_FULL_RELEASE distribution, but there are some issues which cannot be addressed without human intervention. $UNITEX_BUILD_FIRST_ISSUE
+         On $TIMESTAMP_START_C, I started to build the $UNITEX_VERSION_RELEASE distribution, but there are some issues which cannot be addressed without human intervention. $UNITEX_BUILD_FIRST_ISSUE
          $UNITEX_BUILD_FIRST_ISSUE_INFO
          For more details, please check out the full $UNITEX_BUILD_BUNDLE_NAME build-log:
          $UNITEX_BUILD_LOG_FRONTEND_URL
@@ -5409,7 +5409,7 @@ function notify_recipients() {
          ) \
        | sed -e 's:^\s*::' | \
          $UNITEX_BUILD_TOOL_MUTT $UNITEX_BUILD_LOG_FILE_ATTACHMENT $UNITEX_BUILD_ZIPPED_LOG_WORKSPACE_ATTACHMENT \
-            -s "$UNITEX_BUILD_RESULT_EMOJI [$UNITEX_BUILD_VINBER_CODENAME_LOWERCASE-$UNITEX_BUILD_BUNDLE_NAME] $UNITEX_BUILD_FULL_RELEASE build issues" \
+            -s "$UNITEX_BUILD_RESULT_EMOJI [$UNITEX_BUILD_VINBER_CODENAME_LOWERCASE-$UNITEX_BUILD_BUNDLE_NAME] $UNITEX_VERSION_RELEASE build issues" \
             $EMAIL_CC -- $EMAIL_TO
   elif [ "$UNITEX_BUILD_FINISH_WITH_ERROR_COUNT" -eq 0 -a \( "$UNITEX_BUILD_NOTIFY_ON_FIXED" -ge 1 -o  "$UNITEX_BUILD_NOTIFY_ON_SUCESS" -ge 1 \) ]; then
      local subject_type="created"
@@ -5420,7 +5420,7 @@ function notify_recipients() {
     # shellcheck disable=SC2086
     (echo "Dear developer,
 
-         Great news! The $UNITEX_BUILD_FULL_RELEASE $UNITEX_BUILD_BUNDLE_NAME build was successfully $subject_type! $UNITEX_BUILD_LATEST_CHANGED_INFO
+         Great news! The $UNITEX_VERSION_RELEASE $UNITEX_BUILD_BUNDLE_NAME build was successfully $subject_type! $UNITEX_BUILD_LATEST_CHANGED_INFO
          For more details, please check out the full $UNITEX_BUILD_BUNDLE_NAME build-log:
          $UNITEX_BUILD_LOG_FRONTEND_URL
          $UNITEX_BUILD_LOG_ATTACHMENT_INFO
@@ -5436,7 +5436,7 @@ function notify_recipients() {
          ) \
        | sed -e 's:^\s*::' | \
          $UNITEX_BUILD_TOOL_MUTT $UNITEX_BUILD_LOG_FILE_ATTACHMENT $UNITEX_BUILD_ZIPPED_LOG_WORKSPACE_ATTACHMENT \
-            -s "$UNITEX_BUILD_RESULT_EMOJI [$UNITEX_BUILD_VINBER_CODENAME_LOWERCASE-$UNITEX_BUILD_BUNDLE_NAME] $UNITEX_BUILD_FULL_RELEASE build $subject_type" \
+            -s "$UNITEX_BUILD_RESULT_EMOJI [$UNITEX_BUILD_VINBER_CODENAME_LOWERCASE-$UNITEX_BUILD_BUNDLE_NAME] $UNITEX_VERSION_RELEASE build $subject_type" \
             $EMAIL_CC -- $EMAIL_TO      
   fi
 }
