@@ -3771,8 +3771,10 @@ __END__
 cd "$UNITEX_BUILD_REPOSITORY_LING_LOCAL_PATH"
 for LANG in *
   do
-  echo "saveCookie(\"$LANG\",\"$(date -r "$UNITEX_BUILD_RELEASES_LING_DIR/$LANG.zip")\");" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
-done
+  if [ -d "$LANG" ]; then
+    echo "saveCookie(\"$LANG\",\"$(date -r "$UNITEX_BUILD_RELEASES_LING_DIR/$LANG.zip")\");" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
+  fi
+  done
 cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
 }
 //-->
@@ -4080,7 +4082,9 @@ Please consult the latest changes to see if the current versions are safe to use
 __END__
 cd "$UNITEX_BUILD_REPOSITORY_LING_LOCAL_PATH"
 for LANG in *
-  do cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
+  do 
+  if [ -d "$LANG" ]; then
+  cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
     <HR>
     <a href="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_LING_HOME_NAME/$LANG.zip" onClick="saveCookie('$LANG',
 __END__
@@ -4123,7 +4127,8 @@ cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
 
 <a href="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_CHANGES_HOME_NAME/$LANG.txt">Changes on resources for $LANG</a>
 __END__
-done
+ fi
+ done
   #-------------------------End here document------------------------#
   pop_directory  # "$UNITEX_BUILD_BUNDLE_BASEDIR"  
 }
