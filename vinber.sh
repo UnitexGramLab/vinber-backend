@@ -179,7 +179,7 @@ UNITEX_VERSION_URL_ISSUES_CORE="$UNITEX_VERSION_URL_HOMEPAGE/index.php?page=6"
 # shellcheck disable=SC2034
 {
 UNITEX_VERSION_URL_REPOSITORY_CORE="https://svnigm.univ-mlv.fr/svn/unitex/Unitex-C%2B%2B"
-UNITEX_VERSION_URL_REPOSITORY_GOVERNANCE="$UNITEX_VERSION_URL_SOURCES/unitex-governance"
+UNITEX_VERSION_URL_REPOSITORY_GOVERNANCE="http://governance.$UNITEX_DOMAIN_NAME"
 }
 # =============================================================================
 UNITEX_BUILD_SVN_LOG_LIMIT=100
