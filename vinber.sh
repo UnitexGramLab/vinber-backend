@@ -3,7 +3,7 @@
 # Vinber: The Unitex/GramLab Build Automation Service
 # https://github.com/UnitexGramLab/vinber-backend
 # =============================================================================
-# Copyright (C) 2015 Université Paris-Est Marne-la-Vallée <unitex@univ-mlv.fr>
+# Copyright (C) 2015 Université Paris-Est Marne-la-Vallée <unitex-devel@univ-mlv.fr>
 # 
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -3511,9 +3511,9 @@ function stage_unitex_core_dist() {
       cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/Licenses/*.txt     "$UNITEX_BUILD_RELEASE_APP_LICENSES_DIR/"
       cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/Disclaimers/*.txt  "$UNITEX_BUILD_RELEASE_APP_DISCLAIMERS_DIR/"
       
-      # we create a README.txt
+      # we create a README.md
       fold -s -w72 "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH/README.md" \
-                 > "$UNITEX_BUILD_RELEASE_DIR/README.txt"
+                 > "$UNITEX_BUILD_RELEASE_DIR/README.md"
       
       # we create a LICENSE
       cat "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH/LICENSE"         <(echo) \
@@ -3980,7 +3980,7 @@ cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
 This is the whole package that contains all the sources, all the
 linguistic resources for the languages listed below and the Windows 
 (32-bit, 64-bit), GNU/Linux (i686, x86_64) and OS X (10.7+) binary executables.
-See the README.txt for more details.
+See the README for more details.
 </p>
 
 <hr>
