@@ -153,8 +153,8 @@ UNITEX_VERSION_GRAMLAB_IDE_COMMIT_TAG="?"
 {
 UNITEX_DOMAIN_NAME="unitexgramlab.org"
 UNITEX_VERSION_URL_HOMEPAGE="http://$UNITEX_DOMAIN_NAME"
-UNITEX_VERSION_URL_RELEASES="http://unitex.univ-mlv.fr/releases"
-UNITEX_VERSION_URL_SOURCES="https://github.com/UnitexGramLab"
+UNITEX_VERSION_URL_RELEASES="http://releases.$UNITEX_DOMAIN_NAME"
+UNITEX_VERSION_URL_SOURCES="http://code.$UNITEX_DOMAIN_NAME"
 #!UNITEX_VERSION_URL_ABOUT="$UNITEX_VERSION_URL_HOMEPAGE/index.php?page=1"
 #!UNITEX_VERSION_URL_UPDATE="$UNITEX_VERSION_URL_HOMEPAGE/index.php?page=3"
 #!UNITEX_VERSION_URL_LICENSE_RESOURCES="http://bit.do/LGPL-LR" 
@@ -820,12 +820,6 @@ function configure_templated_files() {
     export_unitex_variables
 
     # find all files with .in extension
-    find -L .                           \
-     -not -path "./build/*"             \
-     -not -path "*/\.*"                 \
-     -not -name ".*"                    \
-     -name      "*.in"                  \
-     -type f -print |                   \
     while read -r template ; do         \
       log_info "Processing template" "Processing $template"
       output_file=${template%.*}
@@ -836,7 +830,12 @@ function configure_templated_files() {
           log_warn "Template error" "There were a problem processing $template"
         }
       log_info "File created" "Template output was saved to $output_file"
-    done
+    done < <(find -L .                               \
+                  -not -path "./build/*"             \
+                  -not -path "*/\.*"                 \
+                  -not -name ".*"                    \
+                  -name      "*.in"                  \
+                  -type f -print)
 
     pop_directory
  else
