@@ -3512,8 +3512,8 @@ function stage_unitex_core_dist() {
       cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/Disclaimers/*.txt  "$UNITEX_BUILD_RELEASE_APP_DISCLAIMERS_DIR/"
       
       # we create a README.md
-      fold -s -w72 "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH/README.md" \
-                 > "$UNITEX_BUILD_RELEASE_DIR/README.md"
+      cp "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH/README.md" \
+         "$UNITEX_BUILD_RELEASE_DIR/README.md"
       
       # we create a LICENSE
       cat "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH/LICENSE"         <(echo) \
