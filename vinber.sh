@@ -4491,8 +4491,11 @@ function setup_path_environment() {
   # e.g. /home/vinber/bundle/nightly/build/latest
   UNITEX_BUILD_LOG_WORKSPACE_LATEST_SYMBOLIC_LINK="$UNITEX_BUILD_LOGGER_PATH/$UNITEX_BUILD_LATEST_NAME"
 
-  # e.g http://unitex.univ-mlv.fr/v6/#bundle=nightly&q=2015-04-08-01-16-59
+  # e.g. http://unitex.univ-mlv.fr/v6/#bundle=nightly&q=2015-04-08-01-16-59
   UNITEX_BUILD_LOG_FRONTEND_URL="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_VINBER_HOME_NAME/#bundle=$UNITEX_BUILD_BUNDLE_NAME&q=$UNITEX_BUILD_LOG_NAME"
+  
+  # e.g. http://unitex.univ-mlv.fr/v6/badge/commit/2015-12-08-03-05-05.svg
+  UNITEX_BUILD_LOG_BADGE_URL="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_VINBER_HOME_NAME/badge/$UNITEX_BUILD_BUNDLE_NAME/$UNITEX_BUILD_LOG_NAME.svg"
 }
 
 # =============================================================================
