@@ -1191,17 +1191,17 @@ function stage_unitex_pack_make_source_distribution() {
     log_info "Packing distribution" "Packing source distribution"
     
     create_zip "$UNITEX_BUILD_DIST_BASEDIR" "$UNITEX_BUILD_RELEASES_SOURCE_DIR" \
-               "$UNITEX_PACKAGE_SRCDIST_PREFIX.zip" "$UNITEX_PACKAGE_FULL_NAME" "-x *.svn*" || {
+               "$UNITEX_PACKAGE_SRCDIST_PREFIX.zip" "$UNITEX_PACKAGE_FULL_NAME" "-x \"*.svn*\" \"*.git*\"" || {
         UNITEX_BUILD_PACK_HAS_ERRORS=1
     }
 
     create_zip "$UNITEX_BUILD_RELEASE_DIR" "$UNITEX_BUILD_RELEASES_SOURCE_DIR" \
-               "$UNITEX_PACKAGE_SRC_PREFIX.zip" "Src" "-x *.svn*" || {
+               "$UNITEX_PACKAGE_SRC_PREFIX.zip" "Src" "-x \"*.svn*\" \"*.git*\"" || {
         UNITEX_BUILD_PACK_HAS_ERRORS=1
     }
 
     create_zip "$UNITEX_BUILD_RELEASE_DIR" "$UNITEX_BUILD_RELEASES_SOURCE_DIR" \
-               "$UNITEX_PACKAGE_APP_PREFIX.zip" "App" "-x *.svn*" || {
+               "$UNITEX_PACKAGE_APP_PREFIX.zip" "App" "-x \"*.svn*\" \"*.git*\"" || {
         UNITEX_BUILD_PACK_HAS_ERRORS=1
     }
      
@@ -1696,7 +1696,7 @@ function stage_unitex_lingua_check_for_updates() {
         # create the zip file for the current language
         rm -f "${UNITEX_BUILD_RELEASES_LING_DIR:?}/$lang.zip"
         log_info "Creating file"  "$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip"
-        exec_logged_command "zipcmd.create.$lang" "$UNITEX_BUILD_TOOL_ZIP" -r "\"$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip\"" "\"$lang\"" -x ./*.svn*
+        exec_logged_command "zipcmd.create.$lang" "$UNITEX_BUILD_TOOL_ZIP" -r "\"$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip\"" "\"$lang\"" "-x \"./*.svn*\" \"*.git*\""
   
         if [ -e "$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip" ]; then
           # calculate the checksum for the current lang zip file
@@ -1922,7 +1922,7 @@ function stage_unitex_classic_ide_dist() {
       rm -f "$UNITEX_BUILD_RELEASE_DIR/Src/Java.zip" 
       push_directory "$UNITEX_BUILD_REPOSITORY_CLASSIC_IDE_LOCAL_PATH"
       # shellcheck disable=SC2035
-      exec_logged_command  "zipcmd.create.Java" "$UNITEX_BUILD_TOOL_ZIP" -r "$UNITEX_BUILD_RELEASE_DIR/Src/Java.zip" "src" -x *.svn*
+      exec_logged_command  "zipcmd.create.Java" "$UNITEX_BUILD_TOOL_ZIP" -r "$UNITEX_BUILD_RELEASE_DIR/Src/Java.zip" "src" "-x \"*.svn*\" \"*.git*\""
 
       # DEPRECATED from Vinber v1.4.0
       # cp "$UNITEX_BUILD_RELEASE_DIR/Src/Java.zip" "$UNITEX_BUILD_RELEASES_SOURCE_DIR/"
