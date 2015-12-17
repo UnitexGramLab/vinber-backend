@@ -853,6 +853,12 @@ function stage_unitex_doc_make() {
     configure_templated_files "$UNITEX_BUILD_REPOSITORY_USERMANUAL_LOCAL_PATH"
     
     # English User Manual
+    log_info "Cleaning manual" "Cleaning Makefile_EN_utf8 - English User Manual"
+    exec_logged_command "distclean.Makefile_EN_utf8" "$UNITEX_BUILD_TOOL_MAKE" \
+                        distclean -f Makefile_EN_utf8 || {
+      UNITEX_BUILD_DOCS_HAS_ERRORS=1
+    }
+    
     log_info "Building manual" "Making Makefile_EN_utf8 - English User Manual"
     exec_logged_command "make.Makefile_EN_utf8" "$UNITEX_BUILD_TOOL_MAKE" \
                         -f Makefile_EN_utf8 || {
@@ -860,6 +866,12 @@ function stage_unitex_doc_make() {
     }
 
     # French User Manual
+    log_info "Cleaning manual" "Cleaning Makefile_EN_utf8 - English User Manual"
+    exec_logged_command "distclean.Makefile_FR_utf8" "$UNITEX_BUILD_TOOL_MAKE" \
+                        distclean -f Makefile_FR_utf8 || {
+      UNITEX_BUILD_DOCS_HAS_ERRORS=1
+    }
+    
     log_info "Building manual" "Making Makefile_FR_utf8 - French User Manual"
     exec_logged_command "make.Makefile_FR_utf8" "$UNITEX_BUILD_TOOL_MAKE" \
                         -f Makefile_FR_utf8 || {
