@@ -2276,11 +2276,14 @@ function stage_unitex_core_make() {
 
   UNITEX_BUILD_CORE_HAS_ERRORS=0
   if [ $UNITEX_BUILD_CORE_UPDATE -ne 0 ]; then
+    # Unitex Core last revision changed 
+    UNITEX_VERSION_CORE_REVISION_NUMBER=${CORE_SVN_CHECKOUT_DETAILS[0]}
+    
     # Core configure
     configure_templated_files "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH"
-
+    
     # Saving SVN last revision changed
-    stage_unitex_core_update_source_revision_header "${CORE_SVN_CHECKOUT_DETAILS[0]}"
+    # stage_unitex_core_update_source_revision_header "${CORE_SVN_CHECKOUT_DETAILS[0]}"
 
     # we update the log file
     log_info "Updating"  "$UNITEX_BUILD_RELEASE_DIR/Src/log_svn_C++.txt"
