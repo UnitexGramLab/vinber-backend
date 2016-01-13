@@ -1898,9 +1898,6 @@ function stage_unitex_classic_ide_dist() {
 
       log_info "Preparing dist" "Classic IDE distribution is being prepared..."
 
-      # FIXME(martinec) This is "classic_ide.revision.date"
-      date "+%B %d, %Y" > "$UNITEX_BUILD_RELEASE_APP_DIR/revision.date"
-      
       # we create the jar file
       log_info "Creating JARs" "Classic IDE sources"
       
@@ -2083,8 +2080,6 @@ function stage_unitex_gramlab_ide_dist() {
          $UNITEX_BUILD_GRAMLAB_IDE_HAS_ERRORS -eq 0 ]; then
       UNITEX_BUILD_GRAMLAB_IDE_DEPLOYMENT=1   
       log_info "Preparing dist" "GramLab IDE distribution is being prepared..."
-
-      date "+%B %d, %Y" > "$UNITEX_BUILD_RELEASE_APP_DIR/gramlab_revision.date"
 
       log_info "Creating JAR"  "Gramlab.jar"
       rm -f "$UNITEX_BUILD_RELEASE_APP_DIR/Gramlab.jar"
@@ -3418,8 +3413,6 @@ function stage_unitex_core_dist() {
            -d "$UNITEX_BUILD_CORE_OSX_SOURCES_DIR/bin"           -a \
            -d "$UNITEX_BUILD_CORE_LINUX_I686_SOURCES_DIR/bin"    -a \
            -d "$UNITEX_BUILD_CORE_LINUX_X86_64_SOURCES_DIR/bin" ]; then
-        # Put revision.date
-        date "+%B %d, %Y" > "$UNITEX_BUILD_RELEASE_APP_DIR/revision.date"
 
         # Clean previous binaries    
         rm -rf "${UNITEX_BUILD_RELEASE_APP_DIR:?}"/*.exe
