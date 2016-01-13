@@ -2995,6 +2995,13 @@ function svn_checkout() {
   local svn_checkout_url=$2
   local svn_checkout_path=$3
   
+  # Revert local changes (e.g. templated output files) if previous build had issues
+  if [ "$UNITEX_BUILD_HAS_PREVIOUS_ISSUES" -ge 1 ]; then
+    log_info "Reverting" "Reverting local changes"
+    exec_logged_command "svn.revert" "$UNITEX_BUILD_TOOL_SVN" revert \
+               -R "$svn_checkout_path"
+  fi
+
   # Checking out
   log_info  "Repository" "$svn_checkout_url"
   exec_logged_command "svn.checkout" "$UNITEX_BUILD_TOOL_SVN" checkout \
@@ -3031,6 +3038,13 @@ function git_clone_pull() {
   # try to pull or clone the project
   if [ $is_git_repository -ne 0 ]; then
     push_directory "$git_clone_pull_path"
+
+    # Revert local changes (e.g. templated output files) if previous build had issues
+    if [ "$UNITEX_BUILD_HAS_PREVIOUS_ISSUES" -ge 1 ]; then
+      log_info "Reverting" "Reverting local changes"
+      exec_logged_command "git.revert" "$UNITEX_BUILD_TOOL_GIT" reset --hard
+    fi
+
     # Pulling out
     log_info  "Repository" "$git_clone_pull_url"
     exec_logged_command "git.pull" "$UNITEX_BUILD_TOOL_GIT" pull \
