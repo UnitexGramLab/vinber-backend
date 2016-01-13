@@ -124,6 +124,7 @@ UNITEX_VERSION_COPYRIGHT="Copyright (C) 2001-$UNITEX_VERSION_BUILD_YEAR"
 UNITEX_VERSION_DESCRIPTION_SHORT="corpus processing suite"
 UNITEX_VERSION_DESCRIPTION="an open source, cross-platform, multilingual, lexicon- and grammar-based $UNITEX_VERSION_DESCRIPTION_SHORT"
 UNITEX_VERSION_LICENSE="LGPL-2.1"
+UNITEX_VERSION_CONTACT="unitex-devel@univ-mlv.fr"
 }
 # =============================================================================
 # Unitex/GramLab version information
