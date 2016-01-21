@@ -2997,9 +2997,11 @@ function svn_checkout() {
   # Revert local changes (e.g. templated output files) if previous build had issues
   if [ "$UNITEX_BUILD_HAS_PREVIOUS_ISSUES" -ge 1 ]; then
     log_info "Reverting" "Reverting local changes"
-    push_directory "$svn_checkout_path"
-    exec_logged_command "svn.revert" "$UNITEX_BUILD_TOOL_SVN" revert -R .
-    pop_directory
+    if [ -d  "$svn_checkout_path" ]; then
+      push_directory "$svn_checkout_path"
+      exec_logged_command "svn.revert" "$UNITEX_BUILD_TOOL_SVN" revert -R .
+      pop_directory
+    fi
   fi
 
   # Checking out
