@@ -23,9 +23,9 @@
 # Vinber is a lightweight build automation service (continuous integration +
 # continuous delivery) used to produce the Unitex/GramLab project releases
 # =============================================================================
-UNITEX_VER_MAJOR=3
-UNITEX_VER_MINOR=1
-UNITEX_VER_SUFFIX=beta
+UNITEX_VERSION_MAJOR_NUMBER=3
+UNITEX_VERSION_MINOR_NUMBER=1
+UNITEX_VERSION_SUFFIX=rc
 # =============================================================================
 UNITEX_BUILD_DOCS_FORCE_UPDATE=0
 UNITEX_BUILD_PACK_FORCE_UPDATE=0
