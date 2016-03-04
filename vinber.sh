@@ -5351,7 +5351,7 @@ function notify_recipients() {
   fi    
 
   export EMAIL="$UNITEX_BUILD_VINBER_DESCRIPTION <nobody@univ-mlv.fr>"
-  export REPLYTO="noreply@univ-mlv.fr"
+  export REPLYTO="$UNITEX_BUILD_DEVEL_LIST"
 
   # UNITEX_BUILD_FIRST_ISSUE
   UNITEX_BUILD_FIRST_ISSUE=""
@@ -5438,7 +5438,7 @@ function notify_recipients() {
          $UNITEX_BUILD_VINBER_CODENAME, the $UNITEX_BUILD_VINBER_DESCRIPTION
          $UNITEX_BUILD_VINBER_REPOSITORY_URL
          
-         This is an automated notification - Please do not reply to this message
+         This is an automated notification
          "
          ) \
        | sed -e 's:^\s*::' | \
@@ -5465,7 +5465,7 @@ function notify_recipients() {
          $UNITEX_BUILD_VINBER_CODENAME, the $UNITEX_BUILD_VINBER_DESCRIPTION
          $UNITEX_BUILD_VINBER_REPOSITORY_URL
          
-         This is an automated notification - Please do not reply to this message
+         This is an automated notification
          "
          ) \
        | sed -e 's:^\s*::' | \
