@@ -24,8 +24,8 @@
 # continuous delivery) used to produce the Unitex/GramLab project releases
 # =============================================================================
 UNITEX_VERSION_MAJOR_NUMBER=3
-UNITEX_VERSION_MINOR_NUMBER=1
-UNITEX_VERSION_SUFFIX=rc
+UNITEX_VERSION_MINOR_NUMBER=2
+UNITEX_VERSION_SUFFIX=alpha
 # =============================================================================
 UNITEX_BUILD_DOCS_FORCE_UPDATE=0
 UNITEX_BUILD_PACK_FORCE_UPDATE=0
