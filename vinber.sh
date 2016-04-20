@@ -130,8 +130,8 @@ UNITEX_VERSION_CONTACT="unitex-devel@univ-mlv.fr"
 # Unitex/GramLab version information
 # =============================================================================
 UNITEX_VERSION_MAJOR_NUMBER=3
-UNITEX_VERSION_MINOR_NUMBER=1
-UNITEX_VERSION_SUFFIX=rc
+UNITEX_VERSION_MINOR_NUMBER=2
+UNITEX_VERSION_SUFFIX=alpha
 # =============================================================================
 # Unitex/GramLab commit build information
 # =============================================================================
