@@ -5585,7 +5585,7 @@ function notify_finish() {
   # final message
   if [ $UNITEX_BUILD_FINISH_WITH_ERROR_COUNT -eq 0 ]; then
     # save the incremental revision number
-    if [ $UNITEX_BUILD_READY_FOR_DEPLOYMENT ]; then
+    if [ $UNITEX_BUILD_READY_FOR_DEPLOYMENT -eq 1 ]; then
       echo -n "$UNITEX_VERSION_REVISION_NUMBER" > "$UNITEX_BUILD_RELEASES_REVISION_FILE"
     fi
     # send notifications
