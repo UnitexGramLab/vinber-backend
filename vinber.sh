@@ -1693,7 +1693,7 @@ function stage_unitex_lingua_checkout () {
   push_directory "$UNITEX_BUILD_SOURCE_DIR"
 
   git_clone_pull   "" \
-                   "git://github.com/UnitexGramLab/unitex-lingua.git" \
+                   "git://github.com/UnitexGramLab/$UNITEX_BUILD_REPOSITORY_LING_NAME.git" \
                    "$UNITEX_BUILD_REPOSITORY_LING_NAME"
 
   git_info    LINGUA_GIT_CLONE_DETAILS              \
@@ -1724,10 +1724,11 @@ function stage_unitex_lingua_check_for_updates() {
          log_info "Looking for updates" "Looking for $lang updates..."
 
          # Last changed date
-         git log -1 --format=%cd "$tag" > "$UNITEX_BUILD_TIMESTAMP_DIR/unitex-lingua-$tag.current"
+         git log -1 --format=%cd "$tag" > "$UNITEX_BUILD_TIMESTAMP_DIR/$UNITEX_BUILD_REPOSITORY_LING_NAME-$tag.current"
 
          # check for this language updates
-         check_for_updates UNITEX_BUILD_THIS_LANG_UPDATE "unitex-lingua-$tag"
+         check_for_updates UNITEX_BUILD_THIS_LANG_UPDATE "$UNITEX_BUILD_REPOSITORY_LING_NAME-$tag" \
+                           $UNITEX_BUILD_LING_FORCE_UPDATE
 
          if [ "$UNITEX_BUILD_THIS_LANG_UPDATE" -ne 0 ]; then
             UNITEX_BUILD_LING_UPDATE=1
@@ -1747,9 +1748,9 @@ function stage_unitex_lingua_check_for_updates() {
             fi
 
             # we update the log file
-            log_info "Updating"  "$UNITEX_BUILD_RELEASES_CHANGES_DIR/$lang.txt"
+            log_info "Updating"  "$UNITEX_BUILD_RELEASES_CHANGES_DIR/$UNITEX_BUILD_REPOSITORY_LING_NAME-$tag.txt"
             # shellcheck disable=SC2086
-            git log --follow --oneline --no-merges --first-parent --pretty=format:'%h - %d %s (%cr) <%an>' --abbrev-commit "$tag" > "$UNITEX_BUILD_RELEASES_CHANGES_DIR/unitex-lingua-$tag.txt"
+            git log --follow --oneline --no-merges --first-parent --pretty=format:'%h - %d %s (%cr) <%an>' --abbrev-commit "$tag" > "$UNITEX_BUILD_RELEASES_CHANGES_DIR/$UNITEX_BUILD_REPOSITORY_LING_NAME-$tag.txt"
          fi
       fi
       pop_build_stage
