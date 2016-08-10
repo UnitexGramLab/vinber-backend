@@ -1749,8 +1749,7 @@ function stage_unitex_lingua_check_for_updates() {
             # we update the log file
             log_info "Updating"  "$UNITEX_BUILD_RELEASES_CHANGES_DIR/$lang.txt"
             # shellcheck disable=SC2086
-            git log --follow --oneline --no-merges --first-parent --pretty=format:'%h - %d %s (%cr) <%an>' --abbrev-commit "$tag" > "$UNITEX_BUILD_RELEASE_DIR/$lang/log_$tag.txt"
-            cp "$UNITEX_BUILD_RELEASE_DIR/$lang/log_$tag.txt" "$UNITEX_BUILD_RELEASES_CHANGES_DIR/unitex-lingua-$tag.txt"
+            git log --follow --oneline --no-merges --first-parent --pretty=format:'%h - %d %s (%cr) <%an>' --abbrev-commit "$tag" > "$UNITEX_BUILD_RELEASES_CHANGES_DIR/unitex-lingua-$tag.txt"
          fi
       fi
       pop_build_stage
