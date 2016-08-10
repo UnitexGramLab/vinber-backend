@@ -327,6 +327,7 @@ UNITEX_BUILD_VINBER_MAINTAINER_EMAIL="cristian.martinez@univ-paris-est.fr"
 UNITEX_BUILD_NOTIFY_MAINTAINER=1
 # =============================================================================
 UNITEX_BUILD_NOTIFY_ON_SUCESS=0
+UNITEX_BUILD_NOTIFY_ON_DEPLOYMENT=0
 UNITEX_BUILD_NOTIFY_ON_FAILURE=1
 UNITEX_BUILD_NOTIFY_ON_FIXED=1
 # =============================================================================
@@ -1728,7 +1729,7 @@ function stage_unitex_lingua_check_for_updates() {
 
          # check for this language updates
          check_for_updates UNITEX_BUILD_THIS_LANG_UPDATE "$UNITEX_BUILD_REPOSITORY_LING_NAME-$tag" \
-                           $UNITEX_BUILD_LING_FORCE_UPDATE
+                           $UNITEX_BUILD_LING_UPDATE
 
          if [ "$UNITEX_BUILD_THIS_LANG_UPDATE" -ne 0 ]; then
             UNITEX_BUILD_LING_UPDATE=1
@@ -3380,6 +3381,9 @@ function stage_unitex_deployment_check() {
       log_info "Preparing deployment" "$UNITEX_VERSION_RELEASE deployment is being prepared..."
     fi
   fi
+  
+  # Deployments notification are send when UNITEX_BUILD_NOTIFY_ON_DEPLOYMENT and UNITEX_BUILD_READY_FOR_DEPLOYMENT are set
+  UNITEX_BUILD_NOTIFY_ON_DEPLOYMENT=$(( UNITEX_BUILD_NOTIFY_ON_DEPLOYMENT && UNITEX_BUILD_READY_FOR_DEPLOYMENT ))
 }
 
 # =============================================================================
@@ -5232,7 +5236,7 @@ function notify_recipients() {
          $UNITEX_BUILD_TOOL_MUTT $UNITEX_BUILD_LOG_FILE_ATTACHMENT $UNITEX_BUILD_ZIPPED_LOG_WORKSPACE_ATTACHMENT \
             -s "$UNITEX_BUILD_RESULT_EMOJI [$UNITEX_BUILD_VINBER_CODENAME_LOWERCASE-$UNITEX_BUILD_BUNDLE_NAME] $UNITEX_VERSION_RELEASE build issues" \
             $EMAIL_CC -- $EMAIL_TO
-  elif [ "$UNITEX_BUILD_FINISH_WITH_ERROR_COUNT" -eq 0 -a \( "$UNITEX_BUILD_NOTIFY_ON_FIXED" -ge 1 -o  "$UNITEX_BUILD_NOTIFY_ON_SUCESS" -ge 1 \) ]; then
+  elif [ "$UNITEX_BUILD_FINISH_WITH_ERROR_COUNT" -eq 0 -a \( "$UNITEX_BUILD_NOTIFY_ON_FIXED" -ge 1 -o  "$UNITEX_BUILD_NOTIFY_ON_SUCESS" -ge 1 -o  "$UNITEX_BUILD_NOTIFY_ON_DEPLOYMENT" -ge 1 \) ]; then
      local subject_type="created"
      if [ "$UNITEX_BUILD_NOTIFY_ON_FIXED" -ge 1 ]; then
        subject_type="fixed"
@@ -5585,7 +5589,7 @@ function notify_finish() {
       echo -n "$UNITEX_VERSION_REVISION_NUMBER" > "$UNITEX_BUILD_RELEASES_REVISION_FILE"
     fi
     # send notifications
-    if [ "$UNITEX_BUILD_NOTIFY_ON_SUCESS" -ge 1 -o "$UNITEX_BUILD_NOTIFY_ON_FIXED" -ge 1 ]; then
+    if [ "$UNITEX_BUILD_NOTIFY_ON_SUCESS" -ge 1 -o "$UNITEX_BUILD_NOTIFY_ON_FIXED" -ge 1 -o "$UNITEX_BUILD_NOTIFY_ON_DEPLOYMENT" -ge 1 ]; then
       log_notice "Notification " "Sending a notification message to $(anonymize_mail_addresses "$EMAIL_TO")"
     fi
     log_notice "Happy ending"   "$TIMESTAMP_FINISH_A"
