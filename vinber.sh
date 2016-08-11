@@ -1737,9 +1737,14 @@ function stage_unitex_lingua_check_for_updates() {
             # create the zip file for the current language
             rm -f "${UNITEX_BUILD_RELEASES_LING_DIR:?}/$lang.zip"
             log_info "Creating file"  "$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip"
-            push_directory "$tag"
-            exec_logged_command "zipcmd.create.$lang" "$UNITEX_BUILD_TOOL_ZIP" -r "\"$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip\"" "." "-x \"./*.svn*\" \"*.git*\""
-            pop_directory
+            exec_logged_command "ling.archive"                                          \
+                            "$UNITEX_BUILD_TOOL_GIT"                                    \
+                            archive                                                     \
+                            "HEAD:\"$tag\""                                             \
+                            --format=zip                                                \
+                            --output="\"$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip\"" || {
+                               die_with_critical_error "Ling dist error" "Fail to archive $lang sources"
+                            }
 
             if [ -e "$UNITEX_BUILD_RELEASES_LING_DIR/$lang.zip" ]; then
               # calculate the checksum for the current lang zip file
@@ -1943,12 +1948,12 @@ function stage_unitex_gramlab_ide_dist() {
 
       # archive IDE sources on a zip file using git archive
       push_directory "$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_LOCAL_PATH"
-      exec_logged_command "ide.archive"                                               \
+      exec_logged_command "ide.archive"                                                 \
                             "$UNITEX_BUILD_TOOL_GIT"                                    \
                             archive                                                     \
                             HEAD                                                        \
                             --format=zip                                                \
-                            --output="$UNITEX_BUILD_RELEASE_SRC_DIR/$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_NAME.zip" || {
+                            --output="\"$UNITEX_BUILD_RELEASE_SRC_DIR/$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_NAME.zip\"" || {
                                die_with_critical_error "IDE dist error" "Fail to archive IDE sources"
                             }
       pop_directory
@@ -3307,12 +3312,12 @@ function stage_unitex_core_dist() {
       log_info "Copying" "Core components sources"
       # archive core-sources on a tar file using git archive
       push_directory "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH"
-      exec_logged_command "core.archive"                                              \
+      exec_logged_command "core.archive"                                                \
                             "$UNITEX_BUILD_TOOL_GIT"                                    \
                             archive                                                     \
                             HEAD                                                        \
                             --format=tar                                                \
-                            --output="$UNITEX_BUILD_RELEASE_SRC_CORE_DIR/$UNITEX_BUILD_REPOSITORY_CORE_NAME.tar" || {
+                            --output="\"$UNITEX_BUILD_RELEASE_SRC_CORE_DIR/$UNITEX_BUILD_REPOSITORY_CORE_NAME.tar\"" || {
                                die_with_critical_error "Core dist error" "Fail to archive core sources"
                             }
       pop_directory
@@ -3381,9 +3386,12 @@ function stage_unitex_deployment_check() {
       log_info "Preparing deployment" "$UNITEX_VERSION_RELEASE deployment is being prepared..."
     fi
   fi
-  
-  # Deployments notification are send when UNITEX_BUILD_NOTIFY_ON_DEPLOYMENT and UNITEX_BUILD_READY_FOR_DEPLOYMENT are set
-  UNITEX_BUILD_NOTIFY_ON_DEPLOYMENT=$(( UNITEX_BUILD_NOTIFY_ON_DEPLOYMENT && UNITEX_BUILD_READY_FOR_DEPLOYMENT ))
+
+  # Deployments notification are send when
+  # UNITEX_BUILD_NOTIFY_ON_DEPLOYMENT is set
+  # UNITEX_BUILD_READY_FOR_DEPLOYMENT is set
+  # UNITEX_BUILD_SKIP_DEPLOYMENT isn't set
+  UNITEX_BUILD_NOTIFY_ON_DEPLOYMENT=$(( UNITEX_BUILD_NOTIFY_ON_DEPLOYMENT && UNITEX_BUILD_READY_FOR_DEPLOYMENT && ! $UNITEX_BUILD_SKIP_DEPLOYMENT ))
 }
 
 # =============================================================================
