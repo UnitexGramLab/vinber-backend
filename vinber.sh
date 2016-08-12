@@ -3906,9 +3906,11 @@ Please consult the latest changes to see if the current versions are safe to use
 <a href="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_CHANGES_HOME_NAME/$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_NAME.txt">Changes on GramLab IDE sources</a>
 __END__
 cd "$UNITEX_BUILD_REPOSITORY_LING_LOCAL_PATH"
-for LANG in *
+for tag in *
   do
-  if [ -d "$LANG" ]; then
+  if [ -d "$tag" ]; then
+  LANG="${UNITEX_IEFT_LINGUA["$tag"]}"
+  if [ ! -z "$LANG" ]; then
   cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
     <HR>
     <a href="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_LING_HOME_NAME/$LANG.zip" onClick="saveCookie('$LANG',
@@ -3952,6 +3954,7 @@ cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
 
 <a href="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_CHANGES_HOME_NAME/$LANG.txt">Changes on resources for $LANG</a>
 __END__
+ fi
  fi
  done
   #-------------------------End here document------------------------#
