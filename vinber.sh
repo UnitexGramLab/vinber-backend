@@ -1154,7 +1154,8 @@ function stage_unitex_packaging_windows() {
                       "$UNITEX_BUILD_DOCS_UPDATE"                   \
                       "$UNITEX_BUILD_LING_UPDATE"                   \
                       "$UNITEX_BUILD_GRAMLAB_IDE_UPDATE"            \
-                      "$UNITEX_BUILD_CORE_UPDATE"
+                      "$UNITEX_BUILD_CORE_UPDATE"                   \
+                      "$UNITEX_BUILD_PACK_UPDATE"
 
   fi
 
@@ -1263,26 +1264,9 @@ function stage_unitex_packaging_source() {
   push_stage "PackSrc"
   push_directory "$UNITEX_BUILD_DIST_BASEDIR"
 
-  if [ $UNITEX_BUILD_FREEZE_RELEASE -ne 1 ]; then
-    local packaging_source_timestamp
-    if [ -e "$UNITEX_BUILD_RELEASES_SOURCE_DIR/$UNITEX_PACKAGE_SRCDIST_PREFIX.zip" ]; then
-      packaging_source_timestamp=$(stat -c %y "$UNITEX_BUILD_RELEASES_SOURCE_DIR/$UNITEX_PACKAGE_SRCDIST_PREFIX.zip")
-    fi
-
-    # 1. Save source distribution package last date changed
-    echo "$packaging_source_timestamp" > "$UNITEX_BUILD_TIMESTAMP_DIR/$UNITEX_BUILD_PACKAGE_SOURCE_DISTRIBUTION_SUFFIX.current"
-
-    # 2. Check for source distribution package updates
-    check_for_updates UNITEX_BUILD_PACK_UPDATE "$UNITEX_BUILD_PACKAGE_SOURCE_DISTRIBUTION_SUFFIX"  \
-                      "$UNITEX_BUILD_DOCS_UPDATE"                   \
-                      "$UNITEX_BUILD_LING_UPDATE"                   \
-                      "$UNITEX_BUILD_GRAMLAB_IDE_UPDATE"            \
-                      "$UNITEX_BUILD_CORE_UPDATE"
-  fi
-
   count_issues_until_now UNITEX_BUILD_ISSUES_BEFORE_PACKAGING_SOURCE_DISTRIBUTION
 
-  # 3. Windows packaging make
+  # 1. Sources packaging
   # shellcheck disable=SC2086
   if [  $UNITEX_BUILD_ISSUES_BEFORE_PACKAGING_SOURCE_DISTRIBUTION -eq 0 ]; then
     stage_unitex_pack_make_source_distribution
@@ -1290,7 +1274,7 @@ function stage_unitex_packaging_source() {
     log_warn "Packing skipped" "Some issues prevent to pack the source distribution"
   fi
 
-  # 4. source distribution
+  # 2. Source distribution
   stage_unitex_packaging_source_dist
 
   pop_directory
@@ -1318,7 +1302,8 @@ function stage_unitex_packaging_source() {
 #                     "$UNITEX_BUILD_DOCS_UPDATE"                   \
 #                     "$UNITEX_BUILD_LING_UPDATE"                   \
 #                     "$UNITEX_BUILD_GRAMLAB_IDE_UPDATE"            \
-#                     "$UNITEX_BUILD_CORE_UPDATE"
+#                     "$UNITEX_BUILD_CORE_UPDATE"                   \
+#                     "$UNITEX_BUILD_PACK_UPDATE"
 
 
 #   count_issues_until_now UNITEX_BUILD_ISSUES_BEFORE_PACKAGING_LINUX_X86_64
@@ -1355,7 +1340,8 @@ function stage_unitex_packaging_unix() {
                       "$UNITEX_BUILD_DOCS_UPDATE"                   \
                       "$UNITEX_BUILD_LING_UPDATE"                   \
                       "$UNITEX_BUILD_GRAMLAB_IDE_UPDATE"            \
-                      "$UNITEX_BUILD_CORE_UPDATE"
+                      "$UNITEX_BUILD_CORE_UPDATE"                   \
+                      "$UNITEX_BUILD_PACK_UPDATE"
   fi
 
   count_issues_until_now UNITEX_BUILD_ISSUES_BEFORE_PACKAGING_UNIX_MAKE
