@@ -79,6 +79,7 @@ UNITEX_BUILD_UNTRACED="untraced"
 # =============================================================================
 UNITEX_BUILD_STATUS_FAILED="failed"
 UNITEX_BUILD_STATUS_PASSED="passed"
+UNITEX_BUILD_STATUS_DEPLOYED="deployed"
 UNITEX_BUILD_STATUS_UNKNOWN="unknown"
 UNITEX_BUILD_STATUS_ERROR="error"
 UNITEX_BUILD_STATUS_INACC="inaccessible"
@@ -267,6 +268,8 @@ UNITEX_BUILD_SKIP_ULP_VALGRIND_TESTS=0
 # =============================================================================
 UNITEX_BUILD_BUNDLE_NAME="debug"
 UNITEX_BUILD_LATEST_NAME="latest"
+# =============================================================================
+UNITEX_BUILD_READY_FOR_DEPLOYMENT=0
 # =============================================================================
 UNITEX_BUILD_COMMAND_EXECUTION_ERROR_COUNT=0
 UNITEX_BUILD_COMMAND_EXECUTION_COUNT=0
@@ -3346,8 +3349,6 @@ function stage_unitex_core_dist() {
 #
 # =============================================================================
 function stage_unitex_deployment_check() {
-  UNITEX_BUILD_READY_FOR_DEPLOYMENT=0
-
   UNITEX_BUILD_GLOBAL_DEPLOYMENT=$(( 0 || UNITEX_BUILD_DOCS_DEPLOYMENT ||  UNITEX_BUILD_PACK_DEPLOYMENT ||  UNITEX_BUILD_LING_DEPLOYMENT || UNITEX_BUILD_GRAMLAB_IDE_DEPLOYMENT ||  UNITEX_BUILD_CORE_DEPLOYMENT ))
   log_debug "Deployment" "UNITEX_BUILD_DOCS_DEPLOYMENT=$UNITEX_BUILD_DOCS_DEPLOYMENT"
   log_debug "Deployment" "UNITEX_BUILD_PACK_DEPLOYMENT=$UNITEX_BUILD_PACK_DEPLOYMENT"
@@ -3361,23 +3362,18 @@ function stage_unitex_deployment_check() {
 
   # shellcheck disable=SC2086
   if [ $UNITEX_BUILD_ISSUES_BEFORE_DEPLOYMENT -ne 0 ]; then
-    UNITEX_BUILD_READY_FOR_DEPLOYMENT=0
     log_notice "Build issues" "There are some build issues which prevent the deployment of $UNITEX_PRETTYAPPNAME"
   elif [ $UNITEX_BUILD_GLOBAL_DEPLOYMENT -eq 0 ]; then
-    UNITEX_BUILD_READY_FOR_DEPLOYMENT=0
     log_info "Up-do-date" "All components are already up-to-date. Nothing to Do!"
-  else
+  elif [ $UNITEX_BUILD_SKIP_DEPLOYMENT -ne 1 ]; then
     UNITEX_BUILD_READY_FOR_DEPLOYMENT=1
-    if [ $UNITEX_BUILD_SKIP_DEPLOYMENT -ne 1 ]; then
-      log_info "Preparing deployment" "$UNITEX_VERSION_RELEASE deployment is being prepared..."
-    fi
+    log_info "Preparing deployment" "$UNITEX_VERSION_RELEASE deployment is being prepared..."
   fi
 
   # Deployments notification are send when
   # UNITEX_BUILD_NOTIFY_ON_DEPLOYMENT is set
   # UNITEX_BUILD_READY_FOR_DEPLOYMENT is set
-  # UNITEX_BUILD_SKIP_DEPLOYMENT isn't set
-  UNITEX_BUILD_NOTIFY_ON_DEPLOYMENT=$(( UNITEX_BUILD_NOTIFY_ON_DEPLOYMENT && UNITEX_BUILD_READY_FOR_DEPLOYMENT && ! UNITEX_BUILD_SKIP_DEPLOYMENT ))
+  UNITEX_BUILD_NOTIFY_ON_DEPLOYMENT=$(( UNITEX_BUILD_NOTIFY_ON_DEPLOYMENT && UNITEX_BUILD_READY_FOR_DEPLOYMENT ))
 }
 
 # =============================================================================
@@ -3957,7 +3953,7 @@ function stage_unitex_deployment() {
   # 1 Check if we could do a deployment
   stage_unitex_deployment_check
 
-  if [ $UNITEX_BUILD_READY_FOR_DEPLOYMENT -eq 1 -a $UNITEX_BUILD_SKIP_DEPLOYMENT -eq 1 ]; then
+  if [ $UNITEX_BUILD_SKIP_DEPLOYMENT -eq 1 ]; then
     log_info "Deployment skipped" "The deployment wont be made as requested by the $UNITEX_BUILD_BUNDLE_NAME-bundle configuration"
   elif [ $UNITEX_BUILD_READY_FOR_DEPLOYMENT -eq 1 ]; then
     # 2 Update the latest symbolic link
@@ -5581,10 +5577,6 @@ function notify_finish() {
 
   # final message
   if [ $UNITEX_BUILD_FINISH_WITH_ERROR_COUNT -eq 0 ]; then
-    # save the incremental revision number
-    if [ $UNITEX_BUILD_READY_FOR_DEPLOYMENT -eq 1 ]; then
-      echo -n "$UNITEX_VERSION_REVISION_NUMBER" > "$UNITEX_BUILD_RELEASES_REVISION_FILE"
-    fi
     # send notifications
     if [ "$UNITEX_BUILD_NOTIFY_ON_SUCESS" -ge 1 -o "$UNITEX_BUILD_NOTIFY_ON_FIXED" -ge 1 -o "$UNITEX_BUILD_NOTIFY_ON_DEPLOYMENT" -ge 1 ]; then
       log_notice "Notification " "Sending a notification message to $(anonymize_mail_addresses "$EMAIL_TO")"
@@ -5600,6 +5592,9 @@ function notify_finish() {
 
   # create a latest-failed or latest-success symbolic link
   create_latest_symbolic_links
+
+  # create the latest-deployed symbolic link and update the revision number
+  update_latest_deployed_information
 
   # alert recipients
   notify_recipients
@@ -5637,8 +5632,33 @@ function create_latest_symbolic_links() {
   # Create /latest-status directory symbolic link
   rm  -f "$UNITEX_BUILD_LOG_WORKSPACE_LATEST_STATUS_SYMBOLIC_LINK"
   ln -sf "$UNITEX_BUILD_LOG_WORKSPACE" "$UNITEX_BUILD_LOG_WORKSPACE_LATEST_STATUS_SYMBOLIC_LINK"
-
 }  # create_latest_symbolic_links
+
+# =============================================================================
+#  ATTENTION: avoid to send log messages from here
+# =============================================================================
+function update_latest_deployed_information() {
+  if [ $UNITEX_BUILD_FINISH_WITH_ERROR_COUNT -eq 0 -a $UNITEX_BUILD_READY_FOR_DEPLOYMENT -eq 1 ]; then
+    local UNITEX_BUILD_LOG_LATEST_DEPLOYED_SYMBOLIC_LINK="$UNITEX_BUILD_LOG_WORKSPACE_LATEST_SYMBOLIC_LINK-$UNITEX_BUILD_STATUS_DEPLOYED.$UNITEX_BUILD_LOG_FILE_EXT"
+    local UNITEX_BUILD_LOG_JSON_LATEST_DEPLOYED_SYMBOLIC_LINK="$UNITEX_BUILD_LOG_WORKSPACE_LATEST_SYMBOLIC_LINK-$UNITEX_BUILD_STATUS_DEPLOYED.$UNITEX_BUILD_LOG_JSON_EXT"
+    local UNITEX_BUILD_LOG_WORKSPACE_LATEST_DEPLOYED_SYMBOLIC_LINK="$UNITEX_BUILD_LOG_WORKSPACE_LATEST_SYMBOLIC_LINK-$UNITEX_BUILD_STATUS_DEPLOYED"
+
+    # Create latest-deployed.log symbolic link
+    rm  -f "$UNITEX_BUILD_LOG_LATEST_DEPLOYED_SYMBOLIC_LINK"
+    ln -sf "$UNITEX_BUILD_LOG_FILE" "$UNITEX_BUILD_LOG_LATEST_DEPLOYED_SYMBOLIC_LINK"
+
+    # Create latest-deployed.json symbolic link
+    rm  -f "$UNITEX_BUILD_LOG_JSON_LATEST_DEPLOYED_SYMBOLIC_LINK"
+    ln -sf "$UNITEX_BUILD_LOG_JSON" "$UNITEX_BUILD_LOG_JSON_LATEST_DEPLOYED_SYMBOLIC_LINK"
+
+    # Create /latest-deployed directory symbolic link
+    rm  -f "$UNITEX_BUILD_LOG_WORKSPACE_LATEST_DEPLOYED_SYMBOLIC_LINK"
+    ln -sf "$UNITEX_BUILD_LOG_WORKSPACE" "$UNITEX_BUILD_LOG_WORKSPACE_LATEST_DEPLOYED_SYMBOLIC_LINK"
+
+    # finally, save the incremental revision number
+    echo -n "$UNITEX_VERSION_REVISION_NUMBER" > "$UNITEX_BUILD_RELEASES_REVISION_FILE"
+  fi
+}
 
 # =============================================================================
 #  ATTENTION: avoid to send log messages from here
