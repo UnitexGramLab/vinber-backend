@@ -5,16 +5,16 @@
 Vinber is a lightweight [build automation](http://en.wikipedia.org/wiki/Build_automation) service (continuous integration + continuous delivery) used to produce the [Unitex/GramLab][unitexgramlab] project releases, including:
 
  - Creating documentation
-   - <a href="http://unitex.univ-mlv.fr/releases/latest-beta/man/" target="_blank">User's Manual</a>
+   - <a href="https://github.com/UnitexGramLab/unitex-doc-usermanual" target="_blank">User's Manual</a>
    - <a href="http://unitex.univ-mlv.fr/releases/latest-beta/changes/" target="_blank">Release Notes</a> (work-in-progress)
  - Compiling code
-   - Unitex Core
+   - <a href="https://github.com/UnitexGramLab/unitex-core" target="_blank">Unitex Core</a>
      - Windows 32-bit
      - Windows 64-bit
      - GNU/Linux Intel
      - GNU/Linux Intel 64-bit
      - OS X (10.7+)
-   - GramLab IDE (GramLab.jar)
+   - <a href="https://github.com/UnitexGramLab/gramlab-ide" target="_blank">GramLab IDE</a>
  - Running <a href="https://github.com/UnitexGramLab/unitex-core-tests" target="_blank">automated tests</a>
    - Memory leaks
    - Non-regression
@@ -60,7 +60,7 @@ The badges from [Vinber][vinber] shows the status of the [Unitex/GramLab][unitex
 
 We welcome everyone to contribute to improve this project. Below are some of the things that you can do to contribute:
 
--  [Fork us](https://github.com/UnitexGramLab/vinber-backend/fork) and [request a pull](https://github.com/UnitexGramLab/vinber-backend/pulls) to the [develop branch](https://github.com/UnitexGramLab/vinber-backend/tree/develop).
+-  [Fork us](https://github.com/UnitexGramLab/vinber-backend/fork) and [request a pull](https://github.com/UnitexGramLab/vinber-backend/pulls) to the [master branch](https://github.com/UnitexGramLab/vinber-backend/tree/master).
 -  Submit [bug reports or feature requests](https://github.com/UnitexGramLab/vinber-backend/issues)
 
 ## License
@@ -77,6 +77,7 @@ Copyright (C) 2016 Université Paris-Est Marne-la-Vallée
 [unitexgramlab]:  http://unitexgramlab.org
 [vinber]:  http://unitex.univ-mlv.fr/v6
 [nightly]: http://unitex.univ-mlv.fr/v6/#bundle=nightly&q=latest
+[commit]:  http://unitex.univ-mlv.fr/v6/#bundle=commit&q=latest
 [deployed]:  http://unitex.univ-mlv.fr/v6/#bundle=nightly&q=latest-deployed
 [request]: http://unitex.univ-mlv.fr/v6/#bundle=nightly&action=rebuild
 [tour]:    http://unitex.univ-mlv.fr/v6/#bundle=nightly&q=buils&action=help
