@@ -14,10 +14,8 @@ Vinber is a lightweight [build automation](http://en.wikipedia.org/wiki/Build_au
      - GNU/Linux Intel
      - GNU/Linux Intel 64-bit
      - OS X (10.7+)
-   - Visual Integrate Development Environments 
-     - Classic Environment (Unitex.jar)
-     - GramLab Environment (GramLab.jar)
- - Running automated tests
+   - GramLab IDE (GramLab.jar)
+ - Running <a href="https://github.com/UnitexGramLab/unitex-core-tests" target="_blank">automated tests</a>
    - Memory leaks
    - Non-regression
  - Packaging and signing binaries
@@ -46,15 +44,15 @@ A short guided tour about using the frontend is <a href="http://unitex.univ-mlv.
 
 ## Badges
 
-The badges from [Vinber][vinber] shows the status of the [Unitex/GramLab][unitex] builds. Badges are powered by [shields.io](http://shields.io/) using an intermediate processing/caching layer.
+The badges from [Vinber][vinber] shows the status of the [Unitex/GramLab][unitexgramlab] builds. Badges are powered by [shields.io](http://shields.io/) using an intermediate processing/caching layer.
+
+### Latest Public Release
+
+[![Latest Public Release](http://unitex.univ-mlv.fr/v6/badge/nightly/latest-deployed.svg?subject=product.name&status=product.version.string)][deployed] [![Latest Public Release](http://unitex.univ-mlv.fr/v6/badge/nightly/latest-deployed.svg?status=build.started&label=Latest%20Built&color=5CB85C)][deployed]
 
 ### Nightly Status
 
 [![Nightly Release](http://unitex.univ-mlv.fr/v6/badge/nightly/latest.svg?subject=product.name&status=product.version.string)][nightly] [![Nightly Status](http://unitex.univ-mlv.fr/v6/badge/nightly/latest.svg?status=build.status)][nightly]
-
-### Last Commit Status
-
-[![Last Commit Release](http://unitex.univ-mlv.fr/v6/badge/commit/latest.svg?subject=product.name&status=product.version.string)][commit] [![Last Commit Status](http://unitex.univ-mlv.fr/v6/badge/commit/latest.svg?status=build.status)][commit]
 
 ## Contributing
 
@@ -79,6 +77,6 @@ Copyright (C) 2016 Université Paris-Est Marne-la-Vallée
 [unitexgramlab]:  http://unitexgramlab.org
 [vinber]:  http://unitex.univ-mlv.fr/v6
 [nightly]: http://unitex.univ-mlv.fr/v6/#bundle=nightly&q=latest
-[commit]:  http://unitex.univ-mlv.fr/v6/#bundle=commit&q=latest
+[deployed]:  http://unitex.univ-mlv.fr/v6/#bundle=nightly&q=latest-deployed
 [request]: http://unitex.univ-mlv.fr/v6/#bundle=nightly&action=rebuild
 [tour]:    http://unitex.univ-mlv.fr/v6/#bundle=nightly&q=buils&action=help
