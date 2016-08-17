@@ -3583,12 +3583,15 @@ cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
 );
 __END__
 cd "$UNITEX_BUILD_REPOSITORY_LING_LOCAL_PATH"
-for LANG in *
+for tag in *
   do
-  if [ -d "$LANG" ]; then
+  if [ -d "$tag" ]; then
+   LANG="${UNITEX_IEFT_LINGUA["$tag"]}"
+   if [ ! -z "$LANG" ]; then
     echo "saveCookie(\"$LANG\",\"$(date -r "$UNITEX_BUILD_RELEASES_LING_DIR/$LANG.zip")\");" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
+   fi
   fi
-  done
+done
 cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
 }
 //-->
