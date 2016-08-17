@@ -46,13 +46,13 @@ A short guided tour about using the frontend is <a href="http://unitex.univ-mlv.
 
 The badges from [Vinber][vinber] shows the status of the [Unitex/GramLab][unitexgramlab] builds. Badges are powered by [shields.io](http://shields.io/) using an intermediate processing/caching layer.
 
-### Latest Public Release
+### Latest Nightly Release
 
-[![Latest Public Release](http://unitex.univ-mlv.fr/v6/badge/nightly/latest-deployed.svg?subject=product.name&status=product.version.string)][deployed] [![Latest Public Release](http://unitex.univ-mlv.fr/v6/badge/nightly/latest-deployed.svg?status=build.started&label=Latest%20Built&color=5CB85C)][deployed]
+[![Latest Nightly Release](http://unitex.univ-mlv.fr/v6/badge/nightly/latest-deployed.svg?subject=product.name&status=product.version.string)][deployed] [![Latest Nightly Release](http://unitex.univ-mlv.fr/v6/badge/nightly/latest-deployed.svg?status=build.started&label=Latest%20Built&color=5CB85C)][deployed]
 
-### Nightly Status
+### Latest Nightly Build
 
-[![Nightly Release](http://unitex.univ-mlv.fr/v6/badge/nightly/latest.svg?subject=product.name&status=product.version.string)][nightly] [![Nightly Status](http://unitex.univ-mlv.fr/v6/badge/nightly/latest.svg?status=build.status)][nightly]
+[![Nightly Build](http://unitex.univ-mlv.fr/v6/badge/nightly/latest.svg?subject=product.name&status=product.version.string)][nightly] [![Nightly Build](http://unitex.univ-mlv.fr/v6/badge/nightly/latest.svg?status=build.status)][nightly]
 
 ## Contributing
 
