@@ -3299,24 +3299,28 @@ function stage_unitex_core_dist() {
 
       # then, we copy the sources into the Src/unitex-core directory
       log_info "Copying" "Core components sources"
+
       # archive core-sources on a tar file using git archive
+      # Src/unitex-core.tar
       push_directory "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH"
       exec_logged_command "core.archive"                                                \
                             "$UNITEX_BUILD_TOOL_GIT"                                    \
                             archive                                                     \
                             HEAD                                                        \
                             --format=tar                                                \
-                            --output="\"$UNITEX_BUILD_RELEASE_SRC_CORE_DIR/$UNITEX_BUILD_REPOSITORY_CORE_NAME.tar\"" || {
+                            --output="\"$UNITEX_BUILD_RELEASE_SRC_DIR/$UNITEX_BUILD_REPOSITORY_CORE_NAME.tar\"" || {
                                die_with_critical_error "Core dist error" "Fail to archive core sources"
                             }
       pop_directory
-      # create /bin directory
-      mkdir "$UNITEX_BUILD_RELEASE_SRC_CORE_DIR/bin"
-      # untar sources
-      push_directory "$UNITEX_BUILD_RELEASE_SRC_CORE_DIR"
+
       # remove previous sources
-      rm  -rf  "$UNITEX_BUILD_REPOSITORY_CORE_NAME"
-      tar -xvf "$UNITEX_BUILD_REPOSITORY_CORE_NAME.tar"  > /dev/null
+      # Src/unitex-core
+      rm  -rf "$UNITEX_BUILD_RELEASE_SRC_CORE_DIR"
+      mkdir   "$UNITEX_BUILD_RELEASE_SRC_CORE_DIR"
+
+      # untar Src/unitex-core.tar on Src/unitex-core
+      push_directory "$UNITEX_BUILD_RELEASE_SRC_DIR"
+      tar -xvf "$UNITEX_BUILD_REPOSITORY_CORE_NAME.tar" -C "$UNITEX_BUILD_RELEASE_SRC_CORE_DIR" > /dev/null
       rm "$UNITEX_BUILD_REPOSITORY_CORE_NAME.tar"
       pop_directory
 
