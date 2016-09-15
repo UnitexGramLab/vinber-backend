@@ -3556,7 +3556,7 @@ writeCookie(name,val,date);
 function updateAllCookies() {
 saveCookie("$UNITEX_PACKAGE_SRCDIST_PREFIX",
 __END__
-# shellcheck disable=SC2945
+# shellcheck disable=SC2945,SC2129
 echo -n \" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
 # shellcheck disable=SC2945
 echo -n "$(date -r "$UNITEX_BUILD_RELEASES_SOURCE_DIR/$UNITEX_PACKAGE_SRCDIST_PREFIX.zip")"\" >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE"
@@ -3582,7 +3582,7 @@ echo -n "$(date -r "$UNITEX_BUILD_RELEASES_SOURCE_DIR/$UNITEX_PACKAGE_SRC_PREFIX
 cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
 );
 __END__
-cd "$UNITEX_BUILD_REPOSITORY_LING_LOCAL_PATH"
+cd "$UNITEX_BUILD_REPOSITORY_LING_LOCAL_PATH" || die_with_critical_error "Deploy error" "Directory $UNITEX_BUILD_REPOSITORY_LING_LOCAL_PATH not found"
 for tag in *
   do
   if [ -d "$tag" ]; then
@@ -3592,6 +3592,7 @@ for tag in *
    fi
   fi
 done
+# shellcheck disable=SC2129
 cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
 }
 //-->
@@ -3894,12 +3895,13 @@ Please consult the latest changes to see if the current versions are safe to use
 
 <a href="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_CHANGES_HOME_NAME/$UNITEX_BUILD_REPOSITORY_GRAMLAB_IDE_NAME.txt">Changes on GramLab IDE sources</a>
 __END__
-cd "$UNITEX_BUILD_REPOSITORY_LING_LOCAL_PATH"
+cd "$UNITEX_BUILD_REPOSITORY_LING_LOCAL_PATH" || die_with_critical_error "Deploy error" "Directory $UNITEX_BUILD_REPOSITORY_LING_LOCAL_PATH not found"
 for tag in *
   do
   if [ -d "$tag" ]; then
   LANG="${UNITEX_IEFT_LINGUA["$tag"]}"
   if [ ! -z "$LANG" ]; then
+  # shellcheck disable=SC2129
   cat >> "$UNITEX_BUILD_DOWNLOAD_WEB_PAGE" <<__END__
     <HR>
     <a href="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_RELEASES_HOME_NAME/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME/$UNITEX_BUILD_RELEASES_LING_HOME_NAME/$LANG.zip" onClick="saveCookie('$LANG',
@@ -4237,6 +4239,7 @@ function export_unitex_variables() {
   local unitex_variable
   for unitex_variable in "${unitex_variable_list[@]}"
   do
+    # shellcheck disable=SC2163
     export "$unitex_variable"
   done
 }
@@ -4533,6 +4536,7 @@ function load_deps_conf() {
 
   # only read deps file if isn't world writable
   if [[ $(stat --format %a "$(readlink -f "$UNITEX_BUILD_DEPS_FILENAME")") == 600 ]]; then
+       # shellcheck source=/dev/null
        . "$UNITEX_BUILD_DEPS_FILENAME"
   else
        die_with_critical_error "Wrong permissions" \
@@ -4549,6 +4553,7 @@ function load_authors_conf() {
   if [ -e "$UNITEX_BUILD_AUTHORS_FILENAME" ]; then
     # only read authors file if isn't world writable
     if [[ $(stat --format %a "$(readlink -f "$UNITEX_BUILD_DEPS_FILENAME")") == 600 ]]; then
+         # shellcheck source=/dev/null
          . "$UNITEX_BUILD_AUTHORS_FILENAME"
     else
          die_with_critical_error "Wrong permissions" \
@@ -5577,7 +5582,7 @@ function notify_finish() {
     push_directory "$UNITEX_BUILD_LOG_WORKSPACE"
     {
       find "$UNITEX_BUILD_LOG_WORKSPACE" -size 0 | \
-           while read f; do rm -f "$f" ; done
+           while read -r f; do rm -f "$f" ; done
     } & wait
     pop_directory
   fi
@@ -5980,6 +5985,7 @@ function process_command_line() {
 
   # only read config file if isn't world writable
   if [[ $(stat --format %a "$UNITEX_BUILD_CONFIG_FILENAME") == 600 ]]; then
+       # shellcheck source=/dev/null
        . "$UNITEX_BUILD_CONFIG_FILENAME"
   else
     echo "./$SCRIPT_NAME: wrong permissions"

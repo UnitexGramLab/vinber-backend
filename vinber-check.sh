@@ -16,7 +16,7 @@ fail() {
 
 check() {
   local script="$1"
-  shellcheck "$script" || fail "$script"
+  shellcheck -s bash -e SC2166 "$script" || fail "$script"
   success "$script"
 }
 
