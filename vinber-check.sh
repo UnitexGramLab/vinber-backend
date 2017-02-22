@@ -31,7 +31,18 @@ find_prunes() {
 }
 
 find_cmd() {
-  echo "find . -type f -and \( -perm +111 -or -name '*.sh' \) $(find_prunes)"
+  # GNU Find no longer accepts -perm +111, even though the rest
+  # world (MacOS, Solaris, BSD, etc.) does.  Sigh.  Using -executable
+  # is arguably better, but it is a GNU extension.
+  # @source guilt-fix-portability-problem-with-using-find-perm-111.html
+  # @author Theodore Ts'o
+  if find . -maxdepth 0 -executable > /dev/null 2>&1 ; then
+    exe_test="-executable"
+  else
+    exe_test="-perm +111"
+  fi
+
+  echo "find . -type f -and \( $exe_test -or -name '*.sh' \) $(find_prunes)"
 }
 
 check_all_executables() {
