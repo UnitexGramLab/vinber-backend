@@ -157,22 +157,22 @@ UNITEX_DOMAIN_NAME="unitexgramlab.org"
 UNITEX_VERSION_URL_HOMEPAGE="http://$UNITEX_DOMAIN_NAME"
 UNITEX_VERSION_URL_RELEASES="http://releases.$UNITEX_DOMAIN_NAME"
 UNITEX_VERSION_URL_SOURCES="http://code.$UNITEX_DOMAIN_NAME"
-#!UNITEX_VERSION_URL_ABOUT="$UNITEX_VERSION_URL_HOMEPAGE/index.php?page=1"
-#!UNITEX_VERSION_URL_UPDATE="$UNITEX_VERSION_URL_HOMEPAGE/index.php?page=3"
-#!UNITEX_VERSION_URL_LICENSE_RESOURCES="http://bit.do/LGPL-LR"
+#!UNITEX_VERSION_URL_ABOUT="$UNITEX_VERSION_URL_HOMEPAGE/#about"
+#!UNITEX_VERSION_URL_UPDATE="$UNITEX_VERSION_URL_HOMEPAGE/#downloads"
+#!UNITEX_VERSION_URL_LICENSE_RESOURCES="$UNITEX_VERSION_URL_HOMEPAGE/lgpllr"
 #!UNITEX_VERSION_URL_LICENSE_CORE="http://www.gnu.org/licenses/lgpl.html"
 UNITEX_VERSION_URL_FORUM="http://forum.$UNITEX_DOMAIN_NAME"
 UNITEX_VERSION_URL_DOCS="http://docs.$UNITEX_DOMAIN_NAME"
 }
 # =============================================================================
 UNITEX_BUILD_DEPLOYMENT_DESTINATION="/mnt/pantheon/sdb1/unitex/W3" # Website local path
-UNITEX_BUILD_URL_WEBSITE="http://unitex.univ-mlv.fr"               # Website URL
+UNITEX_BUILD_URL_WEBSITE="http://unitexgramlab.org"                # Website URL
 # =============================================================================
 # Unitex/GramLab issues related URLs
 # =============================================================================
 # shellcheck disable=SC2034
 {
-UNITEX_VERSION_URL_ISSUES="$UNITEX_VERSION_URL_HOMEPAGE/index.php?page=6"
+UNITEX_VERSION_URL_ISSUES="$UNITEX_VERSION_URL_HOMEPAGE/how-to-report-a-bug"
 UNITEX_VERSION_URL_ISSUES_CORE="https://github.com/UnitexGramLab/unitex-core/issues"
 }
 # =============================================================================
@@ -573,16 +573,16 @@ function log() {
       # .log
       # Replace
       # 1. UNITEX_BUILD_DEPLOYMENT_DESTINATION(/mnt/pantheon/sdb1/unitex/W3)
-      #    UNITEX_BUILD_URL_WEBSITE(http://unitex.univ-mlv.fr)
+      #    UNITEX_BUILD_URL_WEBSITE(http://unitexgramlab.org)
       #
       # 2. UNITEX_BUILD_RELEASES_DIR(/mnt/pantheon/unitex/compile/build/Unitex-GramLab/nightly/releases)
-      #    UNITEX_BUILD_URL_WEBSITE(http://unitex.univ-mlv.fr/build/nightly/releases)
+      #    UNITEX_BUILD_URL_WEBSITE(http://unitexgramlab.org/build/nightly/releases)
       #
       # 3. UNITEX_BUILD_LOG_WORKSPACE(/mnt/pantheon/unitex/compile/v6/bundle/nightly/build/2015-04-06-21-34-48)
       #    ""
       #
       # 4. UNITEX_BUILD_LOGGER_PATH(/mnt/pantheon/unitex/compile/v6/bundle/nightly/build')
-      #    UNITEX_BUILD_LOGGER_WEB_HOME(http://unitex.univ-mlv.fr/v6/bundle/nightly/build)
+      #    UNITEX_BUILD_LOGGER_WEB_HOME(http://unitexgramlab.org/v6/bundle/nightly/build)
       #
       # 5. UNITEX_BUILD_BASEDIR(/mnt/pantheon/unitex/compile/build)
       #    ""
@@ -4284,7 +4284,7 @@ function setup_path_environment() {
   # e.g /home/vinber/bundle/nightly/build (path where log files are located)
   UNITEX_BUILD_LOGGER_PATH="$UNITEX_BUILD_LOGS_HOME_PATH/$UNITEX_BUILD_VINBER_LOGS_HOME_NAME"
 
-  # e.g http://unitex.univ-mlv.fr/vinber/bundle/nightly/build
+  # e.g http://unitexgramlab.org/v6/bundle/nightly/build
   UNITEX_BUILD_LOGGER_WEB_HOME="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_LOGS_HOME_NAME/$UNITEX_BUILD_VINBER_LOGS_HOME_NAME"
 
   # e.g /home/vinber/bundle/$UNITEX_BUILD_LOG_NAME.log
@@ -4309,10 +4309,10 @@ function setup_path_environment() {
   # e.g. /home/vinber/bundle/nightly/build/latest
   UNITEX_BUILD_LOG_WORKSPACE_LATEST_SYMBOLIC_LINK="$UNITEX_BUILD_LOGGER_PATH/$UNITEX_BUILD_LATEST_NAME"
 
-  # e.g. http://unitex.univ-mlv.fr/v6/#bundle=nightly&q=2015-04-08-01-16-59
+  # e.g. http://unitexgramlab.org/v6/#bundle=nightly&q=2015-04-08-01-16-59
   UNITEX_BUILD_LOG_FRONTEND_URL="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_VINBER_HOME_NAME/#bundle=$UNITEX_BUILD_BUNDLE_NAME&q=$UNITEX_BUILD_LOG_NAME"
 
-  # e.g. http://unitex.univ-mlv.fr/v6/badge/commit/2015-12-08-03-05-05.svg
+  # e.g. http://unitexgramlab.org/v6/badge/commit/2015-12-08-03-05-05.svg
   # shellcheck disable=SC2034
   UNITEX_BUILD_LOG_BADGE_URL="$UNITEX_BUILD_URL_WEBSITE/$UNITEX_BUILD_VINBER_HOME_NAME/badge/$UNITEX_BUILD_BUNDLE_NAME/$UNITEX_BUILD_LOG_NAME.svg"
 }
@@ -4610,14 +4610,14 @@ function setup_release_information() {
     UNITEX_BUILD_RELEASES_LATESTDIR_NAME="$UNITEX_BUILD_LATEST_NAME-$UNITEX_VERSION_SUFFIX"
   fi
 
-  # e.g. http://unitex.univ-mlv.fr/releases/latest-beta
+  # e.g. http://unitexgramlab.org/releases/latest-beta
   UNITEX_RELEASES_LATEST_URL="$UNITEX_VERSION_URL_RELEASES/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME"
 
-  # e.g. http://unitex.univ-mlv.fr/releases/latest-beta/win32
+  # e.g. http://unitexgramlab.org/releases/latest-beta/win32
   # shellcheck disable=SC2034
   UNITEX_RELEASES_LATEST_WIN32_URL="$UNITEX_RELEASES_LATEST_URL/$UNITEX_BUILD_RELEASES_WIN32_HOME_NAME"
 
-  # e.g. http://unitex.univ-mlv.fr/releases/latest-beta/source
+  # e.g. http://unitexgramlab.org/releases/latest-beta/source
   # shellcheck disable=SC2034
   UNITEX_RELEASES_LATEST_SOURCE_URL="$UNITEX_RELEASES_LATEST_URL/$UNITEX_BUILD_RELEASES_SOURCE_HOME_NAME"
 
