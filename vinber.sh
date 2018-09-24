@@ -943,6 +943,7 @@ function check_for_updates() {
       log_debug "Checkout curr file" "$update_checkout_file.current"
       diff "$UNITEX_BUILD_TIMESTAMP_DIR/$update_checkout_file.last"    \
            "$UNITEX_BUILD_TIMESTAMP_DIR/$update_checkout_file.current" > /dev/null
+      # shellcheck disable=SC5133
       if [ $? -eq 1 ]; then
         update_required=1
         rm -f "$UNITEX_BUILD_TIMESTAMP_DIR/$update_checkout_file.last"
@@ -4502,7 +4503,7 @@ function setup_script_traps() {
   local script_signal
   for script_signal in "${SCRIPT_SIGNAL_LIST[@]}"
   do
-    # shellcheck disable=SC2064, SC2086
+    # shellcheck disable=SC2064,SC2086
     trap "die_with_critical_error \"Caught signal\" \"A $script_signal signal was received at line \$LINENO\"" $script_signal
   done
 }
@@ -5130,6 +5131,7 @@ function notify_recipients() {
     # Create a zipped log workspace copy
     UNITEX_BUILD_ZIPPED_LOG_WORKSPACE=$UNITEX_BUILD_TEMPORAL_WORKSPACE/$UNITEX_BUILD_LOG_NAME.zip
     $UNITEX_BUILD_TOOL_ZIP -qjr "$UNITEX_BUILD_ZIPPED_LOG_WORKSPACE" "$UNITEX_BUILD_LOG_WORKSPACE" -x ".*" > /dev/null
+    # shellcheck disable=SC5133
     if [ $? -eq 0 ]; then
       UNITEX_BUILD_ZIPPED_LOG_WORKSPACE_ATTACHMENT="-a $UNITEX_BUILD_ZIPPED_LOG_WORKSPACE"
     fi
@@ -5878,6 +5880,7 @@ function jsonize_master_log_file() {
   local -r build_comma=$([ -s "$UNITEX_BUILD_LOG_BUILDS_JSON" ] && echo -ne ",\n \n" || echo -ne " ")
 
   # Write builds.json
+  # shellcheck disable=SC2205
   (echo -ne "$build_comma{"                                        \
       "\"number\":      \"$(json_escape "$column_number")\", "      \
       "\"level\":       \"$(json_escape "$column_level")\", "       \
