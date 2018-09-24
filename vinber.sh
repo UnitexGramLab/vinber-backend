@@ -943,7 +943,7 @@ function check_for_updates() {
       log_debug "Checkout curr file" "$update_checkout_file.current"
       diff "$UNITEX_BUILD_TIMESTAMP_DIR/$update_checkout_file.last"    \
            "$UNITEX_BUILD_TIMESTAMP_DIR/$update_checkout_file.current" > /dev/null
-      # shellcheck disable=SC5133
+      # shellcheck disable=SC5133,SC2181
       if [ $? -eq 1 ]; then
         update_required=1
         rm -f "$UNITEX_BUILD_TIMESTAMP_DIR/$update_checkout_file.last"
@@ -5131,7 +5131,7 @@ function notify_recipients() {
     # Create a zipped log workspace copy
     UNITEX_BUILD_ZIPPED_LOG_WORKSPACE=$UNITEX_BUILD_TEMPORAL_WORKSPACE/$UNITEX_BUILD_LOG_NAME.zip
     $UNITEX_BUILD_TOOL_ZIP -qjr "$UNITEX_BUILD_ZIPPED_LOG_WORKSPACE" "$UNITEX_BUILD_LOG_WORKSPACE" -x ".*" > /dev/null
-    # shellcheck disable=SC5133
+    # shellcheck disable=SC5133,SC2181
     if [ $? -eq 0 ]; then
       UNITEX_BUILD_ZIPPED_LOG_WORKSPACE_ATTACHMENT="-a $UNITEX_BUILD_ZIPPED_LOG_WORKSPACE"
     fi
