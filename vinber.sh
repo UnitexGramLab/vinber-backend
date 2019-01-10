@@ -3970,9 +3970,15 @@ function stage_unitex_deployment() {
     # 2 Update the latest symbolic link
     # Update the /releases/latest-$VER_SUFFIX symbolic link
     push_directory "$UNITEX_BUILD_RELEASES_BASEDIR"
+
     rm  -f   "$UNITEX_BUILD_RELEASES_LATESTDIR"
     ln -sf   "$UNITEX_VERSION" "$UNITEX_BUILD_RELEASES_LATESTDIR_NAME"
     log_info "Latest release" "Directory $UNITEX_BUILD_RELEASES_LATESTDIR is now symbolically mapped to $UNITEX_BUILD_RELEASES_VERSION_BASEDIR"
+
+    # Update the /releases/latest-$UNITEX_VERSION_TYPE symbolic link
+    rm  -f   "$UNITEX_BUILD_RELEASES_LATEST_TYPE_DIR"
+    ln -sf   "$UNITEX_VERSION" "$UNITEX_BUILD_RELEASES_LATEST_TYPE_DIR_NAME"
+
     pop_directory  # "$UNITEX_BUILD_RELEASES_BASEDIR"
 
     # UNITEX_BUILD_GLOBAL_DEPLOYMENT=$(( 0 || UNITEX_BUILD_DOCS_DEPLOYMENT ||  UNITEX_BUILD_PACK_DEPLOYMENT ||  UNITEX_BUILD_LING_DEPLOYMENT || UNITEX_BUILD_GRAMLAB_IDE_DEPLOYMENT ||  UNITEX_BUILD_CORE_DEPLOYMENT ))
@@ -4606,11 +4612,14 @@ function setup_release_information() {
     UNITEX_VERSION_IS_UNSTABLE=0
   else
     UNITEX_VERSION="$UNITEX_VERSION_MAJOR_NUMBER.$UNITEX_VERSION_MINOR_NUMBER$UNITEX_VERSION_SUFFIX"
-    UNITEX_VERSION_TYPE="unstable"
+    UNITEX_VERSION_TYPE="devel"
     UNITEX_VERSION_IS_UNSTABLE=1
     # e.g. latest-beta
     UNITEX_BUILD_RELEASES_LATESTDIR_NAME="$UNITEX_BUILD_LATEST_NAME-$UNITEX_VERSION_SUFFIX"
   fi
+
+  # e.g. http://unitexgramlab.org/releases/latest-devel
+  UNITEX_BUILD_RELEASES_LATEST_TYPE_DIR_NAME="$UNITEX_BUILD_LATEST_NAME-$UNITEX_VERSION_TYPE"
 
   # e.g. http://unitexgramlab.org/releases/latest-beta
   UNITEX_RELEASES_LATEST_URL="$UNITEX_VERSION_URL_RELEASES/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME"
@@ -4681,6 +4690,10 @@ function setup_release_information() {
   # setup the bundle latest release directory
   # e.g /home/vinber/build/Unitex-GramLab/nightly/releases/latest-beta
   UNITEX_BUILD_RELEASES_LATESTDIR="$UNITEX_BUILD_RELEASES_BASEDIR/$UNITEX_BUILD_RELEASES_LATESTDIR_NAME"
+
+  # setup the bundle latest stable or devel release directory
+  # e.g /home/vinber/build/Unitex-GramLab/nightly/releases/latest-devel
+  UNITEX_BUILD_RELEASES_LATEST_TYPE_DIR="$UNITEX_BUILD_RELEASES_BASEDIR/$UNITEX_BUILD_RELEASES_LATEST_TYPE_DIR_NAME"
 
   # setup the incremental revision file
   # e.g /home/vinber/build/Unitex-GramLab/nightly/releases/3.1beta/.revision
