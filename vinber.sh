@@ -699,7 +699,7 @@ function exec_logged_command() {
   redirect_std_name="$(echo -n  "${redirect_std_name,,}" | sed -e 's/[^a-z0-9_-]/_/g')"
   redirect_std "$redirect_std_name"
 
-
+  # shellcheck disable=SC2206
   command_line=( $command_name "$command_args" )
 
   MAX_COMMAND_LINE_LENGTH=119
