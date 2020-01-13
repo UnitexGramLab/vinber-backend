@@ -3,7 +3,7 @@
 # Vinber: The Unitex/GramLab Build Automation Service
 # https://github.com/UnitexGramLab/vinber-backend
 # =============================================================================
-# Copyright (C) 2016 Université Paris-Est Marne-la-Vallée <unitex-devel@univ-mlv.fr>
+# Copyright (C) 2019 Université Paris-Est Marne-la-Vallée <unitex-devel@univ-mlv.fr>
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -4506,6 +4506,7 @@ function setup_script_traps() {
   SCRIPT_SIGNAL_LIST=$(set -o posix ; set       |\
                     grep "UNITEX_BUILD_SIGNAL_" |\
                     cut -d= -f2)
+  # shellcheck disable=SC2206
   SCRIPT_SIGNAL_LIST=( $SCRIPT_SIGNAL_LIST )
   local script_signal
   for script_signal in "${SCRIPT_SIGNAL_LIST[@]}"
@@ -5094,6 +5095,7 @@ function redirect_stdout() {
          -s "$REDIRECT_TO_PARTIALNAME.$UNITEX_BUILD_LOG_FILE_EXT" ]; then
         FILENAME_SUFFIX_COUNTER=1
         while [[ -e $REDIRECT_TO_PARTIALNAME.$FILENAME_SUFFIX_COUNTER.$UNITEX_BUILD_LOG_FILE_EXT ]]; do
+            # shellcheck disable=SC2219
             let FILENAME_SUFFIX_COUNTER++
         done
         REDIRECT_TO_PARTIALNAME=$REDIRECT_TO_PARTIALNAME.$FILENAME_SUFFIX_COUNTER
@@ -5918,6 +5920,7 @@ function remove_intermediate_files() {
 # =============================================================================
 function push_directory() {
  if [ -d "$1" ]; then
+  # shellcheck disable=SC2164
   pushd "$1" > /dev/null
  else
   log_warn "Directory not found" "The $1 directory doesn't exist"
@@ -5928,6 +5931,7 @@ function push_directory() {
 # Pop directory without error message
 # =============================================================================
 function pop_directory() {
+ # shellcheck disable=SC2164
  popd > /dev/null
 } # pop_directory
 
