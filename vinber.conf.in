@@ -1,7 +1,7 @@
 # =============================================================================
 # Vinber Configuration File
 # =============================================================================
-# Copyright (C) 2015 Université Paris-Est Marne-la-Vallée <unitex@univ-mlv.fr>
+# Copyright (C) 2020 Université Paris-Est Marne-la-Vallée <unitex@univ-mlv.fr>
 # 
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -24,7 +24,7 @@
 # continuous delivery) used to produce the Unitex/GramLab project releases
 # =============================================================================
 UNITEX_VERSION_MAJOR_NUMBER=3
-UNITEX_VERSION_MINOR_NUMBER=2
+UNITEX_VERSION_MINOR_NUMBER=3
 UNITEX_VERSION_SUFFIX=alpha
 # =============================================================================
 UNITEX_BUILD_DOCS_FORCE_UPDATE=0
