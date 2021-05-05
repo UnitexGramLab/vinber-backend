@@ -71,7 +71,7 @@ This program is licensed under the [GNU Lesser General Public License version 2.
 
 --
 
-Copyright (C) 2020 Université Paris-Est Marne-la-Vallée
+Copyright (C) 2015-2021 Université Paris-Est Marne-la-Vallée
 
 [repos]:   https://github.com/unitexgramlab
 [unitexgramlab]:  http://unitexgramlab.org
