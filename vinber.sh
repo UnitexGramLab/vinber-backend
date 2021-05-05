@@ -130,9 +130,9 @@ UNITEX_VERSION_CONTACT="unitex-devel@univ-mlv.fr"
 # =============================================================================
 # Unitex/GramLab version information
 # =============================================================================
-UNITEX_VERSION_MAJOR_NUMBER=3
-UNITEX_VERSION_MINOR_NUMBER=2
-UNITEX_VERSION_SUFFIX=beta
+UNITEX_VERSION_MAJOR_NUMBER=4
+UNITEX_VERSION_MINOR_NUMBER=0
+UNITEX_VERSION_SUFFIX=alpha
 # =============================================================================
 # Unitex/GramLab commit build information
 # =============================================================================
@@ -154,7 +154,7 @@ UNITEX_VERSION_GRAMLAB_IDE_COMMIT_TAG="?"
 # shellcheck disable=SC2034
 {
 UNITEX_DOMAIN_NAME="unitexgramlab.org"
-UNITEX_VERSION_URL_HOMEPAGE="http://$UNITEX_DOMAIN_NAME"
+UNITEX_VERSION_URL_HOMEPAGE="https://$UNITEX_DOMAIN_NAME"
 UNITEX_VERSION_URL_RELEASES="http://releases.$UNITEX_DOMAIN_NAME"
 UNITEX_VERSION_URL_SOURCES="http://code.$UNITEX_DOMAIN_NAME"
 #!UNITEX_VERSION_URL_ABOUT="$UNITEX_VERSION_URL_HOMEPAGE/#about"
@@ -166,7 +166,7 @@ UNITEX_VERSION_URL_DOCS="http://docs.$UNITEX_DOMAIN_NAME"
 }
 # =============================================================================
 UNITEX_BUILD_DEPLOYMENT_DESTINATION="/mnt/pantheon/sdb1/unitex/W3" # Website local path
-UNITEX_BUILD_URL_WEBSITE="http://unitexgramlab.org"                # Website URL
+UNITEX_BUILD_URL_WEBSITE="https://unitexgramlab.org"               # Website URL
 # =============================================================================
 # Unitex/GramLab issues related URLs
 # =============================================================================
@@ -2155,35 +2155,35 @@ function stage_unitex_core_make() {
 
     #then, we check if the C++ sources could be compiled
 
-    # MinGW32
-    UNITEX_BUILD_CORE_WIN32_DIR="$UNITEX_BUILD_TEMPORAL_WORKSPACE/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_WIN32_HOME_NAME"
-    UNITEX_BUILD_CORE_WIN32_SOURCES_DIR="$UNITEX_BUILD_CORE_WIN32_DIR/$UNITEX_BUILD_REPOSITORY_CORE_NAME"
-    stage_unitex_core_make_win32
-
-    # MinGW64
-    UNITEX_BUILD_CORE_WIN64_DIR="$UNITEX_BUILD_TEMPORAL_WORKSPACE/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_WIN64_HOME_NAME"
-    UNITEX_BUILD_CORE_WIN64_SOURCES_DIR="$UNITEX_BUILD_CORE_WIN64_DIR/$UNITEX_BUILD_REPOSITORY_CORE_NAME"
-    stage_unitex_core_make_win64
-
-    # OS X
-    UNITEX_BUILD_CORE_OSX_DIR="$UNITEX_BUILD_TEMPORAL_WORKSPACE/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_OSX_HOME_NAME"
-    UNITEX_BUILD_CORE_OSX_SOURCES_DIR="$UNITEX_BUILD_CORE_OSX_DIR/$UNITEX_BUILD_REPOSITORY_CORE_NAME"
-    stage_unitex_core_make_osx
+    # Linux Intel 64-bit (x86_64) debug
+    UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_DIR="$UNITEX_BUILD_TEMPORAL_WORKSPACE/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_LINUX_X86_64_HOME_NAME-debug"
+    UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_SOURCES_DIR="$UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_DIR/$UNITEX_BUILD_REPOSITORY_CORE_NAME"
+    stage_unitex_core_make_linux_x86_64_debug
 
     # Linux Intel (i686)
     UNITEX_BUILD_CORE_LINUX_I686_DIR="$UNITEX_BUILD_TEMPORAL_WORKSPACE/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_LINUX_I686_HOME_NAME"
     UNITEX_BUILD_CORE_LINUX_I686_SOURCES_DIR="$UNITEX_BUILD_CORE_LINUX_I686_DIR/$UNITEX_BUILD_REPOSITORY_CORE_NAME"
     stage_unitex_core_make_linux_i686
 
-    # Linux Intel 64-bit (x86_64) debug
-    UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_DIR="$UNITEX_BUILD_TEMPORAL_WORKSPACE/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_LINUX_X86_64_HOME_NAME-debug"
-    UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_SOURCES_DIR="$UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_DIR/$UNITEX_BUILD_REPOSITORY_CORE_NAME"
-    stage_unitex_core_make_linux_x86_64_debug
-
     # Linux Intel 64-bit (x86_64)
     UNITEX_BUILD_CORE_LINUX_X86_64_DIR="$UNITEX_BUILD_TEMPORAL_WORKSPACE/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_LINUX_X86_64_HOME_NAME"
     UNITEX_BUILD_CORE_LINUX_X86_64_SOURCES_DIR="$UNITEX_BUILD_CORE_LINUX_X86_64_DIR/$UNITEX_BUILD_REPOSITORY_CORE_NAME"
     stage_unitex_core_make_linux_x86_64
+
+    # OS X
+    UNITEX_BUILD_CORE_OSX_DIR="$UNITEX_BUILD_TEMPORAL_WORKSPACE/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_OSX_HOME_NAME"
+    UNITEX_BUILD_CORE_OSX_SOURCES_DIR="$UNITEX_BUILD_CORE_OSX_DIR/$UNITEX_BUILD_REPOSITORY_CORE_NAME"
+    stage_unitex_core_make_osx
+
+    # MinGW64
+    UNITEX_BUILD_CORE_WIN64_DIR="$UNITEX_BUILD_TEMPORAL_WORKSPACE/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_WIN64_HOME_NAME"
+    UNITEX_BUILD_CORE_WIN64_SOURCES_DIR="$UNITEX_BUILD_CORE_WIN64_DIR/$UNITEX_BUILD_REPOSITORY_CORE_NAME"
+    stage_unitex_core_make_win64
+
+    # MinGW32
+    UNITEX_BUILD_CORE_WIN32_DIR="$UNITEX_BUILD_TEMPORAL_WORKSPACE/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_WIN32_HOME_NAME"
+    UNITEX_BUILD_CORE_WIN32_SOURCES_DIR="$UNITEX_BUILD_CORE_WIN32_DIR/$UNITEX_BUILD_REPOSITORY_CORE_NAME"
+    stage_unitex_core_make_win32
   fi
 
   pop_directory  # "$UNITEX_BUILD_SOURCE_DIR"
@@ -2213,17 +2213,17 @@ function stage_unitex_core_make_win32() {
     pop_directory  # "$UNITEX_BUILD_SOURCE_DIR"
   fi  # [ ! -d "${UNITEX_BUILD_CORE_WIN32_DIR:?}" ]
 
-  push_directory "$UNITEX_BUILD_CORE_WIN32_SOURCES_DIR/build"
+  push_directory "$UNITEX_BUILD_CORE_WIN32_SOURCES_DIR/src/build"
 
   if [ $UNITEX_BUILD_CORE_UPDATE     -ne 0 -a \
        $UNITEX_BUILD_CORE_HAS_ERRORS -eq 0 ]; then
     # ensure that we remove all binary objects
     log_notice "Cleaning" "Win32 Unitex Core sources will be cleaned up"
-    exec_logged_command "make.mingw32.clean"  "$UNITEX_BUILD_TOOL_MAKE" COMMANDPREFIXDEFINED=yes COMMANDPREFIX=$UNITEX_BUILD_MINGW32_COMMAND_PREFIX ADDITIONAL_CFLAG+="'-DUNITEX_PREVENT_USING_WINRT_API -static -static-libgcc -static-libstdc++'" SYSTEM=mingw32 clean
+    exec_logged_command "make.mingw32.clean"  "$UNITEX_BUILD_TOOL_MAKE" clean-all
 
     log_notice "Compiling" "Win32 Unitex Core Tool Logger"
     local unitex_core_make_fail=0
-    exec_logged_command "make.mingw32.unitextoolloggeronly" "$UNITEX_BUILD_TOOL_MAKE" COMMANDPREFIXDEFINED=yes COMMANDPREFIX=$UNITEX_BUILD_MINGW32_COMMAND_PREFIX ADDITIONAL_CFLAG+="'-DUNITEX_PREVENT_USING_WINRT_API -static -static-libgcc -static-libstdc++'" SYSTEM=mingw32 \
+    exec_logged_command "make.mingw32.unitextoolloggeronly" "$UNITEX_BUILD_TOOL_MAKE" 64BITS=no COMMANDPREFIXDEFINED=yes COMMANDPREFIX=$UNITEX_BUILD_MINGW32_COMMAND_PREFIX ADDITIONAL_CFLAG+="'-DUNITEX_USE_POSIX_THREADS=1 -DUNITEX_PREVENT_USING_WINRT_API -static -static-libgcc -static-libstdc++'" SYSTEM=mingw32 \
                      UNITEXTOOLLOGGERONLY=yes || {
                        unitex_core_make_fail=1
                      }
@@ -2242,7 +2242,7 @@ function stage_unitex_core_make_win32() {
     fi
   fi
 
-  pop_directory  # "$UNITEX_BUILD_CORE_WIN32_SOURCES_DIR/build"
+  pop_directory  # "$UNITEX_BUILD_CORE_WIN32_SOURCES_DIR/src/build"
   pop_build_stage
 }
 
@@ -2269,17 +2269,17 @@ function stage_unitex_core_make_win64() {
     pop_directory  # "$UNITEX_BUILD_SOURCE_DIR"
   fi  # [ ! -d "${UNITEX_BUILD_CORE_WIN64_DIR:?}" ]
 
-  push_directory "$UNITEX_BUILD_CORE_WIN64_SOURCES_DIR/build"
+  push_directory "$UNITEX_BUILD_CORE_WIN64_SOURCES_DIR/src/build"
 
   if [ $UNITEX_BUILD_CORE_UPDATE     -ne 0 -a \
        $UNITEX_BUILD_CORE_HAS_ERRORS -eq 0 ]; then
     # ensure that we remove all binary objects
     log_notice "Cleaning" "Win64 Unitex Core sources will be cleaned up"
-    exec_logged_command "make.mingw32.clean"  "$UNITEX_BUILD_TOOL_MAKE" 64BITS=yes COMMANDPREFIXDEFINED=yes COMMANDPREFIX=$UNITEX_BUILD_MINGW64_COMMAND_PREFIX ADDITIONAL_CFLAG+="'-DUNITEX_PREVENT_USING_WINRT_API -m64 -static -static-libgcc -static-libstdc++'" SYSTEM=mingw32 clean
+    exec_logged_command "make.mingw32.clean"  "$UNITEX_BUILD_TOOL_MAKE" clean-all
 
     log_notice "Compiling" "Win64 Unitex Core Tool Logger"
     local unitex_core_make_fail=0
-    exec_logged_command "make.mingw32.unitextoolloggeronly" "$UNITEX_BUILD_TOOL_MAKE" 64BITS=yes COMMANDPREFIXDEFINED=yes COMMANDPREFIX=$UNITEX_BUILD_MINGW64_COMMAND_PREFIX ADDITIONAL_CFLAG+="'-DUNITEX_PREVENT_USING_WINRT_API -m64 -static -static-libgcc -static-libstdc++'" SYSTEM=mingw32 \
+    exec_logged_command "make.mingw32.unitextoolloggeronly" "$UNITEX_BUILD_TOOL_MAKE" 64BITS=yes COMMANDPREFIXDEFINED=yes COMMANDPREFIX=$UNITEX_BUILD_MINGW64_COMMAND_PREFIX ADDITIONAL_CFLAG+="'-DUNITEX_USE_POSIX_THREADS=1 -DUNITEX_PREVENT_USING_WINRT_API -m64 -static -static-libgcc -static-libstdc++'" SYSTEM=mingw32 \
                      UNITEXTOOLLOGGERONLY=yes || {
                        unitex_core_make_fail=1
                      }
@@ -2298,7 +2298,7 @@ function stage_unitex_core_make_win64() {
     fi
   fi
 
-  pop_directory  # "$UNITEX_BUILD_CORE_WIN64_SOURCES_DIR/build"
+  pop_directory  # "$UNITEX_BUILD_CORE_WIN64_SOURCES_DIR/src/build"
   pop_build_stage
 }
 
@@ -2326,17 +2326,18 @@ function stage_unitex_core_make_osx() {
     pop_directory  # "$UNITEX_BUILD_SOURCE_DIR"
   fi  # [ ! -d "${UNITEX_BUILD_CORE_OSX_DIR:?}" ]
 
-  push_directory "$UNITEX_BUILD_CORE_OSX_SOURCES_DIR/build"
+  push_directory "$UNITEX_BUILD_CORE_OSX_SOURCES_DIR/src/build"
 
   if [ $UNITEX_BUILD_CORE_UPDATE     -ne 0 -a \
        $UNITEX_BUILD_CORE_HAS_ERRORS -eq 0 ]; then
     # ensure that we remove all binary objects
     log_notice "Cleaning" "OS X Unitex Core sources will be cleaned up"
-    exec_logged_command "make.osxcross.clean" "$UNITEX_BUILD_TOOL_MAKE" SYSTEM=osxcross clean
+    exec_logged_command "make.osxcross.clean" "$UNITEX_BUILD_TOOL_MAKE" clean-all
 
     log_notice "Compiling" "OS X Unitex Core Tool Logger"
     local unitex_core_make_fail=0
-    exec_logged_command "make.osxcross.debug.unitextoolloggeronly" "$UNITEX_BUILD_TOOL_MAKE" SYSTEM=osxcross \
+    exec_logged_command "make.osxcross.debug.unitextoolloggeronly" "$UNITEX_BUILD_TOOL_MAKE" 64BITS=yes \
+                   MACOSX_DEPLOYMENT_TARGET=10.8 SYSTEM=osxcross \
                    UNITEXTOOLLOGGERONLY=yes || {
                      unitex_core_make_fail=1
                    }
@@ -2355,7 +2356,7 @@ function stage_unitex_core_make_osx() {
     fi
   fi
 
-  pop_directory  # "$UNITEX_BUILD_CORE_OSX_SOURCES_DIR/build"
+  pop_directory  # "$UNITEX_BUILD_CORE_OSX_SOURCES_DIR/src/build"
   pop_build_stage
 }
 
@@ -2383,17 +2384,19 @@ function stage_unitex_core_make_linux_i686() {
     pop_directory  # "$UNITEX_BUILD_SOURCE_DIR"
   fi  # [ ! -d "${UNITEX_BUILD_CORE_LINUX_I686_DIR:?}" ]
 
-  push_directory "$UNITEX_BUILD_CORE_LINUX_I686_SOURCES_DIR/build"
+  push_directory "$UNITEX_BUILD_CORE_LINUX_I686_SOURCES_DIR/src/build"
 
   if [ $UNITEX_BUILD_CORE_UPDATE     -ne 0 -a \
        $UNITEX_BUILD_CORE_HAS_ERRORS -eq 0 ]; then
     # ensure that we remove all binary objects
     log_notice "Cleaning" "Linux Intel (i686) Unitex Core sources will be cleaned up"
-    exec_logged_command "make.linux.clean" "$UNITEX_BUILD_TOOL_MAKE" TRE_DIRECT_COMPILE=yes ADDITIONAL_CFLAG+="'-m32 -static -static-libgcc -static-libstdc++'"  64BITS=no TRE_CONFIGURE_OPTION="--host=i686-pc-linux-gnu"  clean
+    exec_logged_command "make.linux.clean" "$UNITEX_BUILD_TOOL_MAKE" clean-all
 
     log_notice "Compiling" "Linux Intel (i686) Unitex Core Tool Logger"
     local unitex_core_make_fail=0
-    exec_logged_command "make.linux.debug.unitextoolloggeronly" "$UNITEX_BUILD_TOOL_MAKE"  TRE_DIRECT_COMPILE=yes ADDITIONAL_CFLAG+="'-m32 -static -static-libgcc -static-libstdc++'"  64BITS=no TRE_CONFIGURE_OPTION="--host=i686-pc-linux-gnu" \
+    exec_logged_command "make.linux.debug.unitextoolloggeronly" "$UNITEX_BUILD_TOOL_MAKE"  \
+                   64BITS=no ADDITIONAL_CFLAG+="'-m32 -static -static-libgcc -static-libstdc++'" \
+		   TRE_CONFIGURE_OPTION="--host=i686-pc-linux-gnu" \
                    UNITEXTOOLLOGGERONLY=yes || {
                      unitex_core_make_fail=1
                    }
@@ -2412,7 +2415,7 @@ function stage_unitex_core_make_linux_i686() {
     fi
   fi
 
-  pop_directory  # "$UNITEX_BUILD_CORE_LINUX_I686_SOURCES_DIR/build"
+  pop_directory  # "$UNITEX_BUILD_CORE_LINUX_I686_SOURCES_DIR/src/build"
   pop_build_stage
 }
 
@@ -2440,17 +2443,18 @@ function stage_unitex_core_make_linux_x86_64_debug() {
     pop_directory  # "$UNITEX_BUILD_SOURCE_DIR"
   fi  # [ ! -d "${UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_DIR:?}" ]
 
-  push_directory "$UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_SOURCES_DIR/build"
+  push_directory "$UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_SOURCES_DIR/src/build"
 
   if [ $UNITEX_BUILD_CORE_UPDATE     -ne 0 -a \
        $UNITEX_BUILD_CORE_HAS_ERRORS -eq 0 ]; then
     # ensure that we remove all binary objects
     log_notice "Cleaning" "Linux Intel 64-bit (x86_64) (with debug info) Unitex Core sources will be cleaned up"
-    exec_logged_command "make.linux.clean"    "$UNITEX_BUILD_TOOL_MAKE" SYSTEM=linux-like 64BITS=yes clean
+    exec_logged_command "make.linux.clean"    "$UNITEX_BUILD_TOOL_MAKE" clean-all
 
     log_notice "Compiling" "Linux Intel 64-bit (x86_64) (with debug info) Unitex Core Tool Logger"
     local unitex_core_make_fail=0
-    exec_logged_command "make.linux.debug.unitextoolloggeronly" "$UNITEX_BUILD_TOOL_MAKE" SYSTEM=linux-like 64BITS=yes DEBUG=yes \
+    exec_logged_command "make.linux.debug.unitextoolloggeronly" "$UNITEX_BUILD_TOOL_MAKE" DISABLE_GOLD_LINKER=yes \
+    64BITS=yes DEBUG=yes \
                    UNITEXTOOLLOGGERONLY=yes || {
                      unitex_core_make_fail=1
                    }
@@ -2469,7 +2473,7 @@ function stage_unitex_core_make_linux_x86_64_debug() {
     fi
   fi
 
-  pop_directory  # "$UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_SOURCES_DIR/build"
+  pop_directory  # "$UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_SOURCES_DIR/src/build"
   pop_build_stage
 }
 
@@ -2497,17 +2501,17 @@ function stage_unitex_core_make_linux_x86_64() {
     pop_directory  # "$UNITEX_BUILD_SOURCE_DIR"
   fi  # [ ! -d "${UNITEX_BUILD_CORE_LINUX_X86_64_DIR:?}" ]
 
-  push_directory "$UNITEX_BUILD_CORE_LINUX_X86_64_SOURCES_DIR/build"
+  push_directory "$UNITEX_BUILD_CORE_LINUX_X86_64_SOURCES_DIR/src/build"
 
   if [ $UNITEX_BUILD_CORE_UPDATE     -ne 0 -a \
        $UNITEX_BUILD_CORE_HAS_ERRORS -eq 0 ]; then
     # ensure that we remove all binary objects
     log_notice "Cleaning" "Linux Intel 64-bit (x86_64) Unitex Core sources will be cleaned up"
-    exec_logged_command "make.linux.clean" "$UNITEX_BUILD_TOOL_MAKE" SYSTEM=linux-like 64BITS=yes ADDITIONAL_CFLAG+="'-static -static-libgcc -static-libstdc++'" clean
+    exec_logged_command "make.linux.clean" "$UNITEX_BUILD_TOOL_MAKE" clean-all
 
     log_notice "Compiling" "Linux Intel 64-bit (x86_64) Unitex Core Tool Logger"
     local unitex_core_make_fail=0
-    exec_logged_command "make.linux.debug.unitextoolloggeronly" "$UNITEX_BUILD_TOOL_MAKE" SYSTEM=linux-like 64BITS=yes ADDITIONAL_CFLAG+="'-static -static-libgcc -static-libstdc++'" \
+    exec_logged_command "make.linux.debug.unitextoolloggeronly" "$UNITEX_BUILD_TOOL_MAKE" 64BITS=yes ADDITIONAL_CFLAG+="'-static -static-libgcc -static-libstdc++'" \
                    UNITEXTOOLLOGGERONLY=yes || {
                      unitex_core_make_fail=1
                    }
@@ -2526,7 +2530,7 @@ function stage_unitex_core_make_linux_x86_64() {
     fi
   fi
 
-  pop_directory  # "$UNITEX_BUILD_CORE_LINUX_X86_64_SOURCES_DIR/build"
+  pop_directory  # "$UNITEX_BUILD_CORE_LINUX_X86_64_SOURCES_DIR/src/build"
   pop_build_stage
 }
 
