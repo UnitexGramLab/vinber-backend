@@ -4259,7 +4259,7 @@ function export_unitex_variables() {
 function setup_path_environment() {
   # The build base directory
   # e.g /home/vinber/build/Unitex-GramLab
-  UNITEX_BUILD_BASEDIR="$SCRIPT_BASEDIR/$UNITEX_BUILD_VINBER_BUILD_HOME_NAME/$UNITEX_PACKAGE_NAME"
+  UNITEX_BUILD_BASEDIR="${UNITEX_BUILD_BASE_PATH:-$SCRIPT_BASEDIR}/$UNITEX_BUILD_VINBER_BUILD_HOME_NAME/$UNITEX_PACKAGE_NAME"
 
   # The bundle base directory
   # e.g /home/vinber/build/Unitex-GramLab/nightly
@@ -4291,7 +4291,7 @@ function setup_path_environment() {
   UNITEX_BUILD_VINBER_LOGS_HOME_NAME="$UNITEX_BUILD_BUNDLE_NAME/$UNITEX_BUILD_VINBER_BUILD_HOME_NAME"
 
   # e.g /home/vinber/bundle/ (a path)
-  UNITEX_BUILD_LOGS_HOME_PATH="$SCRIPT_BASEDIR/$UNITEX_BUILD_LOGS_HOME_NAME"
+  UNITEX_BUILD_LOGS_HOME_PATH="${UNITEX_BUILD_LOGS_PATH:-$SCRIPT_BASEDIR}/$UNITEX_BUILD_LOGS_HOME_NAME"
 
   # e.g /home/vinber/bundle/nightly/build (path where log files are located)
   UNITEX_BUILD_LOGGER_PATH="$UNITEX_BUILD_LOGS_HOME_PATH/$UNITEX_BUILD_VINBER_LOGS_HOME_NAME"
