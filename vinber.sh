@@ -189,9 +189,8 @@ UNITEX_VERSION_URL_REPOSITORY_GOVERNANCE="http://governance.$UNITEX_DOMAIN_NAME"
 UNITEX_BUILD_SVN_LOG_LIMIT=100
 UNITEX_BUILD_GIT_LOG_LIMIT=100
 }
-UNITEX_BUILD_MINGW32_COMMAND_PREFIX="mingw32-"
-#UNITEX_BUILD_MINGW32_COMMAND_PREFIX="i586-mingw32msvc-"
-UNITEX_BUILD_MINGW64_COMMAND_PREFIX="x86_64-w64-mingw32-"
+UNITEX_BUILD_MINGW32_COMMAND_PREFIX="${UNITEX_BUILD_MINGW32_COMMAND_PREFIX:-mingw32-}"
+UNITEX_BUILD_MINGW64_COMMAND_PREFIX="${UNITEX_BUILD_MINGW64_COMMAND_PREFIX:-x86_64-w64-mingw32-}"
 # =============================================================================
 UNITEX_BUILD_VINBER_BACKEND_UPDATE=0
 UNITEX_BUILD_DOCS_UPDATE=0
@@ -2223,7 +2222,7 @@ function stage_unitex_core_make_win32() {
 
     log_notice "Compiling" "Win32 Unitex Core Tool Logger"
     local unitex_core_make_fail=0
-    exec_logged_command "make.mingw32.unitextoolloggeronly" "$UNITEX_BUILD_TOOL_MAKE" 64BITS=no COMMANDPREFIXDEFINED=yes COMMANDPREFIX=$UNITEX_BUILD_MINGW32_COMMAND_PREFIX ADDITIONAL_CFLAG+="'-DUNITEX_USE_POSIX_THREADS=1 -DUNITEX_PREVENT_USING_WINRT_API -static -static-libgcc -static-libstdc++'" SYSTEM=mingw32 \
+    exec_logged_command "make.mingw32.unitextoolloggeronly" "$UNITEX_BUILD_TOOL_MAKE" 64BITS=no COMMANDPREFIXDEFINED=yes COMMANDPREFIX="$UNITEX_BUILD_MINGW32_COMMAND_PREFIX" ADDITIONAL_CFLAG+="'-DUNITEX_USE_POSIX_THREADS=1 -DUNITEX_PREVENT_USING_WINRT_API -static -static-libgcc -static-libstdc++'" SYSTEM=mingw32 \
                      UNITEXTOOLLOGGERONLY=yes || {
                        unitex_core_make_fail=1
                      }
@@ -2279,7 +2278,7 @@ function stage_unitex_core_make_win64() {
 
     log_notice "Compiling" "Win64 Unitex Core Tool Logger"
     local unitex_core_make_fail=0
-    exec_logged_command "make.mingw32.unitextoolloggeronly" "$UNITEX_BUILD_TOOL_MAKE" 64BITS=yes COMMANDPREFIXDEFINED=yes COMMANDPREFIX=$UNITEX_BUILD_MINGW64_COMMAND_PREFIX ADDITIONAL_CFLAG+="'-DUNITEX_USE_POSIX_THREADS=1 -DUNITEX_PREVENT_USING_WINRT_API -m64 -static -static-libgcc -static-libstdc++'" SYSTEM=mingw32 \
+    exec_logged_command "make.mingw32.unitextoolloggeronly" "$UNITEX_BUILD_TOOL_MAKE" 64BITS=yes COMMANDPREFIXDEFINED=yes COMMANDPREFIX="$UNITEX_BUILD_MINGW64_COMMAND_PREFIX" ADDITIONAL_CFLAG+="'-DUNITEX_USE_POSIX_THREADS=1 -DUNITEX_PREVENT_USING_WINRT_API -m64 -static -static-libgcc -static-libstdc++'" SYSTEM=mingw32 \
                      UNITEXTOOLLOGGERONLY=yes || {
                        unitex_core_make_fail=1
                      }
