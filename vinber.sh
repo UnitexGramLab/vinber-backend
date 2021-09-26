@@ -165,7 +165,7 @@ UNITEX_VERSION_URL_FORUM="http://forum.$UNITEX_DOMAIN_NAME"
 UNITEX_VERSION_URL_DOCS="http://docs.$UNITEX_DOMAIN_NAME"
 }
 # =============================================================================
-UNITEX_BUILD_DEPLOYMENT_DESTINATION="/mnt/pantheon/sdb1/unitex/W3" # Website local path
+UNITEX_BUILD_DEPLOYMENT_DESTINATION="${UNITEX_BUILD_DEPLOYMENT_DESTINATION:-/mnt/pantheon/sdb1/unitex/W3}" # Website rsync path
 UNITEX_BUILD_URL_WEBSITE="https://unitexgramlab.org"               # Website URL
 # =============================================================================
 # Unitex/GramLab issues related URLs
