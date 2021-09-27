@@ -3329,8 +3329,8 @@ function stage_unitex_core_dist() {
       pop_directory
 
       # App dir Licenses and Disclaimers
-      cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/Licenses/*.txt     "$UNITEX_BUILD_RELEASE_APP_LICENSES_DIR/"
-      cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/Disclaimers/*.txt  "$UNITEX_BUILD_RELEASE_APP_DISCLAIMERS_DIR/"
+      cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/licenses/*.txt     "$UNITEX_BUILD_RELEASE_APP_LICENSES_DIR/"
+      cp -r "$UNITEX_BUILD_REPOSITORY_CORE_NAME"/disclaimers/*.txt  "$UNITEX_BUILD_RELEASE_APP_DISCLAIMERS_DIR/"
 
       # we create a README.md
       cp "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH/README.md" \
