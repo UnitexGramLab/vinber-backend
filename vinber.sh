@@ -395,6 +395,7 @@ UNITEX_BUILD_RELEASES_OSX_HOME_NAME="osx"
 UNITEX_BUILD_RELEASES_LINUX_I686_HOME_NAME="linux-i686"
 UNITEX_BUILD_RELEASES_LINUX_X86_64_HOME_NAME="linux-x86_64"
 UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME="platform"
+UNITEX_BUILD_RELEASES_ELG_HOME_NAME="elg"
 # =============================================================================
 UNITEX_BUILD_PACKAGE_APP_SUFFIX="-application"
 UNITEX_BUILD_PACKAGE_SOURCE_SUFFIX="-source"
@@ -3231,7 +3232,11 @@ function stage_unitex_core_dist() {
         # Clean previous binaries
         rm -rf "${UNITEX_BUILD_RELEASE_APP_DIR:?}"/*.exe
         rm -rf "${UNITEX_BUILD_RELEASE_APP_DIR:?}"/UnitexToolLogger
+        rm -rf "${UNITEX_BUILD_RELEASE_APP_DIR:?}"/"${UNITEX_BUILD_RELEASES_ELG_HOME_NAME:?}"
         rm -rf "${UNITEX_BUILD_RELEASE_APP_DIR:?}"/"${UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME:?}"
+	
+        # copy the /elg directory
+        cp -rT "$UNITEX_BUILD_REPOSITORY_CORE_LOCAL_PATH"/bin/elg "${UNITEX_BUILD_RELEASE_APP_DIR:?}"/"${UNITEX_BUILD_RELEASES_ELG_HOME_NAME:?}"
 
         # Create a /platform directory
         mkdir "${UNITEX_BUILD_RELEASE_APP_DIR:?}"/"${UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME:?}"
