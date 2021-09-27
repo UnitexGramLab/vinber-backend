@@ -3126,9 +3126,8 @@ function stage_unitex_core_logs_run() {
 
 
     if [ $UNITEX_BUILD_HAS_UNITEXTOOLLOGGER -ne 0 ]; then
-      # copy UnitexToolLogger
-      cp "$UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_SOURCES_DIR/bin/UnitexToolLogger" "$UNITEX_BUILD_REPOSITORY_LOGS_LOCAL_PATH/UnitexToolLogger"
-      export UNITEX_BIN="$UNITEX_BUILD_REPOSITORY_LOGS_LOCAL_PATH/UnitexToolLogger"
+      # export UNITEX_BIN=UnitexToolLogger
+      export UNITEX_BIN="$UNITEX_BUILD_CORE_LINUX_X86_64_DEBUG_SOURCES_DIR/bin/UnitexToolLogger"
 
       push_directory "$UNITEX_BUILD_REPOSITORY_LOGS_LOCAL_PATH"
 
