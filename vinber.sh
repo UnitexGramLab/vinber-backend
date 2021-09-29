@@ -1404,7 +1404,7 @@ function stage_unitex_packaging_make_installer_linux_i686() {
     rm -rf "$UNITEX_BUILD_RELEASES_LINUX_I686_DIR/$UNITEX_PACKAGE_LINUX_I686_PREFIX.run"
 
     # Use makeself to build the package
-    exec_logged_command "makeself.linux_i686" "makeself.sh"                                         \
+    exec_logged_command "makeself.linux_i686" "$(UNITEX_BUILD_TOOL_MAKESELF)"                       \
       --license "$UNITEX_BUILD_SOURCE_DIR/$UNITEX_BUILD_REPOSITORY_PACK_UNIX_NAME/data/LICENSE.txt" \
       --target  "\"\\\$HOME/$UNITEX_PACKAGE_FULL_NAME\""                                            \
       "$UNITEX_PACKAGE_FULL_NAME"                                                                   \
@@ -1447,7 +1447,7 @@ function stage_unitex_packaging_make_installer_linux_x86_64() {
     rm -rf "$UNITEX_BUILD_RELEASES_LINUX_X86_64_DIR/$UNITEX_PACKAGE_LINUX_X86_64_PREFIX.run"
 
     # Use makeself to build the package
-    exec_logged_command "makeself.linux_x86_64" "makeself.sh"                                       \
+    exec_logged_command "makeself.linux_x86_64" "$(UNITEX_BUILD_TOOL_MAKESELF)"                     \
       --license "$UNITEX_BUILD_SOURCE_DIR/$UNITEX_BUILD_REPOSITORY_PACK_UNIX_NAME/data/LICENSE.txt" \
       --target  "\"\\\$HOME/$UNITEX_PACKAGE_FULL_NAME\""                                            \
       "$UNITEX_PACKAGE_FULL_NAME"                                                                   \
@@ -1490,7 +1490,7 @@ function stage_unitex_packaging_make_installer_osx() {
     rm -rf "$UNITEX_BUILD_RELEASES_OSX_DIR/$UNITEX_PACKAGE_OSX_PREFIX.run"
 
     # Use makeself to build the package
-    exec_logged_command "makeself.osx" "makeself.sh"                                                \
+    exec_logged_command "makeself.osx" "$(UNITEX_BUILD_TOOL_MAKESELF)"                              \
       --license "$UNITEX_BUILD_SOURCE_DIR/$UNITEX_BUILD_REPOSITORY_PACK_UNIX_NAME/data/LICENSE.txt" \
       --target  "\"\\\$HOME/$UNITEX_PACKAGE_FULL_NAME\""                                            \
       "$UNITEX_PACKAGE_FULL_NAME"                                                                   \
