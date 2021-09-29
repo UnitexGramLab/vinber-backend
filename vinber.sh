@@ -3253,7 +3253,7 @@ function stage_unitex_core_dist() {
           push_directory "$UNITEX_BUILD_RELEASE_APP_DIR/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_WIN32_HOME_NAME"
           for executable in ./*.exe; do
             log_info "Signing" "$executable"
-            exec_logged_command "signcode.sh.win.exe" "signcode.sh" "$executable" || { \
+            exec_logged_command "signcode.sh.win.exe" "${UNITEX_BUILD_TOOL_SIGNCODE}" "$executable" || { \
               die_with_critical_error "Sign failed" "Error signing $executable"
             }
           done  # for executable
@@ -3272,7 +3272,7 @@ function stage_unitex_core_dist() {
           push_directory "$UNITEX_BUILD_RELEASE_APP_DIR/$UNITEX_BUILD_RELEASES_PLATFORM_HOME_NAME/$UNITEX_BUILD_RELEASES_WIN64_HOME_NAME"
           for executable in ./*.exe; do
             log_info "Signing" "$executable"
-            exec_logged_command "signcode.sh.win.exe" "signcode.sh" "$executable" || { \
+            exec_logged_command "signcode.sh.win.exe" "${UNITEX_BUILD_TOOL_SIGNCODE}" "$executable" || { \
               die_with_critical_error "Sign failed" "Error signing $executable"
             }
           done  # for executable
