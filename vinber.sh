@@ -1913,7 +1913,7 @@ function stage_unitex_gramlab_ide_dist() {
       # Sign Unitex.jar
       if [ -n "${UNITEX_BUILD_TOOL_JARSIGNER+1}" -a -e "$UNITEX_BUILD_RELEASE_APP_DIR/Unitex.jar" ]; then
         log_info "Signing" "Unitex.jar"
-        exec_logged_command "signjar.sh.Unitex.jar" "signjar.sh" "$UNITEX_BUILD_RELEASE_APP_DIR/Unitex.jar" || {   \
+        exec_logged_command "signjar.sh.Unitex.jar" "${UNITEX_BUILD_TOOL_JARSIGNER}" "$UNITEX_BUILD_RELEASE_APP_DIR/Unitex.jar" || {   \
           die_with_critical_error "Sign failed" "Error signing Unitex.jar"
         }
       fi   # [ -n "${UNITEX_BUILD_TOOL_JARSIGNER+1}" ]
@@ -1921,7 +1921,7 @@ function stage_unitex_gramlab_ide_dist() {
       # Sign GramLab.jar
       if [ -n "${UNITEX_BUILD_TOOL_JARSIGNER+1}" -a -e "$UNITEX_BUILD_RELEASE_APP_DIR/Gramlab.jar" ]; then
         log_info "Signing" "Gramlab.jar"
-        exec_logged_command "signjar.sh.Gramlab.jar" "signjar.sh" "$UNITEX_BUILD_RELEASE_APP_DIR/Gramlab.jar" || {   \
+        exec_logged_command "signjar.sh.Gramlab.jar" "${UNITEX_BUILD_TOOL_JARSIGNER}" "$UNITEX_BUILD_RELEASE_APP_DIR/Gramlab.jar" || {   \
           die_with_critical_error "Sign failed" "Error signing Gramlab.jar"
         }
       fi   # [ -n "${UNITEX_BUILD_TOOL_JARSIGNER+1}" ]
@@ -1929,7 +1929,7 @@ function stage_unitex_gramlab_ide_dist() {
       # Sign new GramLab.jar
       if [ -n "${UNITEX_BUILD_TOOL_JARSIGNER+1}" -a -e "$UNITEX_BUILD_RELEASE_APP_DIR/GramLab.jar" ]; then
         log_info "Signing" "GramLab.jar"
-        exec_logged_command "signjar.sh.GramLab.jar" "signjar.sh" "$UNITEX_BUILD_RELEASE_APP_DIR/GramLab.jar" || {   \
+        exec_logged_command "signjar.sh.GramLab.jar" "${UNITEX_BUILD_TOOL_JARSIGNER}" "$UNITEX_BUILD_RELEASE_APP_DIR/GramLab.jar" || {   \
           die_with_critical_error "Sign failed" "Error signing GramLab.jar"
         }
       fi   # [ -n "${UNITEX_BUILD_TOOL_JARSIGNER+1}" ]
